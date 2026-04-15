@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "id": "f001",
+    "location": "봉천동",
+    "bio": "70대 후반 아버지가 요양 병원에 오래오래 계세요.\n(Q: 도우미 성별로 선호하시는 쪽이 있으세요?\n A: 무관)\n(Q: 어느 시간대에 도움이 필요하세요?\n A: 오전 9시부터 오후 5시)\n(Q: 하루 급여로 생각하시는 금액이 있으신가요?\n A: )",
+    "parsed": {
+      "wage_max": 999999,
+      "care_type": "환자",
+      "hours": "09:00-17:00",
+      "preferred_gender": "무관",
+      "care_age": 77
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  }
+]

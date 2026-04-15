@@ -139,13 +139,15 @@ function ResultsInner() {
 
   return (
     <div>
-      <h1 className="text-[32px] font-bold text-apple-label2">
-        {finalResults ? `추천 도우미 ${finalResults.results.length}명` : "AI와 조건 맞추기"}
+      <h1 className="text-[30px] font-semibold text-apple-label">
+        {finalResults
+          ? `추천 돌봄 선생님 ${finalResults.results.length}분`
+          : "돌봄 상황 확인 중"}
       </h1>
       <p className="mt-2 text-[16px] text-apple-gray">
         {finalResults
-          ? "조건을 바탕으로 AI가 선정한 최적의 매칭입니다."
-          : "대화로 조건을 명확히 한 뒤 매칭합니다. 최대 4번까지만 여쭤봐요."}
+          ? "말씀해주신 상황에 맞춰 AI가 선정한 결과입니다."
+          : "몇 가지만 더 여쭤보고 적합한 돌봄 선생님을 찾아드릴게요."}
       </p>
 
       {/* 대화 영역 */}
@@ -192,13 +194,13 @@ function ResultsInner() {
                 className="flex-1 bg-apple-silver rounded-xl px-4 py-3 text-[17px] focus:bg-white focus:outline-none focus:ring-2 focus:ring-apple-blue transition-all"
               />
               <Button onClick={() => handleAnswer(input)} variant="secondary">
-                답변
+                확인
               </Button>
             </div>
           )}
-          {typeof pending.turns_left === "number" && (
+          {typeof pending.turns_left === "number" && pending.turns_left > 0 && (
             <p className="mt-3 text-[12px] text-apple-gray">
-              남은 되묻기 {pending.turns_left}회
+              앞으로 최대 {pending.turns_left}번 정도만 더 여쭤볼게요
             </p>
           )}
         </div>

@@ -27,7 +27,7 @@ export function Button({ variant = "primary", className = "", onClick, children,
     primary:
       "bg-apple-blue text-white shadow-card hover:shadow-cardHover hover:brightness-105",
     secondary:
-      "bg-apple-silver text-neutral-900 hover:bg-apple-silver2",
+      "bg-apple-silver text-apple-label hover:bg-apple-silver2",
     ghost:
       "bg-transparent text-apple-blue hover:bg-apple-silver",
   };

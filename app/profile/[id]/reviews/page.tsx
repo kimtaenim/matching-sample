@@ -68,7 +68,7 @@ export default function ReviewsPage({ params }: { params: Promise<{ id: string }
       <Link href="/" className="text-[14px] text-apple-gray hover:text-apple-blue">
         ← 홈으로
       </Link>
-      <h1 className="mt-4 text-[36px] font-bold text-neutral-900">
+      <h1 className="mt-4 text-[36px] font-bold text-apple-label">
         {data.name || data.id} 님의 후기
       </h1>
       <p className="mt-2 text-[17px] text-apple-gray">
@@ -95,7 +95,7 @@ export default function ReviewsPage({ params }: { params: Promise<{ id: string }
               <Stars rating={r.rating} />
               <span className="text-[14px] text-apple-gray">{r.date}</span>
             </div>
-            <p className="mt-3 text-[17px] text-neutral-700 leading-relaxed">{r.text}</p>
+            <p className="mt-3 text-[17px] text-apple-label2 leading-relaxed">{r.text}</p>
           </div>
         ))}
       </div>

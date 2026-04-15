@@ -64,7 +64,7 @@ function AdminInner() {
 
   return (
     <div className="max-w-3xl mx-auto">
-      <h1 className="text-[36px] font-bold text-neutral-900">프로필 등록</h1>
+      <h1 className="text-[36px] font-bold text-apple-label">프로필 등록</h1>
       <p className="mt-2 text-[17px] text-apple-gray">
         자연어로 설명만 입력하면 AI가 구조화해 저장하고, 즉시 매칭을 실행합니다.
       </p>
@@ -77,7 +77,7 @@ function AdminInner() {
             className={`text-[17px] px-6 py-3 rounded-full transition-all active:scale-[0.97] ${
               role === r
                 ? "bg-apple-blue text-white shadow-card"
-                : "bg-apple-silver text-neutral-700 hover:bg-apple-silver2"
+                : "bg-apple-silver text-apple-label2 hover:bg-apple-silver2"
             }`}
           >
             {r === "helper" ? "도우미 등록" : "가정 등록"}
@@ -107,7 +107,7 @@ function AdminInner() {
                 className={`text-[17px] py-3 rounded-xl border transition-all active:scale-[0.97] ${
                   location === a
                     ? "bg-apple-blue text-white border-apple-blue"
-                    : "bg-white text-neutral-900 border-apple-silver2 hover:bg-apple-silver"
+                    : "bg-white text-apple-label border-apple-silver2 hover:bg-apple-silver"
                 }`}
               >
                 {a}

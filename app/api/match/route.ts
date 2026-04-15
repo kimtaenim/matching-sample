@@ -9,27 +9,24 @@ import {
 } from "@/lib/data";
 import { withinRange } from "@/lib/distance";
 import {
-  parseFamilyBio,
-  parseHelperBio,
+  chatFamily,
+  chatHelper,
   finalizeFamily,
   finalizeHelper,
-  nextQuestion,
-  questionText,
-} from "@/lib/parse";
+} from "@/lib/chat";
 import type { Helper, Family, Location } from "@/lib/types";
 
 export const runtime = "nodejs";
 
-interface Body {
-  bio: string;
-  location: Location;
-  role: "family" | "helper";
-  name?: string;
-  skipped_keys?: string[];
-  turn?: number; // 몇 번째 follow-up인지 (0부터)
-}
-
 const MAX_TURNS = 4;
+
+interface Body {
+  bio?: unknown;
+  location?: unknown;
+  role?: unknown;
+  name?: unknown;
+  turn?: unknown;
+}
 
 interface ScoreItem {
   id: string;
@@ -37,24 +34,35 @@ interface ScoreItem {
   match_score: number;
 }
 
+function safeString(v: unknown, fallback = ""): string {
+  return typeof v === "string" ? v : fallback;
+}
+function safeNumber(v: unknown, fallback = 0): number {
+  if (typeof v === "number" && !Number.isNaN(v)) return v;
+  if (typeof v === "string") {
+    const n = parseInt(v, 10);
+    if (!Number.isNaN(n)) return n;
+  }
+  return fallback;
+}
+
 export async function POST(req: NextRequest) {
   let body: Body;
   try {
-    body = await req.json();
+    body = (await req.json()) as Body;
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
-  const {
-    bio,
-    location,
-    role,
-    name,
-    skipped_keys = [],
-    turn = 0,
-  } = body;
-  if (!bio || !location || (role !== "family" && role !== "helper")) {
+
+  const bio = safeString(body.bio).trim();
+  const location = safeString(body.location) as Location;
+  const role = body.role === "helper" ? "helper" : body.role === "family" ? "family" : null;
+  const name = safeString(body.name) || undefined;
+  const turn = safeNumber(body.turn, 0);
+
+  if (!bio || !location || !role) {
     return NextResponse.json(
-      { error: "bio, location, role(family|helper) 필요" },
+      { error: "bio, location, role(family|helper) 모두 필요" },
       { status: 400 }
     );
   }
@@ -63,94 +71,104 @@ export async function POST(req: NextRequest) {
   let totalOut = 0;
   let totalKRW = 0;
 
-  // 1) bio 파싱 → 누락 필드 확인
+  // 1) 대화형 파싱 + 다음 질문 생성 (1 Claude call)
   let finalFamily: Family["parsed"] | null = null;
   let finalHelper: Helper["parsed"] | null = null;
 
-  if (role === "family") {
-    const r = await parseFamilyBio(bio);
-    totalIn += r.usage.input;
-    totalOut += r.usage.output;
-    totalKRW += r.cost_krw;
-    const reachedCap = turn >= MAX_TURNS;
-    const nq = reachedCap ? null : nextQuestion(r.missing, skipped_keys);
-    if (nq) {
-      return NextResponse.json({
-        need_info: true,
-        next_key: nq.key,
-        next_question: questionText(nq),
-        next_type: nq.type,
-        next_options: nq.options ?? null,
-        parsed_so_far: r.parsed,
-        turn,
-        turns_left: MAX_TURNS - turn,
-        input_tokens: totalIn,
-        output_tokens: totalOut,
-        cost_krw: totalKRW,
-        _usage: { input: totalIn, output: totalOut },
-      });
+  try {
+    if (role === "family") {
+      const r = await chatFamily(bio, turn, MAX_TURNS);
+      totalIn += r.usage.input;
+      totalOut += r.usage.output;
+      totalKRW += r.cost_krw;
+      if (!r.done && r.next_question) {
+        return NextResponse.json({
+          need_info: true,
+          next_key: r.next_key,
+          next_question: r.next_question,
+          next_type: r.next_type,
+          next_options: r.next_options,
+          parsed_so_far: r.parsed,
+          turn,
+          turns_left: MAX_TURNS - turn,
+          input_tokens: totalIn,
+          output_tokens: totalOut,
+          cost_krw: totalKRW,
+          _usage: { input: totalIn, output: totalOut },
+        });
+      }
+      finalFamily = finalizeFamily(r.parsed);
+    } else {
+      const r = await chatHelper(bio, turn, MAX_TURNS);
+      totalIn += r.usage.input;
+      totalOut += r.usage.output;
+      totalKRW += r.cost_krw;
+      if (!r.done && r.next_question) {
+        return NextResponse.json({
+          need_info: true,
+          next_key: r.next_key,
+          next_question: r.next_question,
+          next_type: r.next_type,
+          next_options: r.next_options,
+          parsed_so_far: r.parsed,
+          turn,
+          turns_left: MAX_TURNS - turn,
+          input_tokens: totalIn,
+          output_tokens: totalOut,
+          cost_krw: totalKRW,
+          _usage: { input: totalIn, output: totalOut },
+        });
+      }
+      finalHelper = finalizeHelper(r.parsed);
     }
-    finalFamily = finalizeFamily(r.parsed);
-  } else {
-    const r = await parseHelperBio(bio);
-    totalIn += r.usage.input;
-    totalOut += r.usage.output;
-    totalKRW += r.cost_krw;
-    const reachedCap = turn >= MAX_TURNS;
-    const nq = reachedCap ? null : nextQuestion(r.missing, skipped_keys);
-    if (nq) {
-      return NextResponse.json({
-        need_info: true,
-        next_key: nq.key,
-        next_question: questionText(nq),
-        next_type: nq.type,
-        next_options: nq.options ?? null,
-        parsed_so_far: r.parsed,
-        turn,
-        turns_left: MAX_TURNS - turn,
-        input_tokens: totalIn,
-        output_tokens: totalOut,
-        cost_krw: totalKRW,
-        _usage: { input: totalIn, output: totalOut },
-      });
-    }
-    finalHelper = finalizeHelper(r.parsed);
+  } catch (e) {
+    return NextResponse.json(
+      { error: `파싱 실패: ${(e as Error).message}` },
+      { status: 500 }
+    );
   }
 
   // 2) 요청자 영속화
   let requester_id: string;
-  if (role === "family" && finalFamily) {
-    const families = await getFamilies();
-    const f: Family = {
-      id: nextId("f", families),
-      location,
-      bio,
-      parsed: finalFamily,
-      reviews_received: [],
-      reviews_written: [],
-    };
-    families.push(f);
-    await saveFamilies(families);
-    requester_id = f.id;
-  } else if (finalHelper) {
-    const helpers = await getHelpers();
-    const h: Helper = {
-      id: nextId("h", helpers),
-      name: name || "익명",
-      location,
-      bio,
-      parsed: finalHelper,
-      reviews_received: [],
-      reviews_written: [],
-    };
-    helpers.push(h);
-    await saveHelpers(helpers);
-    requester_id = h.id;
-  } else {
-    return NextResponse.json({ error: "parsed data 누락" }, { status: 500 });
+  try {
+    if (role === "family" && finalFamily) {
+      const families = await getFamilies();
+      const f: Family = {
+        id: nextId("f", families),
+        location,
+        bio,
+        parsed: finalFamily,
+        reviews_received: [],
+        reviews_written: [],
+      };
+      families.push(f);
+      await saveFamilies(families);
+      requester_id = f.id;
+    } else if (finalHelper) {
+      const helpers = await getHelpers();
+      const h: Helper = {
+        id: nextId("h", helpers),
+        name: name || "익명",
+        location,
+        bio,
+        parsed: finalHelper,
+        reviews_received: [],
+        reviews_written: [],
+      };
+      helpers.push(h);
+      await saveHelpers(helpers);
+      requester_id = h.id;
+    } else {
+      return NextResponse.json({ error: "parsed data 누락" }, { status: 500 });
+    }
+  } catch (e) {
+    return NextResponse.json(
+      { error: `저장 실패: ${(e as Error).message}` },
+      { status: 500 }
+    );
   }
 
-  // 3) 후보 목록 + 거리 하드 필터
+  // 3) 후보 필터
   const targetIsHelper = role === "family";
   const candidates = targetIsHelper
     ? (await getHelpers()).filter((h) => withinRange(location, h.location))
@@ -177,50 +195,48 @@ export async function POST(req: NextRequest) {
 
   const prompt = `다음은 ${
     role === "family" ? "가정이 찾는 돌봄 도우미" : "도우미가 찾는 돌봄 가정"
-  } 매칭입니다. 일부 조건은 사용자가 답하지 않아 누락됐을 수 있으니, 있는 정보만으로 유연하게 평가해주세요.
+  } 매칭입니다. 일부 조건은 누락됐을 수 있으니 있는 정보만으로 유연하게 평가하세요.
 
 요청자 역할: ${role}
 요청자 지역: ${location}
-요청자 조건 (자연어): """${bio}"""
+요청자 설명: """${bio}"""
 
-후보 ${limited.length}명 (거리 10km 이내 필터됨):
+후보 ${limited.length}명:
 ${JSON.stringify(summary, null, 2)}
 
-각 후보를 요청자 조건과 비교해 적합도를 평가하고, 상위 5명을 JSON 배열로만 응답해주세요.
-- match_reason: 왜 잘 맞는지 한 줄 한국어 (구체적 근거)
-- match_score: 0-100 정수
-- match_score 내림차순 정렬
-
+상위 5명을 JSON 배열로 응답. match_score 내림차순.
 [{"id":"...", "match_reason":"...", "match_score": 92}, ...]`;
-
-  let scoreResult;
-  try {
-    scoreResult = await callClaude(prompt, { maxTokens: 1200 });
-  } catch (e) {
-    return NextResponse.json(
-      { error: (e as Error).message },
-      { status: 500 }
-    );
-  }
-  totalIn += scoreResult.usage.input;
-  totalOut += scoreResult.usage.output;
-  totalKRW += scoreResult.cost_krw;
 
   let scored: ScoreItem[] = [];
   try {
-    scored = extractJson<ScoreItem[]>(scoreResult.text);
-  } catch {
-    // 빈 결과
+    const scoreResult = await callClaude(prompt, { maxTokens: 1200 });
+    totalIn += scoreResult.usage.input;
+    totalOut += scoreResult.usage.output;
+    totalKRW += scoreResult.cost_krw;
+    try {
+      scored = extractJson<ScoreItem[]>(scoreResult.text);
+    } catch {
+      scored = [];
+    }
+  } catch (e) {
+    return NextResponse.json(
+      { error: `매칭 실패: ${(e as Error).message}` },
+      { status: 500 }
+    );
   }
 
   const byId = new Map<string, Helper | Family>(limited.map((c) => [c.id, c]));
   const results = scored
-    .filter((s) => byId.has(s.id))
-    .sort((a, b) => b.match_score - a.match_score)
+    .filter((s) => s && typeof s.id === "string" && byId.has(s.id))
+    .sort((a, b) => (b.match_score || 0) - (a.match_score || 0))
     .slice(0, 5)
     .map((s) => {
       const c = byId.get(s.id)!;
-      return { ...c, match_reason: s.match_reason, match_score: s.match_score };
+      return {
+        ...c,
+        match_reason: safeString(s.match_reason, "조건 부합"),
+        match_score: safeNumber(s.match_score, 0),
+      };
     });
 
   return NextResponse.json({
@@ -250,7 +266,7 @@ function summarizeHelper(h: Helper) {
     wage_min: h.parsed.wage_min,
     hours: h.parsed.hours,
     preferred_gender: h.parsed.preferred_gender,
-    bio: h.bio.slice(0, 180),
+    bio: (h.bio || "").slice(0, 180),
     avg_rating: Number(avgRating(h).toFixed(1)),
     review_count: h.reviews_received.length,
   };
@@ -265,6 +281,6 @@ function summarizeFamily(f: Family) {
     wage_max: f.parsed.wage_max,
     hours: f.parsed.hours,
     preferred_gender: f.parsed.preferred_gender,
-    bio: f.bio.slice(0, 180),
+    bio: (f.bio || "").slice(0, 180),
   };
 }

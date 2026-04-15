@@ -13,7 +13,7 @@ export default function SearchPage() {
 
   const submit = () => {
     if (!text.trim()) {
-      alert("조건을 자유롭게 적어주세요.");
+      alert("돌봄이 필요한 상황을 자유롭게 적어주세요.");
       return;
     }
     setLoading(true);
@@ -23,16 +23,16 @@ export default function SearchPage() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h1 className="text-[40px] font-bold text-neutral-900">
+      <h1 className="text-[36px] font-semibold text-apple-label">
         어떤 돌봄이 필요하세요?
       </h1>
       <p className="mt-3 text-[18px] text-apple-gray">
-        자유롭게 적어주시면 AI가 조건을 이해해 꼭 맞는 분을 찾아드립니다.
+        자유롭게 적어주시면 AI가 상황을 이해해 꼭 맞는 돌봄 선생님을 찾아드려요.
       </p>
 
       <div className="mt-10 space-y-6">
         <div>
-          <label className="block text-[15px] text-apple-gray mb-2">조건 설명</label>
+          <label className="block text-[15px] text-apple-gray mb-2">돌봄 상황 설명</label>
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
@@ -52,7 +52,7 @@ export default function SearchPage() {
                 className={`text-[18px] py-4 rounded-2xl border transition-all active:scale-[0.97] ${
                   location === a
                     ? "bg-apple-blue text-white border-apple-blue shadow-card"
-                    : "bg-white text-neutral-900 border-apple-silver2 hover:bg-apple-silver"
+                    : "bg-white text-apple-label border-apple-silver2 hover:bg-apple-silver"
                 }`}
               >
                 {a}
@@ -63,7 +63,7 @@ export default function SearchPage() {
 
         <div className="pt-4 flex justify-center">
           <Button onClick={submit} disabled={loading} className="w-full md:w-auto min-w-[240px]">
-            {loading ? "검색 중..." : "AI로 맞는 분 찾기"}
+            {loading ? "찾는 중..." : "돌봄 선생님 찾기"}
           </Button>
         </div>
 

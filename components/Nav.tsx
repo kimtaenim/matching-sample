@@ -9,7 +9,7 @@ export function Nav() {
         <div className="flex items-center gap-2.5">
           <Link
             href="/"
-            className="text-[22px] font-semibold tracking-tight text-neutral-900 hover:text-apple-blue transition-colors"
+            className="text-[22px] font-semibold tracking-tight text-apple-label hover:text-apple-blue transition-colors"
           >
             AI 돌봄 매칭
           </Link>

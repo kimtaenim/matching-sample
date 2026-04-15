@@ -58,7 +58,7 @@ function MatchedInner() {
     <div className="max-w-2xl mx-auto py-10">
       <div className="flex flex-col items-center text-center">
         <Checkmark size={120} />
-        <h1 className="mt-8 text-[36px] font-bold text-neutral-900 animate-fadeSlideUp" style={{ animationDelay: "0.4s" }}>
+        <h1 className="mt-8 text-[36px] font-bold text-apple-label animate-fadeSlideUp" style={{ animationDelay: "0.4s" }}>
           매칭이 성사되었습니다
         </h1>
         <p className="mt-3 text-[18px] text-apple-gray animate-fadeSlideUp" style={{ animationDelay: "0.5s" }}>
@@ -98,10 +98,10 @@ function ReviewBox({ title, rating, text }: { title: string; rating: number; tex
   return (
     <div className="bg-white border border-apple-silver2 rounded-card p-6 shadow-card">
       <div className="flex items-center justify-between">
-        <h3 className="text-[17px] font-semibold text-neutral-900">{title}</h3>
+        <h3 className="text-[17px] font-semibold text-apple-label">{title}</h3>
         <Stars rating={rating} />
       </div>
-      <p className="mt-3 text-[17px] text-neutral-700 leading-relaxed">{text}</p>
+      <p className="mt-3 text-[17px] text-apple-label2 leading-relaxed">{text}</p>
     </div>
   );
 }
