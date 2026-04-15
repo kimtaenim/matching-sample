@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
 
 JSON 형식:
 { "rating": 3-5 사이 숫자, "text": "구체적이고 자연스러운 후기 1-2문장" }`;
-    const { text, usage } = await callClaude(prompt, 300);
+    const { text, usage } = await callClaude(prompt, { maxTokens: 300 });
     const rev = extractJson<{ rating: number; text: string }>(text);
     const date = new Date().toISOString().slice(0, 10);
     h.reviews_received.push({ from: "(AI)", date, rating: rev.rating, text: rev.text });
@@ -45,7 +45,7 @@ JSON 형식:
 
 JSON 형식:
 { "rating": 3-5 사이 숫자, "text": "구체적이고 자연스러운 후기 1-2문장" }`;
-    const { text, usage } = await callClaude(prompt, 300);
+    const { text, usage } = await callClaude(prompt, { maxTokens: 300 });
     const rev = extractJson<{ rating: number; text: string }>(text);
     const date = new Date().toISOString().slice(0, 10);
     f.reviews_received.push({ from: "(AI)", date, rating: rev.rating, text: rev.text });
