@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+  background: #F2F2F7;
+  color: #1C1C1E;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+}
+
+body {
+  min-height: 100vh;
+  background: #F2F2F7;
+}
+
+h1, h2, h3 { letter-spacing: -0.02em; }
+
+/* 따뜻한 그라디언트 (애플 Fitness/Health 스타일) */
+.badge-warm  { background: linear-gradient(135deg, #FFB088 0%, #FF7A73 100%); }
+.badge-warm2 { background: linear-gradient(135deg, #FFC3A0 0%, #FF8A7A 100%); }
+/* 본문 텍스트용 따뜻한 톤 */
+.text-warm-shadow { box-shadow: 0 6px 18px -6px rgba(255, 122, 115, 0.5); }
+
+/* ------- Keyframes ------- */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes ripple {
+  to { transform: scale(40); opacity: 0; }
+}
+@keyframes drawCircle {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes drawCheck {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.animate-fadeSlideUp { animation: fadeSlideUp .5s ease-out both; }
+.animate-slideUp    { animation: slideUp .5s cubic-bezier(.22,.9,.26,1) both; }
+.animate-ripple     { animation: ripple .6s ease-out forwards; }
+.animate-drawCircle { animation: drawCircle .7s ease-out .1s forwards; }
+.animate-drawCheck  { animation: drawCheck .4s ease-out .8s forwards; }
+.animate-pulse-soft { animation: pulse-soft 1.6s ease-in-out infinite; }
+.animate-spin       { animation: spin 1s linear infinite; }
+
+/* 페이지 컨테이너 전환 */
+.page-enter {
+  animation: fadeSlideUp .45s ease-out both;
+}
+
+/* 숨김 스크롤바 */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
