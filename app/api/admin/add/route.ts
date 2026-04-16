@@ -169,17 +169,17 @@ ${JSON.stringify(summary, null, 2)}
 - 85+: 거의 완벽 / 70-84: 좋음 / 50-69: 부분 / 50미만: 반환 금지
 
 [반환]
-- match_score 50 이상만. 0~5명. 억지로 채우지 말 것.
-- 각 추천:
-  - headline: 30자 요약
-  - for_family: 가정에게 2-3문장 따뜻한 추천사
-  - for_helper: 도우미 입장에서 좋은 점 1-2문장
-  - match_reason: for_family와 같게 (하위호환)
+- match_score 50 이상만. 0~5명.
+- 글자수 한도 엄수:
+  - headline: 30자 이내
+  - for_family: 2문장 총 80자 내외
+  - for_helper: 1문장 50자 이내
+  - match_reason = for_family 복사
   - match_score: 숫자
 
-[{"id":"...", "headline":"...", "for_family":"...", "for_helper":"...", "match_reason":"...", "match_score": 82}]`;
+[{"id":"...","headline":"...","for_family":"...","for_helper":"...","match_reason":"...","match_score":82}]`;
 
-  const m = await callClaude(matchPrompt, { maxTokens: 3500 });
+  const m = await callClaude(matchPrompt, { maxTokens: 1500 });
   totalIn += m.usage.input;
   totalOut += m.usage.output;
   totalKRW += m.cost_krw;

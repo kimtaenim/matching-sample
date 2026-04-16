@@ -241,28 +241,19 @@ ${JSON.stringify(summary, null, 2)}
 - 50 이상이 아무도 없으면 빈 배열 [] 반환. (프론트에서 "다른 조건으로 다시 상담" 안내)
 - match_score 내림차순.
 
-각 추천마다:
-- headline: 30자 내외 한 줄 요약 (예: "여성·10년 경력·조용하고 차분한 성격")
-- for_family: 가정에게 건네는 따뜻한 2-3문장 추천사. 왜 이분이 이 사연과 잘 맞는지 구체적으로.
-- for_helper: 도우미 입장에서 "이 가정이 어떤 점이 좋을지" 1-2문장. (도우미에게 제안할 때 쓸 말)
-- match_reason: for_family와 거의 동일 (하위 호환용)
+[비용 절약] 반드시 아래 글자수 한도 지키세요. 장황하면 안 됩니다.
+- headline: 30자 이내 한 줄
+- for_family: 2문장, 각 40자 이내 (총 80자 내외)
+- for_helper: 1문장, 50자 이내
+- match_reason: for_family와 동일하게 복사
 - match_score: 숫자
 
-JSON 배열로만 응답:
-[
-  {
-    "id": "h123",
-    "headline": "...",
-    "for_family": "...",
-    "for_helper": "...",
-    "match_reason": "...",
-    "match_score": 82
-  }
-]`;
+JSON 배열만:
+[{"id":"h123","headline":"...","for_family":"...","for_helper":"...","match_reason":"...","match_score":82}]`;
 
   let scored: ScoreItem[] = [];
   try {
-    const scoreResult = await callClaude(prompt, { maxTokens: 3500 });
+    const scoreResult = await callClaude(prompt, { maxTokens: 1500 });
     totalIn += scoreResult.usage.input;
     totalOut += scoreResult.usage.output;
     totalKRW += scoreResult.cost_krw;
