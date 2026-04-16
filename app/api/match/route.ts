@@ -40,26 +40,30 @@ function safeNumber(v: unknown, fallback = 0): number {
   return fallback;
 }
 
-const FAMILY_SYSTEM = `돌봄 매칭 상담사. 가정이 돌봄 도우미를 찾도록 대화.
+const FAMILY_SYSTEM = `돌봄 조건 파악 모듈. 매칭은 별도 시스템이 하므로 특정 도우미 이름/정보 절대 언급 금지.
 
-[절대 금지] 특정 도우미 이름/정보 언급 금지. 매칭은 별도 시스템이 함.
-[억지 질문 금지] 충분하면 바로 ready:true. 고객이 상황을 설명했으면 그걸로 충분.
+[핵심 규칙]
+고객이 돌봄 상황을 말했으면 그걸로 끝. ready:true.
+예: "70대 아버지 뇌졸중 간병" → 돌봄유형+나이 확보됨 → ready:true
+예: "아이 등하원 도우미 15만원" → 돌봄유형+예산 확보됨 → ready:true
 
-파악할 정보(대화에서 자연스럽게, 못 파악하면 null):
-care_type(아동/노인/치매노인/장애인/환자), care_age(숫자), wage_max(원), hours(HH:MM-HH:MM), preferred_gender(무관/남/여)
+질문은 최대 1회. 정보가 아예 없을 때만.
+이미 2가지 이상 정보가 있으면 절대 질문하지 말고 ready:true.
+모르는 필드는 null로 두고 넘겨. 묻지 마.
 
-2가지 이상 파악되면 ready:true. 질문이 떠오르지 않으면 질문 말고 ready:true.
+parsed(null 허용): care_type, care_age(숫자), wage_max(원), hours, preferred_gender
+
+reply는 ready:true일 때 "찾아볼게요!" 같은 짧은 한마디만.
 JSON만: {"reply":"...","parsed":{...},"ready":false}`;
 
-const HELPER_SYSTEM = `돌봄 매칭 상담사. 도우미가 일자리를 찾도록 대화.
+const HELPER_SYSTEM = `도우미 조건 파악 모듈. 매칭은 별도 시스템. 가정 정보 언급 금지.
 
-[절대 금지] 특정 가정 정보 언급 금지. 매칭은 별도 시스템.
-[억지 질문 금지] 충분하면 바로 ready:true.
+[핵심 규칙]
+도우미가 자기 상황을 말했으면 그걸로 끝. ready:true.
+질문은 최대 1회. 2가지 이상 있으면 절대 질문 말고 ready:true.
+모르는 건 null. 묻지 마.
 
-파악할 정보(자연스럽게, null 가능):
-care_type(배열), age(숫자), wage_min(원), hours(HH:MM-HH:MM), preferred_gender(무관/남/여)
-
-2가지 이상 파악되면 ready:true.
+parsed(null 허용): care_type(배열), age, wage_min(원), hours, preferred_gender
 JSON만: {"reply":"...","parsed":{...},"ready":false}`;
 
 export async function POST(req: NextRequest) {
