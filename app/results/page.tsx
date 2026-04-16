@@ -166,7 +166,8 @@ function ResultsInner() {
           <button
             type="submit"
             disabled={loading || !input.trim()}
-            className="px-5 py-3 rounded-xl bg-apple-blue text-white text-[15px] font-semibold disabled:opacity-40 active:scale-[0.97] transition-all"
+            className="px-5 py-3 rounded-xl text-white text-[15px] font-semibold disabled:opacity-40 active:scale-[0.97] transition-all"
+            style={{ background: "linear-gradient(135deg, #D4A574, #B8915E)" }}
           >
             전송
           </button>
@@ -183,9 +184,10 @@ function ChatBubble({ role, text, loading }: { role: "user" | "ai"; text: string
       <div
         className={`max-w-[80%] px-4 py-3 rounded-2xl text-[15px] leading-relaxed ${
           isUser
-            ? "bg-apple-blue text-white rounded-br-md"
+            ? "text-white rounded-br-md"
             : "bg-white text-apple-label2 rounded-bl-md shadow-card"
         } ${loading ? "animate-pulse-soft" : ""}`}
+        style={isUser ? { background: "linear-gradient(135deg, #D4A574 0%, #C49B6A 50%, #B8915E 100%)" } : undefined}
       >
         {text}
       </div>
