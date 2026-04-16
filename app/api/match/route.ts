@@ -167,12 +167,13 @@ ${candidateContext}
 1. 3명 추천. 서로 다른 ID. 조건에 맞는 사람만.
 2. 고객이 특정 인물 언급하면 그 사람 반드시 포함.
 3. "비슷한 사람" = 이름이 아닌 경력/성격 기준.
-4. 나이 조건 엄격. "젊은"=35세 이하. 61세를 젊다고 하면 안 됨.
+4. 나이 조건 엄격. "젊은"=35세 이하.
 5. 조건 안 맞으면 솔직히 없다고.
 6. reply는 짧은 한마디. 이모지 금지.
-7. headline 20자 이내.
+7. headline: 이 사람의 핵심 강점 20자 (예: "아동돌봄 5년, 밝고 활발")
+8. for_family: 고객의 구체적 상황에 왜 이 사람이 맞는지 설명. bio를 읽고 연결해서 쓸 것. (예: "초등학생 남매와 놀아주기 경험이 풍부하고, 토요일 오전 시간대에 활동 가능합니다.") 단순 키워드 나열 금지.
 
-JSON만: {"reply":"한마디","recommendations":[{"id":"h001","headline":"20자","for_family":"1문장"}]}`;
+JSON만: {"reply":"한마디","recommendations":[{"id":"h001","headline":"핵심강점20자","for_family":"고객 상황과 연결된 구체적 추천 이유 2문장"}]}`;
 
     const matchResp = await callClaude(matchPrompt, { maxTokens: 400, model: "claude-haiku-4-5-20251001" });
     totalIn += matchResp.usage.input;
