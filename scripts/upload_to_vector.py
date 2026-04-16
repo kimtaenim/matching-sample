@@ -6,6 +6,8 @@ Upstash Vector 인덱스는 BGE-M3 임베딩 모델로 생성되어 있어야 �
 import json, os, sys, time
 from pathlib import Path
 
+sys.stdout.reconfigure(encoding="utf-8")
+
 try:
     from upstash_vector import Index
 except ImportError:
@@ -79,7 +81,7 @@ def make_family_text(f: dict) -> str:
 def upload_file(filename: str, text_fn):
     filepath = DATA_DIR / filename
     if not filepath.exists():
-        print(f"  {filename} 없음, 건너뜀")
+        print(f"  {filename} 파일 없음, 건너뜀")
         return 0
 
     data = json.loads(filepath.read_text(encoding="utf-8"))
@@ -112,7 +114,7 @@ def upload_file(filename: str, text_fn):
 
 def main():
     print("=" * 50)
-    print("돌봄 매칭 — Upstash Vector 업로드")
+    print("돌봄 매칭 - Upstash Vector 업로드")
     print("=" * 50)
 
     print("\n[helpers.json]")
