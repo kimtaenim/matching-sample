@@ -33,6 +33,8 @@ export async function POST(req: NextRequest) {
   try {
     const userMessages = messages.filter((m) => m.role === "user").map((m) => m.content);
     const allUserText = userMessages.join(" ");
+    // 벡터 쿼리는 첫 메시지(핵심 요구)만 사용 — 대화 쌓여도 검색 안정적
+    const searchQuery = userMessages[0] || allUserText;
 
     // ── 벡터 검색: location filter + 감성 유사도 ──
     const idPrefix = role === "family" ? "h" : "f";
@@ -40,7 +42,7 @@ export async function POST(req: NextRequest) {
 
     let vectorResults: { id: string; score: number; metadata: VectorMetadata }[] = [];
     try {
-      vectorResults = await queryVector(allUserText, 30, locationFilter);
+      vectorResults = await queryVector(searchQuery, 30, locationFilter);
       vectorResults = vectorResults.filter((r) => String(r.id).startsWith(idPrefix));
     } catch {
       try {
