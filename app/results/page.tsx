@@ -115,7 +115,7 @@ function ResultsInner() {
 
         {/* 매칭 결과 */}
         {finalResults && finalResults.length > 0 && (
-          <div className="space-y-4 mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
             {finalResults.map((r, i) => (
               <HelperCard
                 key={r.id || i}
