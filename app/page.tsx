@@ -10,7 +10,7 @@ export default function Home() {
       <div className="mb-12">
         <h1
           className="text-[44px] md:text-[60px] font-semibold animate-fadeSlideUp"
-          style={{ letterSpacing: "-0.035em", color: "#636366" }}
+          style={{ letterSpacing: "-0.035em", color: "#8E8E93" }}
         >
           AI 돌봄 매칭
         </h1>
