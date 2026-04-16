@@ -25,6 +25,7 @@ export interface ClaudeResult {
 export interface CallOptions {
   maxTokens?: number;
   model?: string;
+  messages?: { role: "user" | "assistant"; content: string }[];
 }
 
 export async function callClaude(
@@ -34,10 +35,16 @@ export async function callClaude(
   const model = options.model || DEFAULT_MODEL;
   let resp;
   try {
+    const msgs = options.messages
+      ? options.messages
+      : [{ role: "user" as const, content: prompt }];
+    const systemPrompt = options.messages ? prompt : undefined;
+
     resp = await client().messages.create({
       model,
       max_tokens: options.maxTokens || 1500,
-      messages: [{ role: "user", content: prompt }],
+      ...(systemPrompt ? { system: systemPrompt } : {}),
+      messages: msgs,
     });
   } catch (e) {
     throw new Error(`Claude API 호출 실패: ${(e as Error).message}`);

@@ -1,31 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { callClaude, extractJson } from "@/lib/claude";
-import {
-  getHelpers,
-  getFamilies,
-  saveHelpers,
-  saveFamilies,
-  nextId,
-} from "@/lib/data";
-import { withinRange } from "@/lib/distance";
-import {
-  chatFamily,
-  chatHelper,
-  finalizeFamily,
-  finalizeHelper,
-} from "@/lib/chat";
-import type { Helper, Family, Location } from "@/lib/types";
+import { queryVector } from "@/lib/vector";
+import type { Location } from "@/lib/types";
 
 export const runtime = "nodejs";
 
-const MAX_TURNS = 8;
+interface Message {
+  role: "user" | "assistant";
+  content: string;
+}
 
 interface Body {
-  bio?: unknown;
-  location?: unknown;
-  role?: unknown;
-  name?: unknown;
-  turn?: unknown;
+  messages?: Message[];
+  location?: string;
+  role?: string;
+  name?: string;
 }
 
 interface ScoreItem {
@@ -42,12 +31,51 @@ function safeString(v: unknown, fallback = ""): string {
 }
 function safeNumber(v: unknown, fallback = 0): number {
   if (typeof v === "number" && !Number.isNaN(v)) return v;
-  if (typeof v === "string") {
-    const n = parseInt(v, 10);
-    if (!Number.isNaN(n)) return n;
-  }
+  if (typeof v === "string") { const n = parseInt(v, 10); if (!Number.isNaN(n)) return n; }
   return fallback;
 }
+
+const FAMILY_SYSTEM = `당신은 돌봄 매칭 서비스의 따뜻한 상담사입니다. 가정이 돌봄 도우미를 찾도록 돕습니다.
+
+[수집할 정보 - 5가지]
+1. care_type: 돌봄유형 (아동/노인/치매노인/장애인/환자)
+2. care_age: 돌봄 받으실 분 나이 (숫자)
+3. wage_max: 하루 최대 급여 (숫자, 원)
+4. hours: 시간대 (HH:MM-HH:MM)
+5. preferred_gender: 선호 성별 (무관/남/여)
+
+[행동 규칙]
+- 한 번에 하나만 자연스럽게. 설문이 아닌 대화.
+- 같은 질문 2번 후 답 없으면 기본값 처리.
+- 충분하면 READY_TO_RECOMMEND 라고 말하세요.
+
+JSON 응답:
+{
+  "reply": "자연어 응답",
+  "parsed": { "care_type": null, "care_age": null, "wage_max": null, "hours": null, "preferred_gender": null },
+  "ready": false
+}`;
+
+const HELPER_SYSTEM = `당신은 돌봄 매칭 서비스의 따뜻한 상담사입니다. 돌봄 도우미가 일자리를 찾도록 돕습니다.
+
+[수집할 정보 - 5가지]
+1. care_type: 가능한 돌봄유형 (배열: 아동/노인/치매노인/장애인/환자)
+2. age: 도우미 본인 나이
+3. wage_min: 희망 최저 일당 (원)
+4. hours: 가능 시간대 (HH:MM-HH:MM)
+5. preferred_gender: 선호 성별 (무관/남/여)
+
+[행동 규칙]
+- 한 번에 하나만 자연스럽게.
+- 같은 질문 2번 후 답 없으면 기본값 처리.
+- 충분하면 READY_TO_RECOMMEND.
+
+JSON 응답:
+{
+  "reply": "자연어 응답",
+  "parsed": { "care_type": null, "age": null, "wage_min": null, "hours": null, "preferred_gender": null },
+  "ready": false
+}`;
 
 export async function POST(req: NextRequest) {
   let body: Body;
@@ -57,320 +85,170 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const bio = safeString(body.bio).trim();
+  const messages: Message[] = Array.isArray(body.messages) ? body.messages : [];
   const location = safeString(body.location) as Location;
-  const role = body.role === "helper" ? "helper" : body.role === "family" ? "family" : null;
+  const role = body.role === "helper" ? "helper" : "family";
   const name = safeString(body.name) || undefined;
-  const turn = safeNumber(body.turn, 0);
 
-  if (!bio || !location || !role) {
-    return NextResponse.json(
-      { error: "bio, location, role(family|helper) 모두 필요" },
-      { status: 400 }
-    );
+  if (messages.length === 0 || !location) {
+    return NextResponse.json({ error: "messages, location 필요" }, { status: 400 });
   }
 
   let totalIn = 0;
   let totalOut = 0;
   let totalKRW = 0;
 
-  // 1) 대화형 파싱 + 다음 질문 생성 (1 Claude call)
-  let finalFamily: Family["parsed"] | null = null;
-  let finalHelper: Helper["parsed"] | null = null;
-
-  // 전체 플로우를 try/catch로 감싸 500 대신 graceful fallback
   try {
-    if (role === "family") {
-      const r = await chatFamily(bio, turn, MAX_TURNS);
-      totalIn += r.usage.input;
-      totalOut += r.usage.output;
-      totalKRW += r.cost_krw;
-      if (!r.done && r.next_question) {
-        return NextResponse.json({
-          need_info: true,
-          next_key: r.next_key,
-          next_question: r.next_question,
-          next_type: r.next_type,
-          next_options: r.next_options,
-          parsed_so_far: r.parsed,
-          turn,
-          turns_left: MAX_TURNS - turn,
-          input_tokens: totalIn,
-          output_tokens: totalOut,
-          cost_krw: totalKRW,
-          _usage: { input: totalIn, output: totalOut },
-        });
-      }
-      finalFamily = finalizeFamily(r.parsed);
-    } else {
-      const r = await chatHelper(bio, turn, MAX_TURNS);
-      totalIn += r.usage.input;
-      totalOut += r.usage.output;
-      totalKRW += r.cost_krw;
-      if (!r.done && r.next_question) {
-        return NextResponse.json({
-          need_info: true,
-          next_key: r.next_key,
-          next_question: r.next_question,
-          next_type: r.next_type,
-          next_options: r.next_options,
-          parsed_so_far: r.parsed,
-          turn,
-          turns_left: MAX_TURNS - turn,
-          input_tokens: totalIn,
-          output_tokens: totalOut,
-          cost_krw: totalKRW,
-          _usage: { input: totalIn, output: totalOut },
-        });
-      }
-      finalHelper = finalizeHelper(r.parsed);
-    }
-  } catch (e) {
-    // 파싱 실패해도 500 대신 질문 재시도 유도 or 기본값으로 매칭 진행
-    console.error("[match] parse error:", (e as Error).message);
-    if (role === "family") {
-      finalFamily = finalizeFamily({
-        care_type: null,
-        care_age: null,
-        wage_max: null,
-        hours: null,
-        preferred_gender: null,
-      });
-    } else {
-      finalHelper = finalizeHelper({
-        care_type: null,
-        age: null,
-        wage_min: null,
-        hours: null,
-        preferred_gender: null,
-      });
-    }
-  }
+    // ── 1단계: 정보 수집 (Haiku) ──
+    const systemPrompt = role === "family" ? FAMILY_SYSTEM : HELPER_SYSTEM;
+    const claudeMessages = messages.map((m) => ({
+      role: m.role as "user" | "assistant",
+      content: m.content,
+    }));
 
-  // 2) 요청자 영속화
-  let requester_id: string;
-  try {
-    if (role === "family" && finalFamily) {
-      const families = await getFamilies();
-      const f: Family = {
-        id: nextId("f", families),
-        location,
-        bio,
-        parsed: finalFamily,
-        reviews_received: [],
-        reviews_written: [],
-      };
-      families.push(f);
-      await saveFamilies(families);
-      requester_id = f.id;
-    } else if (finalHelper) {
-      const helpers = await getHelpers();
-      const h: Helper = {
-        id: nextId("h", helpers),
-        name: name || "익명",
-        location,
-        bio,
-        parsed: finalHelper,
-        reviews_received: [],
-        reviews_written: [],
-      };
-      helpers.push(h);
-      await saveHelpers(helpers);
-      requester_id = h.id;
-    } else {
-      return NextResponse.json({ error: "parsed data 누락" }, { status: 500 });
-    }
-  } catch (e) {
-    console.error("[match] persist error:", (e as Error).message);
-    // 저장 실패해도 매칭은 계속 진행, requester_id는 null로
-    requester_id = "";
-  }
-
-  // 3) 후보 필터
-  const targetIsHelper = role === "family";
-  const candidates = targetIsHelper
-    ? (await getHelpers()).filter((h) => withinRange(location, h.location))
-    : (await getFamilies()).filter((f) => withinRange(location, f.location));
-
-  if (candidates.length === 0) {
-    return NextResponse.json({
-      need_info: false,
-      results: [],
-      requester_id,
-      input_tokens: totalIn,
-      output_tokens: totalOut,
-      cost_krw: totalKRW,
-      _usage: { input: totalIn, output: totalOut },
+    const resp = await callClaude(systemPrompt, {
+      maxTokens: 500,
+      model: "claude-haiku-4-5-20251001",
+      messages: claudeMessages,
     });
-  }
+    totalIn += resp.usage.input;
+    totalOut += resp.usage.output;
+    totalKRW += resp.cost_krw;
 
-  const ranked = [...candidates].sort((a, b) => avgRating(b) - avgRating(a));
-  const limited = ranked.slice(0, 30);
+    let parsed: Record<string, unknown> = {};
+    let reply = "";
+    let ready = false;
 
-  // 감성 매칭을 위해 full bio 포함
-  const summary = limited.map((c) =>
-    targetIsHelper ? summarizeHelperFull(c as Helper) : summarizeFamilyFull(c as Family)
-  );
+    try {
+      const json = extractJson<Record<string, unknown>>(resp.text);
+      reply = safeString(json.reply);
+      parsed = (json.parsed as Record<string, unknown>) || {};
+      ready = json.ready === true || resp.text.includes("READY_TO_RECOMMEND");
+    } catch {
+      reply = resp.text.replace(/```json[\s\S]*?```/g, "").trim() || "다시 말씀해 주시겠어요?";
+      ready = resp.text.includes("READY_TO_RECOMMEND");
+    }
 
-  const prompt = `당신은 돌봄 매칭 전문 AI 매니저입니다. 단순 조건 매칭이 아니라, 자기소개와 후기에서 느껴지는 성격·분위기·경험까지 종합해 "감성 매칭"을 해주세요.
+    if (!ready) {
+      return NextResponse.json({
+        need_info: true,
+        reply,
+        parsed_so_far: parsed,
+        _usage: { input: totalIn, output: totalOut },
+        cost_krw: totalKRW,
+      });
+    }
 
-[${role === "family" ? "찾는 가정" : "찾는 도우미"} 정보]
-- 지역: ${location}
-- 사연/요구 (자연어):
+    // ── 2단계: 벡터 검색 ──
+    const queryParts = [`지역: ${location}`];
+    if (role === "family") {
+      if (parsed.care_type) queryParts.push(`돌봄유형: ${parsed.care_type}`);
+      if (parsed.care_age) queryParts.push(`돌봄대상 나이: ${parsed.care_age}`);
+      if (parsed.preferred_gender) queryParts.push(`성별: ${parsed.preferred_gender}`);
+    } else {
+      if (parsed.care_type) queryParts.push(`돌봄유형: ${Array.isArray(parsed.care_type) ? (parsed.care_type as string[]).join(",") : parsed.care_type}`);
+      if (parsed.age) queryParts.push(`나이: ${parsed.age}`);
+    }
+    const userMsgs = messages.filter((m) => m.role === "user").map((m) => m.content);
+    queryParts.push(userMsgs.join(" "));
+
+    const vectorResults = await queryVector(queryParts.join(" | "), 10);
+
+    if (vectorResults.length === 0) {
+      return NextResponse.json({
+        need_info: false,
+        reply: "조건에 맞는 분을 찾지 못했어요. 조건을 조정해 볼까요?",
+        results: [],
+        _usage: { input: totalIn, output: totalOut },
+        cost_krw: totalKRW,
+      });
+    }
+
+    // ── 3단계: Claude 감성 매칭 (Sonnet) ──
+    const candidates = vectorResults.map((r) => {
+      const m = r.metadata as Record<string, unknown>;
+      return {
+        id: r.id,
+        name: m.name,
+        location: m.location,
+        bio: m.bio,
+        parsed: m.parsed,
+        reviews: (m.reviews_received as unknown[] || []).slice(0, 2),
+        score: r.score,
+      };
+    });
+
+    const conversationSummary = userMsgs.slice(-3).join("\n");
+    const targetType = role === "family" ? "도우미" : "가정";
+
+    const matchPrompt = `당신은 돌봄 매칭 전문 AI입니다. 자기소개와 후기의 감성까지 종합해 매칭합니다.
+
+[${role === "family" ? "찾는 가정" : "찾는 도우미"} 대화 맥락]
 """
-${bio}
+${conversationSummary}
 """
+지역: ${location}
 
-[후보 ${limited.length}명]
-${JSON.stringify(summary, null, 2)}
+[후보 ${targetType} ${candidates.length}명]
+${JSON.stringify(candidates, null, 2)}
 
-[평가 원칙]
-1. 구조 조건(지역 거리, 돌봄 유형, 시간대, 급여, 선호 성별) 적합도 — 객관적 기준
-2. 자기소개·후기의 결 — 성격, 말투, 경험, 돌봄 철학
-3. 요청자의 상황에서 실제로 편안할 사람인지 — 맥락 민감도
-
-[match_score 기준]
-- 85-100: 거의 모든 조건 + 정서적 결까지 부합
-- 70-84: 중요 조건 부합, 일부 자잘한 차이
-- 50-69: 절반 정도 부합, 한계 있음
-- 50 미만: 터무니없는 매칭 — 반환하지 마세요
-
-[반환 규칙]
-- match_score 50 이상인 후보만 반환. 0~5명.
-- 억지로 수를 채우지 말 것. 진짜 맞는 사람이 1명뿐이면 1명만.
-- 50 이상이 아무도 없으면 빈 배열 [] 반환. (프론트에서 "다른 조건으로 다시 상담" 안내)
-- match_score 내림차순.
-
-[비용 절약] 반드시 아래 글자수 한도 지키세요. 장황하면 안 됩니다.
-- headline: 30자 이내 한 줄
-- for_family: 2문장, 각 40자 이내 (총 80자 내외)
-- for_helper: 1문장, 50자 이내
-- match_reason: for_family와 동일하게 복사
-- match_score: 숫자
+[평가] 구조 조건 + 성격/경험/돌봄 철학의 결
+[반환] match_score 50↑, 최대 5개, 내림차순
+- headline: 30자 이내
+- for_family: 2문장 80자 (가정이 볼 추천 이유)
+- for_helper: 1문장 50자 (도우미가 볼 추천 이유)
+- match_reason: for_family 복사
 
 JSON 배열만:
-[{"id":"h123","headline":"...","for_family":"...","for_helper":"...","match_reason":"...","match_score":82}]`;
+[{"id":"h001","headline":"...","for_family":"...","for_helper":"...","match_reason":"...","match_score":82}]`;
 
-  let scored: ScoreItem[] = [];
-  try {
-    const scoreResult = await callClaude(prompt, { maxTokens: 1500 });
-    totalIn += scoreResult.usage.input;
-    totalOut += scoreResult.usage.output;
-    totalKRW += scoreResult.cost_krw;
+    let scored: ScoreItem[] = [];
     try {
+      const scoreResult = await callClaude(matchPrompt, { maxTokens: 1000 });
+      totalIn += scoreResult.usage.input;
+      totalOut += scoreResult.usage.output;
+      totalKRW += scoreResult.cost_krw;
       scored = extractJson<ScoreItem[]>(scoreResult.text);
-      console.log("[match] Claude returned", scored.length, "candidates, scores:", scored.map((s) => s.match_score));
-    } catch (e) {
-      console.error("[match] parse fail:", (e as Error).message, "raw:", scoreResult.text.slice(0, 500));
+    } catch {
       scored = [];
     }
-  } catch (e) {
-    console.error("[match] scoring error:", (e as Error).message);
-    scored = [];
-  }
 
-  const byId = new Map<string, Helper | Family>(limited.map((c) => [c.id, c]));
-  const results = scored
-    .filter((s) => s && typeof s.id === "string" && byId.has(s.id))
-    .filter((s) => safeNumber(s.match_score, 0) >= 50) // 터무니없는 매칭 제외
-    .sort((a, b) => (b.match_score || 0) - (a.match_score || 0))
-    .slice(0, 5)
-    .map((s) => {
-      const c = byId.get(s.id)!;
-      return {
-        ...c,
-        headline: safeString(s.headline, ""),
-        for_family: safeString(s.for_family, ""),
-        for_helper: safeString(s.for_helper, ""),
-        match_reason: safeString(s.match_reason || s.for_family, "조건 부합"),
+    const metaMap = new Map(vectorResults.map((r) => [r.id, r.metadata]));
+    const results = scored
+      .filter((s) => s && typeof s.id === "string" && metaMap.has(s.id))
+      .filter((s) => safeNumber(s.match_score, 0) >= 50)
+      .sort((a, b) => (b.match_score || 0) - (a.match_score || 0))
+      .slice(0, 5)
+      .map((s) => ({
+        ...(metaMap.get(s.id) as Record<string, unknown>),
+        headline: safeString(s.headline),
+        for_family: safeString(s.for_family),
+        for_helper: safeString(s.for_helper),
+        match_reason: safeString(s.match_reason || s.for_family),
         match_score: safeNumber(s.match_score, 0),
-      };
+      }));
+
+    const resultSummary = results.length > 0
+      ? `${results.length}명의 ${targetType}를 찾았습니다. 마음에 드시는 분이 있으면 말씀해 주세요.`
+      : "조건에 맞는 분을 찾지 못했어요. 다른 조건으로 다시 찾아볼까요?";
+
+    return NextResponse.json({
+      need_info: false,
+      reply: resultSummary,
+      results,
+      requester_id: "",
+      _usage: { input: totalIn, output: totalOut },
+      cost_krw: totalKRW,
     });
-
-  return NextResponse.json({
-    need_info: false,
-    results,
-    requester_id,
-    input_tokens: totalIn,
-    output_tokens: totalOut,
-    cost_krw: totalKRW,
-    _usage: { input: totalIn, output: totalOut },
-  });
-}
-
-function avgRating(x: Helper | Family): number {
-  const rs = x.reviews_received;
-  if (!rs.length) return 0;
-  return rs.reduce((a, r) => a + r.rating, 0) / rs.length;
-}
-
-function summarizeHelper(h: Helper) {
-  return {
-    id: h.id,
-    name: h.name,
-    location: h.location,
-    age: h.parsed.age,
-    care_type: h.parsed.care_type,
-    wage_min: h.parsed.wage_min,
-    hours: h.parsed.hours,
-    preferred_gender: h.parsed.preferred_gender,
-    bio: (h.bio || "").slice(0, 180),
-    avg_rating: Number(avgRating(h).toFixed(1)),
-    review_count: h.reviews_received.length,
-  };
-}
-
-function summarizeFamily(f: Family) {
-  return {
-    id: f.id,
-    location: f.location,
-    care_type: f.parsed.care_type,
-    care_age: f.parsed.care_age,
-    wage_max: f.parsed.wage_max,
-    hours: f.parsed.hours,
-    preferred_gender: f.parsed.preferred_gender,
-    bio: (f.bio || "").slice(0, 180),
-  };
-}
-
-/** 감성 매칭용 — 전체 bio + 최근 후기 샘플 포함 */
-function summarizeHelperFull(h: Helper) {
-  const recent = h.reviews_received.slice(0, 2).map((r) => ({
-    rating: r.rating,
-    text: r.text,
-  }));
-  return {
-    id: h.id,
-    name: h.name,
-    location: h.location,
-    age: h.parsed.age,
-    care_type: h.parsed.care_type,
-    wage_min: h.parsed.wage_min,
-    hours: h.parsed.hours,
-    preferred_gender: h.parsed.preferred_gender,
-    bio: h.bio || "",
-    avg_rating: Number(avgRating(h).toFixed(1)),
-    review_count: h.reviews_received.length,
-    recent_reviews: recent,
-  };
-}
-
-function summarizeFamilyFull(f: Family) {
-  const recent = f.reviews_received.slice(0, 2).map((r) => ({
-    rating: r.rating,
-    text: r.text,
-  }));
-  return {
-    id: f.id,
-    location: f.location,
-    care_type: f.parsed.care_type,
-    care_age: f.parsed.care_age,
-    wage_max: f.parsed.wage_max,
-    hours: f.parsed.hours,
-    preferred_gender: f.parsed.preferred_gender,
-    bio: f.bio || "",
-    avg_rating: Number(avgRating(f).toFixed(1)),
-    review_count: f.reviews_received.length,
-    recent_reviews: recent,
-  };
+  } catch (e) {
+    console.error("[match] error:", (e as Error).message);
+    return NextResponse.json({
+      need_info: false,
+      reply: "잠시 문제가 생겼어요. 다시 말씀해 주시겠어요?",
+      results: [],
+      error: (e as Error).message,
+      _usage: { input: totalIn, output: totalOut },
+      cost_krw: totalKRW,
+    });
+  }
 }
