@@ -2,77 +2,46 @@
 
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import type { Helper } from "@/lib/types";
 import { HelperCard } from "@/components/HelperCard";
-import { Button } from "@/components/Button";
 import { useTokens, tokenedFetch } from "@/components/TokenProvider";
 
-interface ResultItem extends Helper {
-  match_reason: string;
-  match_score: number;
-  headline?: string;
-  for_family?: string;
-  for_helper?: string;
+interface Message {
+  role: "user" | "assistant";
+  content: string;
 }
 
 interface MatchResponse {
   need_info?: boolean;
-  next_key?: string;
+  reply?: string;
   next_question?: string;
-  next_type?: "select" | "number" | "text";
-  next_options?: string[] | null;
-  turn?: number;
-  turns_left?: number;
-  results?: ResultItem[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  results?: any[];
   requester_id?: string | null;
+  _usage?: { input: number; output: number };
 }
 
-interface ChatTurn {
-  role: "user" | "assistant";
+interface Turn {
+  role: "user" | "ai";
   text: string;
-  /** assistant 질문의 경우 어떤 key에 대한 질문인지 */
-  asksKey?: string;
 }
 
 function ResultsInner() {
   const params = useSearchParams();
   const initialBio = params.get("q") || "";
   const location = params.get("location") || "봉천동";
-  const { add } = useTokens();
+  const { add, input: tokIn, output: tokOut, costKRW } = useTokens();
 
-  const [turns, setTurns] = useState<ChatTurn[]>([]);
-  const [bio, setBio] = useState(initialBio);
-  const [turnCount, setTurnCount] = useState(0);
-  const [skippedKeys, setSkippedKeys] = useState<string[]>([]);
-  const [pending, setPending] = useState<MatchResponse | null>(null);
-  const [input, setInput] = useState("");
+  const [turns, setTurns] = useState<Turn[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
-  const [finalResults, setFinalResults] = useState<{
-    results: ResultItem[];
-    requester_id: string | null;
-  } | null>(null);
-  const [err, setErr] = useState<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [finalResults, setFinalResults] = useState<any[] | null>(null);
+  const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
+  const initialized = useRef(false);
 
-  useEffect(() => {
-    if (initialBio) {
-      setTurns([{ role: "user", text: initialBio }]);
-      runMatch(initialBio, 0, []);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [turns, finalResults]);
-
-  async function runMatch(
-    currentBio: string,
-    currentTurn: number,
-    currentSkipped: string[]
-  ) {
+  async function callMatch(msgs: Message[]) {
     setLoading(true);
-    setErr(null);
     try {
       const r = await tokenedFetch<MatchResponse>(
         "/api/match",
@@ -80,201 +49,139 @@ function ResultsInner() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            bio: currentBio,
+            messages: msgs,
             location,
             role: "family",
-            skipped_keys: currentSkipped,
-            turn: currentTurn,
           }),
         },
         add
       );
-      if (r.need_info && r.next_question) {
-        setPending(r);
-        setTurns((t) => [
-          ...t,
-          { role: "assistant", text: r.next_question!, asksKey: r.next_key },
-        ]);
+
+      const reply = r.reply || r.next_question || "";
+
+      if (r.need_info) {
+        setTurns((t) => [...t, { role: "ai", text: reply }]);
+        setMessages((m) => [...m, { role: "assistant", content: reply }]);
       } else {
-        setPending(null);
-        setFinalResults({
-          results: r.results || [],
-          requester_id: r.requester_id ?? null,
-        });
+        setTurns((t) => [...t, { role: "ai", text: reply }]);
+        setMessages((m) => [...m, { role: "assistant", content: reply }]);
+        if (r.results && r.results.length > 0) {
+          setFinalResults(r.results);
+        }
       }
-    } catch (e) {
-      setErr((e as Error).message);
+    } catch {
+      setTurns((t) => [...t, { role: "ai", text: "잠시 문제가 생겼어요. 다시 말씀해 주시겠어요?" }]);
     } finally {
       setLoading(false);
     }
   }
 
-  function handleAnswer(value: string) {
-    if (!pending || loading) return;
-    const trimmed = value.trim();
-    const asksKey = pending.next_key!;
-    const displayText = trimmed || "(건너뛸게요)";
-    const newTurns: ChatTurn[] = [
-      ...turns,
-      { role: "user", text: displayText },
-    ];
-    setTurns(newTurns);
+  useEffect(() => {
+    if (initialized.current || !initialBio) return;
+    initialized.current = true;
+    const firstMsg: Message = { role: "user", content: initialBio };
+    setTurns([{ role: "user", text: initialBio }]);
+    setMessages([firstMsg]);
+    callMatch([firstMsg]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [turns, finalResults, loading]);
+
+  function handleSend(text: string) {
+    if (!text.trim() || loading) return;
+    const answer = text.trim();
     setInput("");
 
-    if (!trimmed) {
-      const newSkipped = [...skippedKeys, asksKey];
-      setSkippedKeys(newSkipped);
-      runMatch(bio, turnCount + 1, newSkipped);
-      setTurnCount(turnCount + 1);
-      return;
-    }
+    if (finalResults) setFinalResults(null);
 
-    const q = pending.next_question!;
-    const newBio = `${bio}\n(Q: ${q}\n A: ${trimmed})`;
-    setBio(newBio);
-    setTurnCount(turnCount + 1);
-    runMatch(newBio, turnCount + 1, skippedKeys);
+    const userMsg: Message = { role: "user", content: answer };
+    const newMessages = [...messages, userMsg];
+    setMessages(newMessages);
+    setTurns((t) => [...t, { role: "user", text: answer }]);
+    callMatch(newMessages);
   }
 
-  // err 있어도 전체 화면 교체하지 말고 하단에 토스트로만 표시
-
   return (
-    <div>
-      <h1 className="text-[30px] font-semibold text-apple-label">
-        {finalResults
-          ? `추천 돌봄 선생님 ${finalResults.results.length}분`
-          : "돌봄 상황 확인 중"}
-      </h1>
-      <p className="mt-2 text-[16px] text-apple-gray">
-        {finalResults
-          ? "말씀해주신 상황에 맞춰 AI가 선정한 결과입니다."
-          : "몇 가지만 더 여쭤보고 적합한 돌봄 선생님을 찾아드릴게요."}
-      </p>
-
+    <div className="fixed inset-0 flex flex-col" style={{ top: "56px" }}>
       {/* 대화 영역 */}
-      <div className="mt-6 space-y-3">
+      <div className="flex-1 overflow-y-auto px-4 py-6 space-y-3">
         {turns.map((t, i) => (
           <ChatBubble key={i} role={t.role} text={t.text} />
         ))}
-        {loading && <ChatBubble role="assistant" text="생각 중..." loading />}
+        {loading && <ChatBubble role="ai" text="생각 중..." loading />}
+
+        {/* 매칭 결과 */}
+        {finalResults && finalResults.length > 0 && (
+          <div className="space-y-4 mt-4">
+            {finalResults.map((r, i) => (
+              <HelperCard
+                key={r.id || i}
+                helper={r}
+                index={i}
+                matchReason={r.match_reason}
+                matchScore={r.match_score}
+                headline={r.headline}
+                forFamily={r.for_family}
+                forHelper={r.for_helper}
+              />
+            ))}
+          </div>
+        )}
+
+        {finalResults && finalResults.length === 0 && (
+          <div className="bg-white rounded-2xl p-6 text-center shadow-card">
+            <p className="text-[16px] text-apple-label font-semibold">
+              조건에 맞는 분을 찾지 못했어요
+            </p>
+            <p className="mt-2 text-apple-gray text-[14px]">
+              조건을 바꿔서 다시 말씀해 주세요.
+            </p>
+          </div>
+        )}
+
         <div ref={scrollRef} />
       </div>
 
-      {/* 답변 입력 */}
-      {pending && !loading && pending.next_question && (
-        <div className="mt-5 bg-white rounded-card p-5 shadow-card">
-          {pending.next_type === "select" && pending.next_options && (
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              {pending.next_options.map((opt) => (
-                <button
-                  key={opt}
-                  onClick={() => handleAnswer(opt)}
-                  className="text-[15px] px-4 py-2.5 rounded-xl bg-apple-silver hover:bg-apple-silver2 active:scale-[0.97] transition-all"
-                >
-                  {opt}
-                </button>
-              ))}
-              <button
-                onClick={() => handleAnswer("")}
-                className="text-[15px] px-4 py-2.5 rounded-xl bg-white border border-apple-silver2 text-apple-gray hover:bg-apple-silver active:scale-[0.97] transition-all"
-              >
-                건너뛰기
-              </button>
-            </div>
-          )}
-          {pending.next_type !== "select" && (
-            <div className="flex gap-2">
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleAnswer(input);
-                }}
-                placeholder="답변을 입력하거나 엔터로 건너뛰기"
-                type={pending.next_type === "number" ? "text" : "text"}
-                className="flex-1 bg-apple-silver rounded-xl px-4 py-3 text-[17px] focus:bg-white focus:outline-none focus:ring-2 focus:ring-apple-blue transition-all"
-              />
-              <Button onClick={() => handleAnswer(input)} variant="secondary">
-                확인
-              </Button>
-            </div>
-          )}
-          {typeof pending.turns_left === "number" && pending.turns_left > 0 && (
-            <p className="mt-3 text-[12px] text-apple-gray">
-              앞으로 최대 {pending.turns_left}번 정도만 더 여쭤볼게요
-            </p>
-          )}
-        </div>
-      )}
-
-      {err && (
-        <div className="mt-4 bg-apple-silver border border-apple-silver2 rounded-xl p-4 text-[14px] text-apple-label2">
-          잠시 문제가 있었어요. 다시 말씀해주시면 이어서 진행할게요.
+      {/* 입력 영역 — 하단 고정 */}
+      <div className="shrink-0 p-3 pb-4" style={{ borderTop: "1px solid rgba(0,0,0,0.06)", background: "#FAFAFA" }}>
+        {(tokIn > 0 || tokOut > 0) && (
+          <p className="text-center text-[10px] mb-1.5" style={{ color: "#8E8E93" }}>
+            입력 {tokIn.toLocaleString()} · 출력 {tokOut.toLocaleString()} tokens · 약 {costKRW.toLocaleString()}원
+          </p>
+        )}
+        <form
+          onSubmit={(e) => { e.preventDefault(); handleSend(input); }}
+          className="flex gap-2"
+        >
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={finalResults ? "다른 조건이나 의견을 말씀해 주세요..." : "자유롭게 말씀해 주세요..."}
+            className="flex-1 bg-apple-silver rounded-xl px-4 py-3 text-[15px] focus:bg-white focus:outline-none focus:ring-2 focus:ring-apple-blue transition-all"
+            disabled={loading}
+          />
           <button
-            onClick={() => runMatch(bio, turnCount, skippedKeys)}
-            className="ml-2 text-apple-blue hover:underline"
+            type="submit"
+            disabled={loading || !input.trim()}
+            className="px-5 py-3 rounded-xl bg-apple-blue text-white text-[15px] font-semibold disabled:opacity-40 active:scale-[0.97] transition-all"
           >
-            다시 시도
+            전송
           </button>
-        </div>
-      )}
-
-      {/* 최종 결과 카드 */}
-      {finalResults && (
-        <>
-          {finalResults.results.length === 0 ? (
-            <div className="mt-8 bg-white rounded-card p-8 text-center shadow-card">
-              <p className="text-[18px] text-apple-label font-semibold">
-                지금 사연과 꼭 맞는 분을 찾지 못했어요
-              </p>
-              <p className="mt-2 text-apple-gray text-[15px] leading-relaxed">
-                조건을 조금 바꿔보시거나, 다른 지역·시간대로 다시 상담해보시면
-                <br />더 좋은 분을 만나실 수 있을 거예요.
-              </p>
-              <a
-                href="/search"
-                className="mt-5 inline-block text-[15px] text-apple-blue hover:underline"
-              >
-                다른 조건으로 다시 상담하기 →
-              </a>
-            </div>
-          ) : (
-            <div className="mt-8 space-y-4">
-              {finalResults.results.map((r, i) => (
-                <HelperCard
-                  key={r.id}
-                  helper={r}
-                  index={i}
-                  matchReason={r.match_reason}
-                  matchScore={r.match_score}
-                  headline={r.headline}
-                  forFamily={r.for_family}
-                  forHelper={r.for_helper}
-                  familyId={finalResults.requester_id || undefined}
-                />
-              ))}
-            </div>
-          )}
-        </>
-      )}
+        </form>
+      </div>
     </div>
   );
 }
 
-function ChatBubble({
-  role,
-  text,
-  loading,
-}: {
-  role: "user" | "assistant";
-  text: string;
-  loading?: boolean;
-}) {
+function ChatBubble({ role, text, loading }: { role: "user" | "ai"; text: string; loading?: boolean }) {
   const isUser = role === "user";
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"} animate-fadeSlideUp`}>
       <div
-        className={`max-w-[80%] px-4 py-3 rounded-2xl text-[16px] leading-relaxed ${
+        className={`max-w-[80%] px-4 py-3 rounded-2xl text-[15px] leading-relaxed ${
           isUser
             ? "bg-apple-blue text-white rounded-br-md"
             : "bg-white text-apple-label2 rounded-bl-md shadow-card"
