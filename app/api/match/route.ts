@@ -51,7 +51,10 @@ export async function POST(req: NextRequest) {
     const allUserText = userMessages.join(" ");
 
     const queryText = `지역:${location} ${allUserText}`;
-    const vectorResults = await queryVector(queryText, 15);
+    let vectorResults = await queryVector(queryText, 30);
+    // role에 따라 필터: 가정→도우미(h), 도우미→가정(f)
+    const idPrefix = role === "family" ? "h" : "f";
+    vectorResults = vectorResults.filter((r) => String(r.id).startsWith(idPrefix));
 
     const targetType = role === "family" ? "도우미" : "가정";
     const candidateContext = vectorResults.length > 0
