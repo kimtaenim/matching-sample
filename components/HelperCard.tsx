@@ -80,31 +80,31 @@ export function HelperCard({
       >
         <button
           onClick={() => setOpen((v) => !v)}
-          className="w-full text-left p-6 focus:outline-none"
+          className="w-full text-left p-4 focus:outline-none"
         >
-          <div className="flex items-start justify-between gap-4">
+          <div className="flex items-start justify-between gap-3">
             <div className="flex-1 min-w-0">
-              <div className="flex items-baseline gap-3 flex-wrap">
-                <h3 className="text-[24px] font-semibold text-apple-label">
+              <div className="flex items-baseline gap-2 flex-wrap">
+                <h3 className="text-[20px] font-semibold text-apple-label">
                   {helper.name}
                 </h3>
-                <span className="text-[16px] text-apple-gray">
+                <span className="text-[15px] text-apple-gray">
                   {helper.location} · {helper.parsed.age}세
                 </span>
               </div>
               {n > 0 && (
-                <div className="mt-2 text-[14px] text-apple-gray whitespace-nowrap">
+                <div className="mt-1 text-[13px] text-apple-gray whitespace-nowrap">
                   후기 {n}건
                 </div>
               )}
               {headline && (
-                <div className="mt-3">
+                <div className="mt-2">
                   <span className="text-[14px] text-apple-label2 font-medium">{headline}</span>
                 </div>
               )}
               {(forFamily || matchReason) && (
-                <p className="mt-3 text-[15px] text-apple-label2 leading-relaxed">
-                  <span className="text-apple-blue">✦</span> {forFamily || matchReason}
+                <p className="mt-1 text-[14px] text-apple-label2 leading-snug">
+                  {forFamily || matchReason}
                 </p>
               )}
             </div>
