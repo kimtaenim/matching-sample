@@ -5,7 +5,7 @@ import { queryVector, type VectorMetadata } from "@/lib/vector";
 export const runtime = "nodejs";
 
 interface Message { role: "user" | "assistant"; content: string; }
-interface Body { messages?: Message[]; bio?: string; location?: string; role?: string; search_query?: string; filter_tags?: string[]; }
+interface Body { messages?: Message[]; bio?: string; location?: string; role?: string; }
 
 function safeString(v: unknown, f = ""): string { return typeof v === "string" ? v : f; }
 
@@ -17,8 +17,6 @@ export async function POST(req: NextRequest) {
 
   const location = safeString(body.location) || "봉천동";
   const role = body.role === "helper" ? "helper" : "family";
-  const prevSearchQuery = safeString(body.search_query);
-  const prevFilterTags: string[] = Array.isArray(body.filter_tags) ? body.filter_tags : [];
 
   let messages: Message[];
   if (Array.isArray(body.messages) && body.messages.length > 0) {
@@ -32,94 +30,29 @@ export async function POST(req: NextRequest) {
   let totalIn = 0, totalOut = 0, totalKRW = 0;
 
   try {
-    const userMessages = messages.filter((m) => m.role === "user").map((m) => m.content);
-    const allUserText = userMessages.join(" ");
+    const userMessages = messages.filter(m => m.role === "user").map(m => m.content);
+    const lastUserMsg = userMessages[userMessages.length - 1] || "";
+    const firstUserMsg = userMessages[0] || lastUserMsg;
     const idPrefix = role === "family" ? "h" : "f";
 
-    // ── 1단계: Self-querying — Sonnet이 검색어 + 필터 태그 생성 ──
-    const sqPrompt = `대화에서 돌봄 매칭 검색 조건을 추출하세요.
-
-대화:
-${messages.map(m => `${m.role}: ${m.content}`).join("\n")}
-
-지역: ${location}
-${prevFilterTags.length > 0 ? `이전 필터 태그: ${prevFilterTags.join(", ")}` : ""}
-
-JSON만:
-{
-  "search_query": "벡터 검색용 자연어",
-  "filter_tags": ["태그1", "태그2"],
-  "reply": "고객에게 보여줄 짧은 응답 (추천은 하지 말 것)"
-}
-
-filter_tags는 아래 목록에서만 선택. 목록에 없는 태그 금지:
-나이: 20대, 30대, 40대, 50대, 젊은, 시니어
-돌봄: 아동, 노인, 치매노인, 환자, 장애인
-성격: 활발, 밝은, 차분, 꼼꼼, 따뜻, 성실
-시간: 오전, 저녁
-지역은 filter_tags에 넣지 마세요 (별도 처리됨).`;
-
-    const sqResp = await callClaude(sqPrompt, { maxTokens: 300, model: "claude-sonnet-4-6" });
-    totalIn += sqResp.usage.input;
-    totalOut += sqResp.usage.output;
-    totalKRW += sqResp.cost_krw;
-
-    let searchQuery = "";
-    let filterTags: string[] = [];
-    let reply = "";
-
-    try {
-      let raw = sqResp.text;
-      const cb = raw.match(/```(?:json)?\s*([\s\S]*?)```/);
-      if (cb) raw = cb[1];
-      const json = extractJson<Record<string, unknown>>(raw);
-      searchQuery = safeString(json.search_query as string);
-      filterTags = Array.isArray(json.filter_tags) ? json.filter_tags as string[] : [];
-      reply = safeString(json.reply as string);
-    } catch {
-      searchQuery = prevSearchQuery || allUserText;
-      filterTags = prevFilterTags;
-      reply = sqResp.text.replace(/```[\s\S]*?```/g, "").replace(/\*\*/g, "").trim();
-    }
-
-    // ── 2단계: 벡터 검색 — tags CONTAINS 필터 + 유사도 ──
-    // location 필수 + 핵심 태그 1-2개만 AND (너무 많으면 0건)
-    // 나이 관련 태그는 OR로 묶기
-    const ageTagList = ["20대", "30대", "40대", "50대", "60대이상", "젊은", "시니어", "중년"];
-    const ageTags = filterTags.filter(t => ageTagList.includes(t));
-    const otherTags = filterTags.filter(t => !ageTagList.includes(t) && t !== location);
-
-    let filter = `location = '${location}'`;
-    // 돌봄유형 태그 1개만 (가장 중요)
-    if (otherTags.length > 0) {
-      filter += ` AND tags CONTAINS '${otherTags[0]}'`;
-    }
-    // 나이 태그는 OR로
-    if (ageTags.length === 1) {
-      filter += ` AND tags CONTAINS '${ageTags[0]}'`;
-    } else if (ageTags.length > 1) {
-      filter += ` AND (${ageTags.map(t => `tags CONTAINS '${t}'`).join(" OR ")})`;
-    }
-
-    console.log("[match] query:", searchQuery, "filter:", filter);
+    // ── 벡터 검색: location filter + 감성 유사도 ──
+    const query = firstUserMsg === lastUserMsg ? firstUserMsg : `${firstUserMsg} ${lastUserMsg}`;
+    const filter = `location = '${location}'`;
 
     let vectorResults: { id: string; score: number; metadata: VectorMetadata }[] = [];
     try {
-      vectorResults = await queryVector(searchQuery || allUserText, 30, filter);
+      vectorResults = await queryVector(query, 30, filter);
       vectorResults = vectorResults.filter(r => String(r.id).startsWith(idPrefix));
     } catch {
-      // filter 실패 시 location만으로 재시도
       try {
-        vectorResults = await queryVector(searchQuery || allUserText, 30, `location = '${location}'`);
+        vectorResults = await queryVector(query, 30);
         vectorResults = vectorResults.filter(r => String(r.id).startsWith(idPrefix));
-      } catch {
-        vectorResults = [];
-      }
+      } catch { vectorResults = []; }
     }
 
     // 이름 조회
     const namePattern = /([가-힣]{2,4})\s*(?:선생님|씨)|([가-힣]{2,4})이?라는/g;
-    for (const m of [...allUserText.matchAll(namePattern)]) {
+    for (const m of [...(userMessages.join(" ")).matchAll(namePattern)]) {
       const name = (m[1] || m[2] || "").trim();
       if (name.length >= 2) {
         try {
@@ -129,73 +62,68 @@ filter_tags는 아래 목록에서만 선택. 목록에 없는 태그 금지:
               vectorResults.unshift(r);
             }
           }
-        } catch { /* 무시 */ }
+        } catch {}
       }
     }
 
-    console.log("[match] results:", vectorResults.length);
-
     const targetType = role === "family" ? "도우미" : "가정";
-    const candidateContext = vectorResults.slice(0, 15).map((r) => {
+    const top15 = vectorResults.slice(0, 15);
+    const candidateContext = top15.map(r => {
       const m = r.metadata as Record<string, unknown>;
       const p = (typeof m.parsed === "object" && m.parsed) ? m.parsed as Record<string, unknown> : {};
       const careTypes = Array.isArray(p.care_type) ? (p.care_type as string[]).join(",") : String(p.care_type || "");
       return `[${m.id}] ${m.name || "?"} | ${p.age || "?"}세 | ${m.location} | ${careTypes} | ${p.hours || "?"} | ${safeString(m.bio as string).slice(0, 60)}`;
     }).join("\n");
 
-    if (vectorResults.length === 0) {
-      return NextResponse.json({
-        need_info: true,
-        reply: reply || "죄송합니다, 지금 조건으로는 딱 맞는 분을 못 찾았어요. 조건을 바꿔서 다시 말씀해 주시면 다시 찾아볼게요.",
-        search_query: searchQuery,
-        filter_tags: filterTags,
-        _usage: { input: totalIn, output: totalOut },
-        cost_krw: totalKRW,
-      });
-    }
+    // ── Sonnet 단일 호출 ──
+    const systemPrompt = `돌봄 매칭 챗봇. 자연스럽게 대화하며 ${targetType}를 추천합니다.
 
-    // ── 3단계: Sonnet이 후보에서 3명 선택 ──
-    const matchPrompt = `돌봄 매칭. 대화를 읽고 ${targetType}를 추천하세요.
-
-[대화]
-${messages.map(m => `${m.role}: ${m.content}`).join("\n")}
-
-[${targetType} 후보]
-${candidateContext}
+[${targetType} 후보 목록]
+${candidateContext || "(후보 없음)"}
 
 [규칙]
-1. 3명 추천. 서로 다른 ID. 조건에 맞는 사람만.
-2. 고객이 특정 인물 언급하면 그 사람 반드시 포함.
-3. "비슷한 사람" = 이름이 아닌 경력/성격 기준.
-4. 나이 조건 엄격. "젊은"=35세 이하.
-5. 조건 안 맞으면 솔직히 없다고.
-6. reply는 자연스러운 대화체로. "이런 분들을 찾아봤어요" 같은 따뜻한 톤. 고객의 상황을 언급하면서 추천으로 연결. 이모지 금지.
-7. headline: 이 사람의 핵심 강점 20자 (예: "아동돌봄 5년, 밝고 활발")
-8. for_family: 고객의 구체적 상황에 왜 이 사람이 맞는지 설명. bio를 읽고 연결해서 쓸 것. (예: "초등학생 남매와 놀아주기 경험이 풍부하고, 토요일 오전 시간대에 활동 가능합니다.") 단순 키워드 나열 금지.
+1. 고객 상황이 파악되면 목록에서 3명 추천. 정보 부족하면 자연스럽게 질문.
+2. 같은 질문 반복 금지.
+3. 목록에 없는 사람 지어내지 말 것.
+4. 고객이 특정 인물 언급하면 반드시 포함.
+5. 나이 조건 엄격. "젊은"=35세 이하.
+6. 조건 안 맞으면 솔직히 없다고.
+7. reply는 대화체. 고객 상황 언급하면서 자연스럽게.
+8. headline: 핵심 강점 20자.
+9. for_family: 고객 상황과 연결된 구체적 추천 이유 2문장.
+10. 이모지 금지.
 
-JSON만: {"reply":"한마디","recommendations":[{"id":"h001","headline":"핵심강점20자","for_family":"고객 상황과 연결된 구체적 추천 이유 2문장"}]}`;
+[응답]
+추천: {"reply":"대화체","recommendations":[{"id":"h001","headline":"20자","for_family":"2문장"}]}
+대화: {"reply":"대화체","recommendations":[]}
+JSON만.`;
 
-    const matchResp = await callClaude(matchPrompt, { maxTokens: 400, model: "claude-haiku-4-5-20251001" });
-    totalIn += matchResp.usage.input;
-    totalOut += matchResp.usage.output;
-    totalKRW += matchResp.cost_krw;
+    const resp = await callClaude(systemPrompt, {
+      maxTokens: 500,
+      model: "claude-sonnet-4-6",
+      messages: messages.map(m => ({ role: m.role as "user"|"assistant", content: m.content })),
+    });
+    totalIn += resp.usage.input;
+    totalOut += resp.usage.output;
+    totalKRW += resp.cost_krw;
 
-    let matchReply = reply;
+    let reply = "";
     let recommendations: Record<string, unknown>[] = [];
 
     try {
-      let raw = matchResp.text;
+      let raw = resp.text;
       const cb = raw.match(/```(?:json)?\s*([\s\S]*?)```/);
       if (cb) raw = cb[1];
       const json = extractJson<Record<string, unknown>>(raw);
-      matchReply = safeString(json.reply as string) || reply;
+      reply = safeString(json.reply as string);
       recommendations = Array.isArray(json.recommendations) ? json.recommendations as Record<string, unknown>[] : [];
     } catch {
-      matchReply = matchResp.text.replace(/```[\s\S]*?```/g, "").replace(/\*\*/g, "").trim() || reply;
+      reply = resp.text.replace(/```[\s\S]*?```/g, "").replace(/\*\*/g, "").replace(/`/g, "").trim();
+      if (!reply) reply = "죄송합니다, 다시 말씀해 주시겠어요?";
     }
 
     // 결과 매핑
-    const metaMap = new Map(vectorResults.map(r => [r.id, { meta: r.metadata as Record<string, unknown>, score: r.score }]));
+    const metaMap = new Map(top15.map(r => [r.id, { meta: r.metadata as Record<string, unknown>, score: r.score }]));
     const seenIds = new Set<string>();
     const results = recommendations
       .filter(rec => {
@@ -226,17 +154,14 @@ JSON만: {"reply":"한마디","recommendations":[{"id":"h001","headline":"핵심
 
     return NextResponse.json({
       need_info: results.length === 0,
-      reply: results.length > 0 ? matchReply : (reply || matchReply),
-      search_query: searchQuery,
-      filter_tags: filterTags,
-      next_question: results.length === 0 ? (reply || matchReply) : undefined,
+      reply,
+      next_question: results.length === 0 ? reply : undefined,
       results: results.length > 0 ? results : undefined,
       requester_id: "",
       _usage: { input: totalIn, output: totalOut },
       cost_krw: totalKRW,
     });
   } catch (e) {
-    console.error("[match] error:", (e as Error).message);
     return NextResponse.json({
       need_info: true,
       reply: `오류: ${(e as Error).message}`,
