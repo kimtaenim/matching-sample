@@ -59,7 +59,7 @@ filter_tags는 아래 목록에서만 선택. 목록에 없는 태그 금지:
 시간: 오전, 저녁
 지역은 filter_tags에 넣지 마세요 (별도 처리됨).`;
 
-    const sqResp = await callClaude(sqPrompt, { maxTokens: 300, model: "claude-haiku-4-5-20251001" });
+    const sqResp = await callClaude(sqPrompt, { maxTokens: 300, model: "claude-sonnet-4-6" });
     totalIn += sqResp.usage.input;
     totalOut += sqResp.usage.output;
     totalKRW += sqResp.cost_krw;
@@ -174,7 +174,7 @@ ${candidateContext}
 
 JSON만: {"reply":"한마디","recommendations":[{"id":"h001","headline":"20자","for_family":"1문장"}]}`;
 
-    const matchResp = await callClaude(matchPrompt, { maxTokens: 400, model: "claude-sonnet-4-6" });
+    const matchResp = await callClaude(matchPrompt, { maxTokens: 400, model: "claude-haiku-4-5-20251001" });
     totalIn += matchResp.usage.input;
     totalOut += matchResp.usage.output;
     totalKRW += matchResp.cost_krw;
