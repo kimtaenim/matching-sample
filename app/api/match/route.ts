@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
 ${candidateContext}
 
 [규칙]
-1. 고객의 상황이 파악되면 위 목록에서 적합한 분을 매칭하세요 (최대 3명).
+1. 고객의 상황이 파악되면 위 목록에서 적합한 분을 3명 매칭하세요. 같은 사람을 중복 추천 금지. 반드시 서로 다른 ID.
 2. 정보가 부족하면 자연스럽게 한 가지만 물어보세요.
 3. 같은 질문을 반복하지 마세요. 이전 대화를 잘 읽으세요.
 4. 고객이 "이 분 말고", "다른 분" 하면 이전 매칭을 피하세요.
@@ -121,10 +121,17 @@ JSON만 응답.`;
       if (!reply) reply = "죄송합니다, 다시 한번 말씀해 주시겠어요?";
     }
 
+    console.log("[match] recommendations:", JSON.stringify(recommendations.map(r => ({id:r.id, headline:r.headline}))));
     // 추천이 있으면 메타데이터 매핑 — HelperCard 형식에 맞게 변환
     const metaMap = new Map(vectorResults.map((r) => [r.id, { meta: r.metadata as Record<string, unknown>, score: r.score }]));
+    const seenIds = new Set<string>();
     const results = recommendations
-      .filter((rec) => rec && rec.id && metaMap.has(rec.id as string))
+      .filter((rec) => {
+        if (!rec || !rec.id || !metaMap.has(rec.id as string)) return false;
+        if (seenIds.has(rec.id as string)) return false; // 중복 ID 제거
+        seenIds.add(rec.id as string);
+        return true;
+      })
       .map((rec) => {
         const { meta, score } = metaMap.get(rec.id as string)!;
         // parsed가 문자열이면 파싱
