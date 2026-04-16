@@ -169,7 +169,7 @@ function ResultsInner() {
             type="submit"
             disabled={loading || !input.trim()}
             className="px-5 py-3 rounded-xl text-white text-[15px] font-semibold disabled:opacity-40 active:scale-[0.97] transition-all"
-            style={{ background: "linear-gradient(135deg, #B8B8C0, #8888A0)" }}
+            style={{ background: "linear-gradient(135deg, #8BBAB5, #5A8D87)" }}
           >
             전송
           </button>
@@ -189,7 +189,7 @@ function ChatBubble({ role, text, loading }: { role: "user" | "ai"; text: string
             ? "text-white rounded-br-md"
             : "bg-white text-apple-label2 rounded-bl-md shadow-card"
         } ${loading ? "animate-pulse-soft" : ""}`}
-        style={isUser ? { background: "linear-gradient(135deg, #B8B8C0 0%, #9A9AA8 50%, #8888A0 100%)" } : undefined}
+        style={isUser ? { background: "linear-gradient(135deg, #8BBAB5 0%, #6B9E98 50%, #5A8D87 100%)" } : undefined}
       >
         {text.replace(/\*\*/g, "").replace(/```[\s\S]*?```/g, "").replace(/`/g, "")}
       </div>

@@ -37,7 +37,7 @@ export function Button({ variant = "primary", className = "", onClick, children,
       {...rest}
       onClick={handleClick}
       className={`${base} ${variants[variant]} ${className}`}
-      style={variant === "primary" ? { background: "linear-gradient(135deg, #B8B8B8, #9E9E9E)" } : undefined}
+      style={variant === "primary" ? { background: "linear-gradient(135deg, #8BBAB5, #5A8D87)" } : undefined}
     >
       {children}
       {ripples.map((r) => (
