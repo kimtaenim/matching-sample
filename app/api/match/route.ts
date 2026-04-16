@@ -148,7 +148,7 @@ filter_tags 규칙:
     if (vectorResults.length === 0) {
       return NextResponse.json({
         need_info: true,
-        reply: reply || "조건에 맞는 분을 찾지 못했어요. 조건을 조정해 보시겠어요?",
+        reply: reply || "죄송합니다, 지금 조건으로는 딱 맞는 분을 못 찾았어요. 조건을 바꿔서 다시 말씀해 주시면 다시 찾아볼게요.",
         search_query: searchQuery,
         filter_tags: filterTags,
         _usage: { input: totalIn, output: totalOut },
