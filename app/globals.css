@@ -19,9 +19,9 @@ body {
 h1, h2, h3 { letter-spacing: -0.02em; }
 
 /* 따뜻한 그라디언트 (애플 Fitness/Health 스타일) */
-.badge-warm  { background: linear-gradient(135deg, #8BBAB5 0%, #6B9E98 50%, #5A8D87 100%); }
-.badge-warm2 { background: linear-gradient(135deg, #9BCAC5 0%, #78B5AE 100%); }
-.text-warm-shadow { box-shadow: 0 6px 18px -6px rgba(90, 141, 135, 0.4); }
+.badge-warm  { background: linear-gradient(135deg, #C5DDD9 0%, #B0CCC8 50%, #9DBFBA 100%); }
+.badge-warm2 { background: linear-gradient(135deg, #D0E5E2 0%, #BBCFCC 100%); }
+.text-warm-shadow { box-shadow: 0 6px 18px -6px rgba(157, 191, 186, 0.4); }
 
 /* ------- Keyframes ------- */
 @keyframes fadeSlideUp {
