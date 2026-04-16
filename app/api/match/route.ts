@@ -11,10 +11,15 @@ interface Message {
 }
 
 interface Body {
+  // 새 방식
   messages?: Message[];
+  // 구 방식 (하위호환)
+  bio?: string;
   location?: string;
   role?: string;
   name?: string;
+  turn?: number;
+  skipped_keys?: string[];
 }
 
 interface ScoreItem {
@@ -53,7 +58,11 @@ JSON 응답:
 {
   "reply": "자연어 응답",
   "parsed": { "care_type": null, "care_age": null, "wage_max": null, "hours": null, "preferred_gender": null },
-  "ready": false
+  "ready": false,
+  "next_question": "다음 질문 (reply와 동일 가능)",
+  "next_key": "필드명",
+  "next_type": "select|number|text",
+  "next_options": ["옵션1"] 또는 null
 }`;
 
 const HELPER_SYSTEM = `당신은 돌봄 매칭 서비스의 따뜻한 상담사입니다. 돌봄 도우미가 일자리를 찾도록 돕습니다.
@@ -74,7 +83,11 @@ JSON 응답:
 {
   "reply": "자연어 응답",
   "parsed": { "care_type": null, "age": null, "wage_min": null, "hours": null, "preferred_gender": null },
-  "ready": false
+  "ready": false,
+  "next_question": "다음 질문",
+  "next_key": "필드명",
+  "next_type": "select|number|text",
+  "next_options": null
 }`;
 
 export async function POST(req: NextRequest) {
@@ -85,13 +98,21 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const messages: Message[] = Array.isArray(body.messages) ? body.messages : [];
   const location = safeString(body.location) as Location;
   const role = body.role === "helper" ? "helper" : "family";
-  const name = safeString(body.name) || undefined;
 
-  if (messages.length === 0 || !location) {
-    return NextResponse.json({ error: "messages, location 필요" }, { status: 400 });
+  // 구 방식 → messages 변환
+  let messages: Message[];
+  if (Array.isArray(body.messages) && body.messages.length > 0) {
+    messages = body.messages;
+  } else if (body.bio) {
+    messages = [{ role: "user", content: safeString(body.bio) }];
+  } else {
+    return NextResponse.json({ error: "messages 또는 bio 필요" }, { status: 400 });
+  }
+
+  if (!location) {
+    return NextResponse.json({ error: "location 필요" }, { status: 400 });
   }
 
   let totalIn = 0;
@@ -118,22 +139,37 @@ export async function POST(req: NextRequest) {
     let parsed: Record<string, unknown> = {};
     let reply = "";
     let ready = false;
+    let nextQuestion: string | null = null;
+    let nextKey: string | null = null;
+    let nextType: string | null = null;
+    let nextOptions: string[] | null = null;
 
     try {
       const json = extractJson<Record<string, unknown>>(resp.text);
       reply = safeString(json.reply);
       parsed = (json.parsed as Record<string, unknown>) || {};
       ready = json.ready === true || resp.text.includes("READY_TO_RECOMMEND");
+      nextQuestion = safeString(json.next_question) || reply;
+      nextKey = safeString(json.next_key) || null;
+      nextType = safeString(json.next_type) || null;
+      nextOptions = Array.isArray(json.next_options) ? json.next_options as string[] : null;
     } catch {
       reply = resp.text.replace(/```json[\s\S]*?```/g, "").trim() || "다시 말씀해 주시겠어요?";
       ready = resp.text.includes("READY_TO_RECOMMEND");
+      nextQuestion = reply;
     }
 
     if (!ready) {
       return NextResponse.json({
         need_info: true,
         reply,
+        next_question: nextQuestion,
+        next_key: nextKey,
+        next_type: nextType,
+        next_options: nextOptions,
         parsed_so_far: parsed,
+        turn: safeNumber(body.turn, 0),
+        turns_left: 8 - safeNumber(body.turn, 0),
         _usage: { input: totalIn, output: totalOut },
         cost_krw: totalKRW,
       });
@@ -157,8 +193,8 @@ export async function POST(req: NextRequest) {
     if (vectorResults.length === 0) {
       return NextResponse.json({
         need_info: false,
-        reply: "조건에 맞는 분을 찾지 못했어요. 조건을 조정해 볼까요?",
         results: [],
+        requester_id: null,
         _usage: { input: totalIn, output: totalOut },
         cost_krw: totalKRW,
       });
@@ -193,7 +229,7 @@ ${conversationSummary}
 ${JSON.stringify(candidates, null, 2)}
 
 [평가] 구조 조건 + 성격/경험/돌봄 철학의 결
-[반환] match_score 50↑, 최대 5개, 내림차순
+[반환] match_score 50이상, 최대 5개, 내림차순
 - headline: 30자 이내
 - for_family: 2문장 80자 (가정이 볼 추천 이유)
 - for_helper: 1문장 50자 (도우미가 볼 추천 이유)
@@ -228,13 +264,8 @@ JSON 배열만:
         match_score: safeNumber(s.match_score, 0),
       }));
 
-    const resultSummary = results.length > 0
-      ? `${results.length}명의 ${targetType}를 찾았습니다. 마음에 드시는 분이 있으면 말씀해 주세요.`
-      : "조건에 맞는 분을 찾지 못했어요. 다른 조건으로 다시 찾아볼까요?";
-
     return NextResponse.json({
       need_info: false,
-      reply: resultSummary,
       results,
       requester_id: "",
       _usage: { input: totalIn, output: totalOut },
@@ -244,8 +275,8 @@ JSON 배열만:
     console.error("[match] error:", (e as Error).message);
     return NextResponse.json({
       need_info: false,
-      reply: "잠시 문제가 생겼어요. 다시 말씀해 주시겠어요?",
       results: [],
+      requester_id: null,
       error: (e as Error).message,
       _usage: { input: totalIn, output: totalOut },
       cost_krw: totalKRW,
