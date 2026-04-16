@@ -63,7 +63,11 @@ ${bio}
 - hours: 시간대 "HH:MM-HH:MM" | null  (예: "9시부터 6시"→"09:00-18:00")
 - preferred_gender: "무관" | "남" | "여" | null  ("여성이 좋겠어요"→"여")
 
-[2단계] 현재 ${turn}번째 턴 (최대 ${maxTurns}턴). 중요한 정보가 빠져 있으면 다음 질문 한 개를 친근한 한국어로. 템플릿 금지, 맥락 반영. 충분하면 next_question=null.
+[2단계] 현재 ${turn}번째 턴 (최대 ${maxTurns}턴). 아래 5개 필드(care_type, care_age, wage_max, hours, preferred_gender) 중 null인 것에 대해서만 한 개 질문. 5개 모두 채워졌거나 더 물을 필드가 없으면 next_question=null.
+
+금지:
+- 위 5개 외 어떤 정보도 물어보지 마세요. 요양병원 이름, 병명, 주소, 가족 구성, 연락처, 예산 세부 등 절대 묻지 말 것.
+- 친절한 척 추가 정보 캐묻기 금지. 매칭에 필요한 5개 필드만.
 
 next_key는 질문이 겨냥하는 필드명(위 5개 중). next_type은 care_type="select" (${JSON.stringify(CARE_TYPES)}), preferred_gender="select" (${JSON.stringify(GENDERS)}), care_age·wage_max="number", hours="text".
 
