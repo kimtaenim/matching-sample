@@ -105,9 +105,9 @@ function ResultsInner() {
   }
 
   return (
-    <div className="fixed inset-0 flex flex-col z-40" style={{ top: "56px", background: "#FAFAFA" }}>
+    <div className="-mx-6 -mt-10">
       {/* 대화 영역 */}
-      <div className="flex-1 overflow-y-auto px-4 py-6 space-y-3">
+      <div className="px-4 py-6 space-y-3 pb-40">
         {turns.map((t, i) => (
           <ChatBubble key={i} role={t.role} text={t.text} />
         ))}
@@ -146,7 +146,7 @@ function ResultsInner() {
       </div>
 
       {/* 입력 영역 — 하단 고정 */}
-      <div className="shrink-0 p-3 pb-4" style={{ borderTop: "1px solid rgba(0,0,0,0.06)", background: "#FAFAFA" }}>
+      <div className="fixed bottom-0 left-0 right-0 p-3 pb-4 z-50" style={{ borderTop: "1px solid rgba(0,0,0,0.06)", background: "#FAFAFA" }}>
         {(tokIn > 0 || tokOut > 0) && (
           <p className="text-center text-[10px] mb-1.5" style={{ color: "#8E8E93" }}>
             입력 {tokIn.toLocaleString()} · 출력 {tokOut.toLocaleString()} tokens · 약 {costKRW.toLocaleString()}원
