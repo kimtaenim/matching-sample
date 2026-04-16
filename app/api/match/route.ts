@@ -112,9 +112,12 @@ JSON만 응답.`;
       reply = safeString(json.reply);
       recommendations = Array.isArray(json.recommendations) ? json.recommendations as Record<string, unknown>[] : [];
     } catch {
-      // JSON 파싱 완전 실패 시 텍스트에서 reply 부분만 추출 시도
-      const replyMatch = resp.text.match(/"reply"\s*:\s*"([^"]+)"/);
-      reply = replyMatch ? replyMatch[1] : "다시 말씀해 주시겠어요?";
+      reply = resp.text
+        .replace(/```[\s\S]*?```/g, "")
+        .replace(/\*\*/g, "")
+        .replace(/`/g, "")
+        .trim();
+      if (!reply) reply = "죄송합니다, 다시 한번 말씀해 주시겠어요?";
     }
 
     // 추천이 있으면 메타데이터 매핑 — HelperCard 형식에 맞게 변환
