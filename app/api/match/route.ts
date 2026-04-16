@@ -49,11 +49,29 @@ export async function POST(req: NextRequest) {
       } catch { vectorResults = []; }
     }
 
-    console.log("[match] results:", vectorResults.length);
+    // ── 이름 언급 시 DB 조회해서 후보에 추가 ──
+    const koreanNamePattern = /([가-힣]{2,4})\s*선생님|([가-힣]{2,4})\s*씨|([가-힣]{2,4})이?라는/g;
+    const nameMatches = [...allUserText.matchAll(koreanNamePattern)];
+    const mentionedNames = nameMatches.map((m) => m[1] || m[2] || m[3]).filter(Boolean);
+
+    if (mentionedNames.length > 0) {
+      for (const name of mentionedNames) {
+        try {
+          const nameResults = await queryVector(name, 10, `name = '${name}'`);
+          for (const nr of nameResults) {
+            if (String(nr.id).startsWith(idPrefix) && !vectorResults.find((v) => v.id === nr.id)) {
+              vectorResults.unshift(nr); // 앞에 추가
+            }
+          }
+        } catch { /* filter 안 되면 무시 */ }
+      }
+    }
+
+    console.log("[match] results:", vectorResults.length, "names:", mentionedNames);
 
     const targetType = role === "family" ? "도우미" : "가정";
     const candidateContext = vectorResults.length > 0
-      ? vectorResults.slice(0, 10).map((r) => {
+      ? vectorResults.slice(0, 15).map((r) => {
           const m = r.metadata as Record<string, unknown>;
           const p = (typeof m.parsed === "object" && m.parsed) ? m.parsed as Record<string, unknown> : {};
           const careTypes = Array.isArray(p.care_type) ? (p.care_type as string[]).join(",") : String(p.care_type || "");
