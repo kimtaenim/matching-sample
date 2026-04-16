@@ -13,6 +13,9 @@ type Role = "helper" | "family";
 interface ResultItem extends Helper {
   match_reason: string;
   match_score: number;
+  headline?: string;
+  for_family?: string;
+  for_helper?: string;
 }
 interface AddResult {
   id: string;
@@ -165,6 +168,9 @@ function AdminInner() {
                   index={i}
                   matchReason={r.match_reason}
                   matchScore={r.match_score}
+                  headline={r.headline}
+                  forFamily={r.for_family}
+                  forHelper={r.for_helper}
                   familyId={result.requester_id}
                 />
               ))}

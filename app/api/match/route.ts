@@ -18,7 +18,7 @@ import type { Helper, Family, Location } from "@/lib/types";
 
 export const runtime = "nodejs";
 
-const MAX_TURNS = 4;
+const MAX_TURNS = 8;
 
 interface Body {
   bio?: unknown;
@@ -30,6 +30,9 @@ interface Body {
 
 interface ScoreItem {
   id: string;
+  headline?: string;
+  for_family?: string;
+  for_helper?: string;
   match_reason: string;
   match_score: number;
 }
@@ -204,33 +207,70 @@ export async function POST(req: NextRequest) {
   const ranked = [...candidates].sort((a, b) => avgRating(b) - avgRating(a));
   const limited = ranked.slice(0, 30);
 
+  // 감성 매칭을 위해 full bio 포함
   const summary = limited.map((c) =>
-    targetIsHelper ? summarizeHelper(c as Helper) : summarizeFamily(c as Family)
+    targetIsHelper ? summarizeHelperFull(c as Helper) : summarizeFamilyFull(c as Family)
   );
 
-  const prompt = `다음은 ${
-    role === "family" ? "가정이 찾는 돌봄 도우미" : "도우미가 찾는 돌봄 가정"
-  } 매칭입니다. 일부 조건은 누락됐을 수 있으니 있는 정보만으로 유연하게 평가하세요.
+  const prompt = `당신은 돌봄 매칭 전문 AI 매니저입니다. 단순 조건 매칭이 아니라, 자기소개와 후기에서 느껴지는 성격·분위기·경험까지 종합해 "감성 매칭"을 해주세요.
 
-요청자 역할: ${role}
-요청자 지역: ${location}
-요청자 설명: """${bio}"""
+[${role === "family" ? "찾는 가정" : "찾는 도우미"} 정보]
+- 지역: ${location}
+- 사연/요구 (자연어):
+"""
+${bio}
+"""
 
-후보 ${limited.length}명:
+[후보 ${limited.length}명]
 ${JSON.stringify(summary, null, 2)}
 
-상위 5명을 JSON 배열로 응답. match_score 내림차순.
-[{"id":"...", "match_reason":"...", "match_score": 92}, ...]`;
+[평가 원칙]
+1. 구조 조건(지역 거리, 돌봄 유형, 시간대, 급여, 선호 성별) 적합도 — 객관적 기준
+2. 자기소개·후기의 결 — 성격, 말투, 경험, 돌봄 철학
+3. 요청자의 상황에서 실제로 편안할 사람인지 — 맥락 민감도
+
+[match_score 기준]
+- 85-100: 거의 모든 조건 + 정서적 결까지 부합
+- 70-84: 중요 조건 부합, 일부 자잘한 차이
+- 50-69: 절반 정도 부합, 한계 있음
+- 50 미만: 터무니없는 매칭 — 반환하지 마세요
+
+[반환 규칙]
+- match_score 50 이상인 후보만 반환. 0~5명.
+- 억지로 수를 채우지 말 것. 진짜 맞는 사람이 1명뿐이면 1명만.
+- 50 이상이 아무도 없으면 빈 배열 [] 반환. (프론트에서 "다른 조건으로 다시 상담" 안내)
+- match_score 내림차순.
+
+각 추천마다:
+- headline: 30자 내외 한 줄 요약 (예: "여성·10년 경력·조용하고 차분한 성격")
+- for_family: 가정에게 건네는 따뜻한 2-3문장 추천사. 왜 이분이 이 사연과 잘 맞는지 구체적으로.
+- for_helper: 도우미 입장에서 "이 가정이 어떤 점이 좋을지" 1-2문장. (도우미에게 제안할 때 쓸 말)
+- match_reason: for_family와 거의 동일 (하위 호환용)
+- match_score: 숫자
+
+JSON 배열로만 응답:
+[
+  {
+    "id": "h123",
+    "headline": "...",
+    "for_family": "...",
+    "for_helper": "...",
+    "match_reason": "...",
+    "match_score": 82
+  }
+]`;
 
   let scored: ScoreItem[] = [];
   try {
-    const scoreResult = await callClaude(prompt, { maxTokens: 1200 });
+    const scoreResult = await callClaude(prompt, { maxTokens: 3500 });
     totalIn += scoreResult.usage.input;
     totalOut += scoreResult.usage.output;
     totalKRW += scoreResult.cost_krw;
     try {
       scored = extractJson<ScoreItem[]>(scoreResult.text);
-    } catch {
+      console.log("[match] Claude returned", scored.length, "candidates, scores:", scored.map((s) => s.match_score));
+    } catch (e) {
+      console.error("[match] parse fail:", (e as Error).message, "raw:", scoreResult.text.slice(0, 500));
       scored = [];
     }
   } catch (e) {
@@ -241,13 +281,17 @@ ${JSON.stringify(summary, null, 2)}
   const byId = new Map<string, Helper | Family>(limited.map((c) => [c.id, c]));
   const results = scored
     .filter((s) => s && typeof s.id === "string" && byId.has(s.id))
+    .filter((s) => safeNumber(s.match_score, 0) >= 50) // 터무니없는 매칭 제외
     .sort((a, b) => (b.match_score || 0) - (a.match_score || 0))
     .slice(0, 5)
     .map((s) => {
       const c = byId.get(s.id)!;
       return {
         ...c,
-        match_reason: safeString(s.match_reason, "조건 부합"),
+        headline: safeString(s.headline, ""),
+        for_family: safeString(s.for_family, ""),
+        for_helper: safeString(s.for_helper, ""),
+        match_reason: safeString(s.match_reason || s.for_family, "조건 부합"),
         match_score: safeNumber(s.match_score, 0),
       };
     });
@@ -295,5 +339,47 @@ function summarizeFamily(f: Family) {
     hours: f.parsed.hours,
     preferred_gender: f.parsed.preferred_gender,
     bio: (f.bio || "").slice(0, 180),
+  };
+}
+
+/** 감성 매칭용 — 전체 bio + 최근 후기 샘플 포함 */
+function summarizeHelperFull(h: Helper) {
+  const recent = h.reviews_received.slice(0, 2).map((r) => ({
+    rating: r.rating,
+    text: r.text,
+  }));
+  return {
+    id: h.id,
+    name: h.name,
+    location: h.location,
+    age: h.parsed.age,
+    care_type: h.parsed.care_type,
+    wage_min: h.parsed.wage_min,
+    hours: h.parsed.hours,
+    preferred_gender: h.parsed.preferred_gender,
+    bio: h.bio || "",
+    avg_rating: Number(avgRating(h).toFixed(1)),
+    review_count: h.reviews_received.length,
+    recent_reviews: recent,
+  };
+}
+
+function summarizeFamilyFull(f: Family) {
+  const recent = f.reviews_received.slice(0, 2).map((r) => ({
+    rating: r.rating,
+    text: r.text,
+  }));
+  return {
+    id: f.id,
+    location: f.location,
+    care_type: f.parsed.care_type,
+    care_age: f.parsed.care_age,
+    wage_max: f.parsed.wage_max,
+    hours: f.parsed.hours,
+    preferred_gender: f.parsed.preferred_gender,
+    bio: f.bio || "",
+    avg_rating: Number(avgRating(f).toFixed(1)),
+    review_count: f.reviews_received.length,
+    recent_reviews: recent,
   };
 }

@@ -156,23 +156,42 @@ JSON 형식:
         }
   );
 
-  const matchPrompt = `요청자 정보와 후보 목록을 비교해 가장 잘 맞는 상위 5명을 JSON 배열로만 반환.
-- 요청자 역할: ${role}
-- 요청자 지역: ${location}
-- 요청자 설명: """${bio}"""
+  const matchPrompt = `돌봄 매칭 AI 매니저로서 구조 조건 + 자기소개·후기의 결까지 보고 감성 매칭하세요.
+
+요청자 역할: ${role}
+요청자 지역: ${location}
+요청자 설명: """${bio}"""
 
 후보 (거리 10km 이내):
 ${JSON.stringify(summary, null, 2)}
 
-각 추천에 match_reason(한 줄 근거), match_score(0-100) 포함. match_score 내림차순.
-형식: [{"id":"...", "match_reason":"...", "match_score": 92}, ...]`;
+[기준]
+- 85+: 거의 완벽 / 70-84: 좋음 / 50-69: 부분 / 50미만: 반환 금지
 
-  const m = await callClaude(matchPrompt, { maxTokens: 1200 });
+[반환]
+- match_score 50 이상만. 0~5명. 억지로 채우지 말 것.
+- 각 추천:
+  - headline: 30자 요약
+  - for_family: 가정에게 2-3문장 따뜻한 추천사
+  - for_helper: 도우미 입장에서 좋은 점 1-2문장
+  - match_reason: for_family와 같게 (하위호환)
+  - match_score: 숫자
+
+[{"id":"...", "headline":"...", "for_family":"...", "for_helper":"...", "match_reason":"...", "match_score": 82}]`;
+
+  const m = await callClaude(matchPrompt, { maxTokens: 3500 });
   totalIn += m.usage.input;
   totalOut += m.usage.output;
   totalKRW += m.cost_krw;
 
-  let scored: Array<{ id: string; match_reason: string; match_score: number }> = [];
+  let scored: Array<{
+    id: string;
+    headline?: string;
+    for_family?: string;
+    for_helper?: string;
+    match_reason: string;
+    match_score: number;
+  }> = [];
   try {
     scored = extractJson(m.text);
   } catch {
@@ -182,11 +201,19 @@ ${JSON.stringify(summary, null, 2)}
   const byId = new Map<string, Helper | Family>(limited.map((c) => [c.id, c]));
   const results = scored
     .filter((s) => byId.has(s.id))
+    .filter((s) => (s.match_score || 0) >= 50)
     .sort((a, b) => b.match_score - a.match_score)
     .slice(0, 5)
     .map((s) => {
       const c = byId.get(s.id)!;
-      return { ...c, match_reason: s.match_reason, match_score: s.match_score };
+      return {
+        ...c,
+        headline: s.headline || "",
+        for_family: s.for_family || "",
+        for_helper: s.for_helper || "",
+        match_reason: s.match_reason || s.for_family || "조건 부합",
+        match_score: s.match_score,
+      };
     });
 
   return NextResponse.json({

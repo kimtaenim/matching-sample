@@ -10,6 +10,9 @@ import { useTokens, tokenedFetch } from "@/components/TokenProvider";
 interface ResultItem extends Helper {
   match_reason: string;
   match_score: number;
+  headline?: string;
+  for_family?: string;
+  for_helper?: string;
 }
 
 interface MatchResponse {
@@ -220,9 +223,20 @@ function ResultsInner() {
       {finalResults && (
         <>
           {finalResults.results.length === 0 ? (
-            <div className="mt-8 text-center py-10 bg-white rounded-card">
-              <p className="text-[18px] text-apple-label2 font-semibold">조건에 맞는 분을 찾지 못했어요</p>
-              <p className="mt-2 text-apple-gray text-[15px]">조건을 바꿔서 다시 시도해보세요.</p>
+            <div className="mt-8 bg-white rounded-card p-8 text-center shadow-card">
+              <p className="text-[18px] text-apple-label font-semibold">
+                지금 사연과 꼭 맞는 분을 찾지 못했어요
+              </p>
+              <p className="mt-2 text-apple-gray text-[15px] leading-relaxed">
+                조건을 조금 바꿔보시거나, 다른 지역·시간대로 다시 상담해보시면
+                <br />더 좋은 분을 만나실 수 있을 거예요.
+              </p>
+              <a
+                href="/search"
+                className="mt-5 inline-block text-[15px] text-apple-blue hover:underline"
+              >
+                다른 조건으로 다시 상담하기 →
+              </a>
             </div>
           ) : (
             <div className="mt-8 space-y-4">
@@ -233,6 +247,9 @@ function ResultsInner() {
                   index={i}
                   matchReason={r.match_reason}
                   matchScore={r.match_score}
+                  headline={r.headline}
+                  forFamily={r.for_family}
+                  forHelper={r.for_helper}
                   familyId={finalResults.requester_id || undefined}
                 />
               ))}

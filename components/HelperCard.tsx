@@ -14,6 +14,9 @@ interface Props {
   matchReason: string;
   matchScore?: number;
   familyId?: string;
+  headline?: string;
+  forFamily?: string;
+  forHelper?: string;
 }
 
 function avgRating(reviews: Review[]): number {
@@ -21,7 +24,16 @@ function avgRating(reviews: Review[]): number {
   return reviews.reduce((a, r) => a + r.rating, 0) / reviews.length;
 }
 
-export function HelperCard({ helper, index, matchReason, matchScore, familyId }: Props) {
+export function HelperCard({
+  helper,
+  index,
+  matchReason,
+  matchScore,
+  familyId,
+  headline,
+  forFamily,
+  forHelper,
+}: Props) {
   const [open, setOpen] = useState(false);
   const [matching, setMatching] = useState(false);
   const { add } = useTokens();
@@ -89,14 +101,29 @@ export function HelperCard({ helper, index, matchReason, matchScore, familyId }:
               </div>
               <div className="mt-3 flex items-start gap-2 flex-wrap">
                 {typeof matchScore === "number" && (
-                  <span className="text-[13px] font-semibold px-2 py-0.5 rounded-full bg-apple-silver text-apple-label2" style={{ fontVariantNumeric: "tabular-nums" }}>
+                  <span
+                    className="text-[13px] font-semibold px-2 py-0.5 rounded-full bg-apple-silver text-apple-label2"
+                    style={{ fontVariantNumeric: "tabular-nums" }}
+                  >
                     {matchScore}점
                   </span>
                 )}
-                <p className="text-[16px] text-apple-blue font-medium">
-                  ✦ {matchReason}
-                </p>
+                {headline && (
+                  <span className="text-[14px] text-apple-label2 font-medium">
+                    {headline}
+                  </span>
+                )}
               </div>
+              {(forFamily || matchReason) && (
+                <p className="mt-3 text-[15px] text-apple-label2 leading-relaxed">
+                  <span className="text-apple-blue">✦</span> {forFamily || matchReason}
+                </p>
+              )}
+              {forHelper && (
+                <p className="mt-2 text-[13px] text-apple-gray italic leading-snug">
+                  도우미 입장: {forHelper}
+                </p>
+              )}
             </div>
             <div
               className={`text-apple-gray transition-transform duration-300 ${

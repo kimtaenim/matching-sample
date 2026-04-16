@@ -63,6 +63,53 @@ export function extractJson<T = unknown>(text: string): T {
   const open = text[start];
   const close = open === "{" ? "}" : "]";
   const end = text.lastIndexOf(close);
-  if (end === -1) throw new Error("Unbalanced JSON: " + text.slice(0, 200));
-  return JSON.parse(text.slice(start, end + 1));
+  if (end !== -1) {
+    try {
+      return JSON.parse(text.slice(start, end + 1));
+    } catch {
+      // fall through to salvage
+    }
+  }
+
+  // JSON이 잘렸거나 깨진 경우: 배열이면 완전한 오브젝트만 추출
+  if (open === "[") {
+    const salvaged: unknown[] = [];
+    let depth = 0;
+    let objStart = -1;
+    let inString = false;
+    let escape = false;
+    for (let i = start + 1; i < text.length; i++) {
+      const ch = text[i];
+      if (escape) {
+        escape = false;
+        continue;
+      }
+      if (ch === "\\") {
+        escape = true;
+        continue;
+      }
+      if (ch === '"') {
+        inString = !inString;
+        continue;
+      }
+      if (inString) continue;
+      if (ch === "{") {
+        if (depth === 0) objStart = i;
+        depth++;
+      } else if (ch === "}") {
+        depth--;
+        if (depth === 0 && objStart !== -1) {
+          try {
+            salvaged.push(JSON.parse(text.slice(objStart, i + 1)));
+          } catch {
+            // skip this object
+          }
+          objStart = -1;
+        }
+      }
+    }
+    if (salvaged.length > 0) return salvaged as T;
+  }
+
+  throw new Error("Unbalanced/invalid JSON: " + text.slice(0, 200));
 }
