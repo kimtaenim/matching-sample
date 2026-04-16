@@ -85,12 +85,23 @@ filter_tags 규칙:
     }
 
     // ── 2단계: 벡터 검색 — tags CONTAINS 필터 + 유사도 ──
-    // location은 항상 포함
-    const tagFilters = [`location = '${location}'`];
-    for (const t of filterTags.slice(0, 5)) {
-      if (t !== location) tagFilters.push(`tags CONTAINS '${t}'`);
+    // location 필수 + 핵심 태그 1-2개만 AND (너무 많으면 0건)
+    // 나이 관련 태그는 OR로 묶기
+    const ageTagList = ["20대", "30대", "40대", "50대", "60대이상", "젊은", "시니어", "중년"];
+    const ageTags = filterTags.filter(t => ageTagList.includes(t));
+    const otherTags = filterTags.filter(t => !ageTagList.includes(t) && t !== location);
+
+    let filter = `location = '${location}'`;
+    // 돌봄유형 태그 1개만 (가장 중요)
+    if (otherTags.length > 0) {
+      filter += ` AND tags CONTAINS '${otherTags[0]}'`;
     }
-    const filter = tagFilters.join(" AND ");
+    // 나이 태그는 OR로
+    if (ageTags.length === 1) {
+      filter += ` AND tags CONTAINS '${ageTags[0]}'`;
+    } else if (ageTags.length > 1) {
+      filter += ` AND (${ageTags.map(t => `tags CONTAINS '${t}'`).join(" OR ")})`;
+    }
 
     console.log("[match] query:", searchQuery, "filter:", filter);
 
