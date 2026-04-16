@@ -4976,5 +4976,3560 @@
         "text": "할아버지와 가족분들의 사랑이 가득한 가정에서 제가 할 수 있는 최선을 다했습니다. 이렇게 좋은 분들과 함께할 수 있어서 정말 감사합니다."
       }
     ]
+  },
+  {
+    "id": "h201",
+    "name": "김지은",
+    "location": "봉천동",
+    "bio": "에너지 넘치는 20대 초반입니다! 아동 돌봄 경험 3년, 밝고 재미있는 수업으로 아이들의 웃음을 자주 받습니다. 책 읽어주기와 창의미술 활동을 특히 잘해요.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "환자"
+      ],
+      "age": 23,
+      "wage_min": 95000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h202",
+    "name": "이준호",
+    "location": "과천",
+    "bio": "체육을 전공한 남자 돌봄이입니다. 활동적인 성향으로 아이들과 함께 움직이고 노는 것을 좋아해요. 안전하고 신뢰할 수 있는 케어를 약속합니다!",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 26,
+      "wage_min": 110000,
+      "hours": "14:00-22:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h203",
+    "name": "박미라",
+    "location": "대치동",
+    "bio": "노인 돌봄과 치매노인 케어 경험 5년의 전문가입니다. 따뜻한 마음과 인내심으로 어르신들의 신뢰를 얻고 있습니다. 건강한 식단 관리도 전문입니다.",
+    "parsed": {
+      "care_type": [
+        "노인",
+        "치매노인"
+      ],
+      "age": 32,
+      "wage_min": 140000,
+      "hours": "07:00-15:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h204",
+    "name": "최동욱",
+    "location": "봉천동",
+    "bio": "간호학 전공자로 장애인 지원 경험이 풍부합니다. 책임감 있고 세심한 돌봄이 제 장점이에요. 환자분들의 편의와 안전이 최우선입니다.",
+    "parsed": {
+      "care_type": [
+        "장애인",
+        "환자"
+      ],
+      "age": 28,
+      "wage_min": 130000,
+      "hours": "06:00-14:00",
+      "preferred_gender": "남"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h205",
+    "name": "정수진",
+    "location": "대치동",
+    "bio": "아동미술 교육과 보육을 함께 진행하는 젊은 돌봄이입니다. 아이들의 창의력을 키워주는 것이 저의 목표! 항상 긍정적인 에너지로 가득 차 있어요.",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 24,
+      "wage_min": 100000,
+      "hours": "09:00-17:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h206",
+    "name": "오태현",
+    "location": "과천",
+    "bio": "노인 돌봄 전문가이며 친절함으로 유명합니다. 어르신들과의 대화를 소중히 여기고 정서적 지원도 함께 제공해요. 항상 밝은 표정으로 대면합니다.",
+    "parsed": {
+      "care_type": [
+        "노인"
+      ],
+      "age": 31,
+      "wage_min": 125000,
+      "hours": "10:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h207",
+    "name": "하윤지",
+    "location": "봉천동",
+    "bio": "아동과 노인 모두를 사랑하는 만능 돌봄이입니다! 새로운 경험을 즐기고 배우려는 자세로 임합니다. 항상 웃으면서 최고의 서비스를 드려요.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "노인"
+      ],
+      "age": 25,
+      "wage_min": 105000,
+      "hours": "13:00-20:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h208",
+    "name": "신준석",
+    "location": "대치동",
+    "bio": "사회복지학 전공으로 장애인 돌봄과 환자 케어 경험이 많습니다. 섬세하고 책임감 있는 돌봄으로 신뢰받고 있어요. 함께 성장하고 싶습니다!",
+    "parsed": {
+      "care_type": [
+        "장애인",
+        "환자",
+        "치매노인"
+      ],
+      "age": 29,
+      "wage_min": 145000,
+      "hours": "08:00-16:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h209",
+    "name": "이채원",
+    "location": "과천",
+    "bio": "아동 돌봄 경험 4년차 여성입니다. 밝고 활기찬 성격으로 아이들과 빠르게 친해져요. 영어 수업도 함께 진행할 수 있습니다!",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 27,
+      "wage_min": 115000,
+      "hours": "15:00-21:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h210",
+    "name": "강민준",
+    "location": "봉천동",
+    "bio": "20대 후반의 활동적인 남자 돌봄이예요. 노인 및 치매노인 케어 경험이 풍부하고, 신체활동 지원을 특히 잘합니다. 항상 긍정적인 태도로 임하겠습니다!",
+    "parsed": {
+      "care_type": [
+        "노인",
+        "치매노인"
+      ],
+      "age": 30,
+      "wage_min": 135000,
+      "hours": "07:00-15:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h211",
+    "name": "김민준",
+    "location": "봉천동",
+    "bio": "밝고 긍정적인 성격으로 아이들과 쉽게 친해져요. 5년간 어린이집에서 일한 경험이 있으며, 항상 웃음이 가득한 환경을 만들어요.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "환자"
+      ],
+      "age": 23,
+      "wage_min": 95000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h212",
+    "name": "이지은",
+    "location": "과천",
+    "bio": "노인분들과의 소통을 즐기며, 한의학을 공부 중입니다. 친절한 마음으로 편안한 돌봄을 제공해요.",
+    "parsed": {
+      "care_type": [
+        "노인",
+        "치매노인"
+      ],
+      "age": 28,
+      "wage_min": 120000,
+      "hours": "10:00-19:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h213",
+    "name": "박준호",
+    "location": "대치동",
+    "bio": "체육교육과 출신으로 활동적이고 에너지 넘쳐요. 장애인 스포츠 경험을 살려 재활운동을 도와드립니다.",
+    "parsed": {
+      "care_type": [
+        "장애인"
+      ],
+      "age": 26,
+      "wage_min": 130000,
+      "hours": "14:00-22:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h214",
+    "name": "최수진",
+    "location": "봉천동",
+    "bio": "아이들의 성장을 돕는 것이 가장 큰 보람이에요. 유아교육 자격증 있고, 창의적인 활동으로 재미있게 돌봐요.",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 25,
+      "wage_min": 100000,
+      "hours": "07:00-15:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h215",
+    "name": "송은호",
+    "location": "대치동",
+    "bio": "간호조무사 자격증을 가지고 있으며, 환자분들의 건강 관리를 세심하게 챙겨요. 신뢰와 책임감이 최고예요.",
+    "parsed": {
+      "care_type": [
+        "환자",
+        "노인"
+      ],
+      "age": 32,
+      "wage_min": 150000,
+      "hours": "08:00-16:00",
+      "preferred_gender": "남"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h216",
+    "name": "정하나",
+    "location": "과천",
+    "bio": "사회복지학 전공으로 취약계층 돌봄에 특별한 관심이 있어요. 따뜻한 마음으로 성실하게 일합니다.",
+    "parsed": {
+      "care_type": [
+        "노인",
+        "치매노인",
+        "장애인"
+      ],
+      "age": 29,
+      "wage_min": 115000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h217",
+    "name": "이동욱",
+    "location": "봉천동",
+    "bio": "청년 봉사단 활동을 꾸준히 해왔고, 사람들과 연결되는 것을 좋아해요. 지금 4살 조카를 자주 봐주고 있습니다.",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 22,
+      "wage_min": 85000,
+      "hours": "15:00-23:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h218",
+    "name": "한지우",
+    "location": "대치동",
+    "bio": "두 어린이의 엄마이자 치매 어르신을 모시고 있어요. 실무 경험이 풍부하고 섬세한 돌봄을 약속합니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "치매노인"
+      ],
+      "age": 35,
+      "wage_min": 135000,
+      "hours": "10:00-20:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h219",
+    "name": "유찬호",
+    "location": "과천",
+    "bio": "대학원에서 재활치료를 공부 중이고, 실습으로 다양한 케이스를 경험했어요. 체계적이고 전문적인 돌봄이 가능합니다.",
+    "parsed": {
+      "care_type": [
+        "환자",
+        "장애인"
+      ],
+      "age": 27,
+      "wage_min": 125000,
+      "hours": "12:00-20:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h220",
+    "name": "임나연",
+    "location": "봉천동",
+    "bio": "밝은 에너지로 어르신들을 행복하게 해드려요. 할머니와 할아버지를 모시고 지낸 경험이 있어서 노인분들 마음을 잘 알아요.",
+    "parsed": {
+      "care_type": [
+        "노인"
+      ],
+      "age": 24,
+      "wage_min": 105000,
+      "hours": "06:00-14:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h221",
+    "name": "이민준",
+    "location": "봉천동",
+    "bio": "안녕하세요! 에너지 넘치는 20대 청년입니다. 아이들의 밝은 웃음이 제 힘입니다. 책 읽어주기와 함께 재미있는 활동을 좋아합니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "환자"
+      ],
+      "age": 23,
+      "wage_min": 90000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h222",
+    "name": "박지은",
+    "location": "과천",
+    "bio": "따뜻한 손길과 책임감 있는 성격의 간호사입니다. 노년층 돌봄에 경험이 많으며, 세심한 케어를 약속드립니다.",
+    "parsed": {
+      "care_type": [
+        "노인",
+        "치매노인"
+      ],
+      "age": 31,
+      "wage_min": 130000,
+      "hours": "06:00-14:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h223",
+    "name": "김태호",
+    "location": "대치동",
+    "bio": "장애인 돌봄 전문가로 활동 중입니다. 긍정적이고 친절한 태도로 클라이언트분과 신뢰 관계를 만드는 것을 최우선으로 합니다.",
+    "parsed": {
+      "care_type": [
+        "장애인"
+      ],
+      "age": 28,
+      "wage_min": 120000,
+      "hours": "14:00-22:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h224",
+    "name": "정수진",
+    "location": "봉천동",
+    "bio": "밝고 활발한 성격의 대학생입니다. 아동 돌봄에 열정이 있으며, 함께 웃고 즐거운 시간을 만드는 것이 목표입니다.",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 21,
+      "wage_min": 80000,
+      "hours": "15:00-21:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h225",
+    "name": "오준영",
+    "location": "대치동",
+    "bio": "치매 환자 돌봄 경험 3년차입니다. 인내심 있고 성실한 성격으로 어르신들의 편안함을 위해 최선을 다합니다.",
+    "parsed": {
+      "care_type": [
+        "치매노인",
+        "노인"
+      ],
+      "age": 33,
+      "wage_min": 140000,
+      "hours": "07:00-15:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h226",
+    "name": "윤하나",
+    "location": "과천",
+    "bio": "사회복지를 공부 중인 열정적인 청년입니다. 장애인과 아동 모두의 돌봄에 자신감이 있습니다. 함께 성장하고 싶어요!",
+    "parsed": {
+      "care_type": [
+        "장애인",
+        "아동"
+      ],
+      "age": 24,
+      "wage_min": 100000,
+      "hours": "10:00-19:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h227",
+    "name": "최동욱",
+    "location": "봉천동",
+    "bio": "병원 경험이 풍부한 간호조무사입니다. 환자 케어에 섬세하고 책임감 있게 임합니다. 신뢰할 수 있는 파트너가 되겠습니다.",
+    "parsed": {
+      "care_type": [
+        "환자",
+        "노인"
+      ],
+      "age": 29,
+      "wage_min": 125000,
+      "hours": "08:00-16:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h228",
+    "name": "강민지",
+    "location": "대치동",
+    "bio": "아이들을 정말 사랑하는 유아교육과 졸업생입니다. 창의적인 활동과 안전한 돌봄으로 아이들의 발달을 지원합니다.",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 26,
+      "wage_min": 105000,
+      "hours": "08:00-17:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h229",
+    "name": "서영호",
+    "location": "과천",
+    "bio": "차분하고 신중한 성격의 간호 경험자입니다. 치매 어르신 돌봄 전문이며, 가족 같은 마음으로 케어해드립니다.",
+    "parsed": {
+      "care_type": [
+        "치매노인"
+      ],
+      "age": 32,
+      "wage_min": 135000,
+      "hours": "13:00-21:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h230",
+    "name": "조혜윤",
+    "location": "봉천동",
+    "bio": "행복한 에너지를 나누는 간호학 전공 대학원생입니다. 다양한 돌봄 경험으로 누구나 편하게 지낼 수 있도록 도와드립니다.",
+    "parsed": {
+      "care_type": [
+        "환자",
+        "아동",
+        "노인"
+      ],
+      "age": 27,
+      "wage_min": 115000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h231",
+    "name": "이지은",
+    "location": "봉천동",
+    "bio": "안녕하세요! 저는 아이들의 밝은 웃음을 좋아하는 지은입니다. 5년간 유치원에서 일한 경험으로 아이들 교육과 돌봄에 자신감이 있어요. 항상 긍정적인 마음으로 최선을 다하겠습니다!",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "환자"
+      ],
+      "age": 24,
+      "wage_min": 95000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h232",
+    "name": "박준호",
+    "location": "대치동",
+    "bio": "안녕하세요, 준호입니다! 요양원에서 3년간 근무하며 노인분들의 건강관리와 일상 보조에 경험이 풍부합니다. 따뜻한 마음과 책임감으로 항상 최고의 서비스를 제공하겠습니다.",
+    "parsed": {
+      "care_type": [
+        "노인",
+        "치매노인"
+      ],
+      "age": 28,
+      "wage_min": 120000,
+      "hours": "07:00-15:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h233",
+    "name": "김수빈",
+    "location": "과천",
+    "bio": "안녕하세요! 저는 에너지 넘치는 수빈입니다. 장애인 복지관에서 2년간 일하며 맞춤형 케어를 제공해왔어요. 밝고 따뜻한 분위기로 편안함을 드리겠습니다!",
+    "parsed": {
+      "care_type": [
+        "장애인"
+      ],
+      "age": 26,
+      "wage_min": 110000,
+      "hours": "14:00-22:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h234",
+    "name": "최민지",
+    "location": "봉천동",
+    "bio": "안녕하세요, 민지예요! 어린이집에서 아이들을 돌본 경험이 있고, 아동 발달에 대한 이해가 깊습니다. 재미있고 교육적인 활동으로 아이의 성장을 도와드리겠습니다.",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 22,
+      "wage_min": 85000,
+      "hours": "10:00-17:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h235",
+    "name": "서태윤",
+    "location": "대치동",
+    "bio": "안녕하세요! 저는 활발하고 책임감 있는 태윤입니다. 병원에서 간병 경험이 풍부하며, 환자분들의 쾌유를 위해 항상 세심하게 도와드리겠습니다.",
+    "parsed": {
+      "care_type": [
+        "환자",
+        "노인"
+      ],
+      "age": 30,
+      "wage_min": 130000,
+      "hours": "06:00-14:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h236",
+    "name": "윤은지",
+    "location": "과천",
+    "bio": "안녕하세요! 저는 긍정적이고 친화적인 은지입니다. 치매노인 요양시설에서 근무하며 인내심 있는 케어를 제공해왔어요. 따뜻한 손길로 편안함을 드리겠습니다.",
+    "parsed": {
+      "care_type": [
+        "치매노인",
+        "노인"
+      ],
+      "age": 32,
+      "wage_min": 125000,
+      "hours": "08:00-16:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h237",
+    "name": "정현준",
+    "location": "봉천동",
+    "bio": "안녕하세요, 현준입니다! 대학교 동안 아동발달을 전공하고 보육 현장에서 일하고 있습니다. 아이들의 창의력 발달을 중시하며 즐겁고 안전한 환경을 만들겠습니다.",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 25,
+      "wage_min": 100000,
+      "hours": "09:00-17:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h238",
+    "name": "한소연",
+    "location": "대치동",
+    "bio": "안녕하세요! 저는 활기찬 소연입니다. 장애인 스포츠 센터에서 일하며 긍정적인 에너지로 함께하겠습니다. 개인 맞춤형 프로그램으로 최고의 경험을 제공하겠습니다!",
+    "parsed": {
+      "care_type": [
+        "장애인",
+        "아동"
+      ],
+      "age": 27,
+      "wage_min": 115000,
+      "hours": "15:00-23:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h239",
+    "name": "장석호",
+    "location": "과천",
+    "bio": "안녕하세요! 저는 신뢰감 있는 석호입니다. 노인 요양원과 병원에서 장기 근무하며 전문적인 돌봄 경험을 쌓았습니다. 항상 친절하고 섬세한 서비스를 약속드립니다.",
+    "parsed": {
+      "care_type": [
+        "노인",
+        "환자",
+        "치매노인"
+      ],
+      "age": 35,
+      "wage_min": 145000,
+      "hours": "07:00-15:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h240",
+    "name": "조혜진",
+    "location": "봉천동",
+    "bio": "안녕하세요, 혜진입니다! 저는 밝고 따뜻한 성격의 돌봄 전문가입니다. 아이부터 노인까지 다양한 경험이 있으며, 항상 진심으로 최선을 다하겠습니다!",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "노인"
+      ],
+      "age": 29,
+      "wage_min": 105000,
+      "hours": "10:00-19:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h241",
+    "name": "김지훈",
+    "location": "봉천동",
+    "bio": "안녕하세요! 저는 활발한 성격으로 아이들과 잘 지내는 편입니다. 아동 돌봄 경험 3년, 책 읽어주기와 함께 놀이를 통해 아이들의 발달을 돕고 싶습니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "장애인"
+      ],
+      "age": 24,
+      "wage_min": 100000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h242",
+    "name": "이수진",
+    "location": "대치동",
+    "bio": "밝고 친근한 매력으로 할머니, 할아버지 돌봄에 최고의 성의를 다합니다. 노인분들의 안전과 편안함을 최우선으로 생각하며, 따뜻한 손길로 케어하겠습니다!",
+    "parsed": {
+      "care_type": [
+        "노인",
+        "치매노인"
+      ],
+      "age": 28,
+      "wage_min": 120000,
+      "hours": "07:00-15:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h243",
+    "name": "박준호",
+    "location": "과천",
+    "bio": "책임감 강하고 세심한 성격의 남자 돌봄 도우미입니다. 환자분들의 신체활동 보조와 일상생활 케어에 특화되어 있으며, 항상 긍정적인 에너지로 함께하겠습니다.",
+    "parsed": {
+      "care_type": [
+        "환자",
+        "장애인"
+      ],
+      "age": 26,
+      "wage_min": 130000,
+      "hours": "14:00-22:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h244",
+    "name": "최민영",
+    "location": "봉천동",
+    "bio": "활기차고 따뜻한 손길의 돌봄 도우미 민영입니다. 어린이부터 어르신까지 폭넓은 연령대의 돌봄 경험이 있으며, 항상 최선을 다할 준비가 되어있어요!",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "노인"
+      ],
+      "age": 31,
+      "wage_min": 110000,
+      "hours": "10:00-19:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h245",
+    "name": "오태현",
+    "location": "대치동",
+    "bio": "성실하고 친절한 태현입니다. 치매 어르신 돌봄에 대한 전문성과 인내심을 갖추고 있으며, 깊은 공감 능력으로 안심할 수 있는 케어를 제공합니다.",
+    "parsed": {
+      "care_type": [
+        "치매노인"
+      ],
+      "age": 29,
+      "wage_min": 140000,
+      "hours": "08:00-17:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h246",
+    "name": "정예은",
+    "location": "과천",
+    "bio": "밝은 미소와 긍정적 에너지가 가득한 예은입니다. 아이들의 교육과 놀이를 함께하며 성장을 돕는 것이 저의 보람이고, 부모님 신뢰를 드리고 싶습니다.",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 23,
+      "wage_min": 95000,
+      "hours": "15:00-21:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h247",
+    "name": "장민준",
+    "location": "봉천동",
+    "bio": "활력 넘치는 민준입니다! 장애인 분들의 일상과 재활을 적극적으로 지원하고, 따뜻함과 전문성을 모두 갖춘 돌봄을 약속드립니다.",
+    "parsed": {
+      "care_type": [
+        "장애인",
+        "환자"
+      ],
+      "age": 25,
+      "wage_min": 125000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h248",
+    "name": "손지연",
+    "location": "대치동",
+    "bio": "섬세함과 책임감으로 무장한 돌봄 전문가 지연입니다. 노인 분들과의 소통을 중시하며, 건강하고 행복한 일상을 만드는 데 최선을 다하겠습니다!",
+    "parsed": {
+      "care_type": [
+        "노인"
+      ],
+      "age": 32,
+      "wage_min": 115000,
+      "hours": "06:00-14:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h249",
+    "name": "임호영",
+    "location": "과천",
+    "bio": "따뜻하고 믿음직한 호영입니다. 환자분들의 신체 케어와 정서적 지지를 동시에 제공하며, 항상 전문적이고 친절한 서비스를 약속드립니다.",
+    "parsed": {
+      "care_type": [
+        "환자",
+        "치매노인"
+      ],
+      "age": 27,
+      "wage_min": 135000,
+      "hours": "13:00-21:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h250",
+    "name": "우소영",
+    "location": "봉천동",
+    "bio": "에너지 넘치는 소영입니다! 아동과 장애인 돌봄에 진심을 담아 최선을 다하며, 매일 매 순간이 특별하고 안전한 돌봄이 되도록 노력하겠습니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "장애인",
+        "노인"
+      ],
+      "age": 30,
+      "wage_min": 105000,
+      "hours": "10:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h251",
+    "name": "김지윤",
+    "location": "봉천동",
+    "bio": "대학교 아동학과를 전공했고 현재 돌봄 경력 3년입니다. 아이들의 밝은 웃음이 제 에너지원이에요. 성실함과 따뜻한 마음으로 최선을 다하겠습니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "환자"
+      ],
+      "age": 26,
+      "wage_min": 110000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h252",
+    "name": "박준호",
+    "location": "과천",
+    "bio": "간호 자격증을 보유한 남성 케어워커입니다. 환자분들을 세심하게 돌보는 것을 즐기며, 응급상황에도 침착하게 대처할 수 있습니다.",
+    "parsed": {
+      "care_type": [
+        "환자",
+        "노인"
+      ],
+      "age": 31,
+      "wage_min": 130000,
+      "hours": "14:00-22:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h253",
+    "name": "이수진",
+    "location": "대치동",
+    "bio": "에너지 넘치는 20대 초반 케어워커예요! 아이들과 노인분들 모두 좋아하시는 밝은 성격이 장점입니다. 항상 웃음과 긍정으로 가득합니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "노인",
+        "장애인"
+      ],
+      "age": 22,
+      "wage_min": 95000,
+      "hours": "07:00-15:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h254",
+    "name": "최민준",
+    "location": "봉천동",
+    "bio": "장애인 복지 전공자로 현장 경험이 5년입니다. 장애인분들의 존엄성을 존중하며 맞춤형 돌봄을 제공하는 것이 제 철학입니다.",
+    "parsed": {
+      "care_type": [
+        "장애인"
+      ],
+      "age": 30,
+      "wage_min": 140000,
+      "hours": "09:00-19:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h255",
+    "name": "정다영",
+    "location": "과천",
+    "bio": "유아교육 전공으로 아이들 교육까지 함께 돌보고 싶은 열정 많은 케어워커입니다. 놀이와 학습을 자연스럽게 연결해요.",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 24,
+      "wage_min": 105000,
+      "hours": "08:00-17:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h256",
+    "name": "홍석호",
+    "location": "대치동",
+    "bio": "체계적이고 꼼꼼한 성격의 남성 케어워커입니다. 노인분들과 오래 대화하며 정서적 돌봄에 중점을 두고 있어요.",
+    "parsed": {
+      "care_type": [
+        "노인",
+        "치매노인"
+      ],
+      "age": 28,
+      "wage_min": 120000,
+      "hours": "10:00-18:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h257",
+    "name": "신혜진",
+    "location": "봉천동",
+    "bio": "활기차고 친근한 느낌이 특징인 케어워커에요. 아이든 어른이든 금방 편해져서 편안한 돌봄 환경을 만들어요.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "노인"
+      ],
+      "age": 25,
+      "wage_min": 100000,
+      "hours": "13:00-21:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h258",
+    "name": "강도현",
+    "location": "과천",
+    "bio": "치매 돌봄 교육 이수자로 어르신들의 변화하는 상태를 이해하고 맞춰드릴 수 있습니다. 인내심과 배려심이 강점입니다.",
+    "parsed": {
+      "care_type": [
+        "치매노인",
+        "노인"
+      ],
+      "age": 33,
+      "wage_min": 135000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h259",
+    "name": "문지연",
+    "location": "대치동",
+    "bio": "밝고 긍정적인 에너지로 가득한 20대 후반 케어워커입니다. 환자분들의 회복과 일상에 함께하는 것이 보람입니다.",
+    "parsed": {
+      "care_type": [
+        "환자",
+        "장애인"
+      ],
+      "age": 27,
+      "wage_min": 115000,
+      "hours": "15:00-23:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h260",
+    "name": "이준영",
+    "location": "봉천동",
+    "bio": "사회복지학 전공으로 전문성을 갖춘 남성 케어워커입니다. 신체 돌봄과 정서 지원을 균형있게 제공하려 노력합니다.",
+    "parsed": {
+      "care_type": [
+        "노인",
+        "환자",
+        "장애인"
+      ],
+      "age": 29,
+      "wage_min": 125000,
+      "hours": "07:00-16:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h261",
+    "name": "김지은",
+    "location": "봉천동",
+    "bio": "아이들과 함께 즐거운 시간을 보내는 것을 좋아합니다. 밝고 긍정적인 성격으로 아이들의 신뢰를 얻고 있어요. 안전하고 책임감 있는 돌봄을 약속합니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "환자"
+      ],
+      "age": 24,
+      "wage_min": 95000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h262",
+    "name": "이준호",
+    "location": "과천",
+    "bio": "아침형 인간으로 에너지 넘치게 매일을 시작합니다. 노인분들과의 소통을 즐기며 정성스럽게 돌봅니다. 함께 건강하고 행복한 일상을 만들어가고 싶습니다.",
+    "parsed": {
+      "care_type": [
+        "노인"
+      ],
+      "age": 28,
+      "wage_min": 110000,
+      "hours": "07:00-15:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h263",
+    "name": "박민지",
+    "location": "대치동",
+    "bio": "치매 어르신 돌봄 경험이 풍부합니다. 인내심과 따뜻함으로 어르신들과 깊은 관계를 맺어왔어요. 최고의 서비스를 제공하기 위해 항상 노력합니다.",
+    "parsed": {
+      "care_type": [
+        "치매노인",
+        "노인"
+      ],
+      "age": 31,
+      "wage_min": 140000,
+      "hours": "14:00-22:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h264",
+    "name": "최재훈",
+    "location": "봉천동",
+    "bio": "장애인 돌봄에 특화되어 있으며 항상 긍정적인 태도로 임합니다. 개인의 존엄성을 존중하고 맞춤형 서비스를 제공하는 것이 제 목표입니다.",
+    "parsed": {
+      "care_type": [
+        "장애인",
+        "환자"
+      ],
+      "age": 26,
+      "wage_min": 125000,
+      "hours": "10:00-19:00",
+      "preferred_gender": "남"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h265",
+    "name": "정수현",
+    "location": "과천",
+    "bio": "아이들의 성장을 도와주는 과정이 가장 보람 있습니다. 창의적이고 재미있는 활동으로 아이들의 발달을 촉진해요. 부모님들과도 소통하며 신뢰를 쌓고 있습니다.",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 23,
+      "wage_min": 85000,
+      "hours": "15:00-20:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h266",
+    "name": "윤혜린",
+    "location": "대치동",
+    "bio": "밤샘 돌봄 경험이 많아 신뢰할 수 있습니다. 환자분들의 상태 변화를 세밀하게 관찰하고 빠르게 대응하는 것이 제 강점입니다.",
+    "parsed": {
+      "care_type": [
+        "환자",
+        "치매노인"
+      ],
+      "age": 29,
+      "wage_min": 135000,
+      "hours": "18:00-06:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h267",
+    "name": "한도현",
+    "location": "봉천동",
+    "bio": "활발하고 친화력 좋은 성격으로 어른, 아이 할 것 없이 잘 지냅니다. 돌봄 서비스를 예술처럼 제공하려고 노력합니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "노인",
+        "환자"
+      ],
+      "age": 25,
+      "wage_min": 100000,
+      "hours": "08:00-17:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h268",
+    "name": "송민경",
+    "location": "과천",
+    "bio": "장애인분들과의 상호작용을 통해 많이 배우고 성장합니다. 각자의 개성을 존중하며 맞춤형 돌봄을 제공해요. 항상 밝은 에너지로 긍정적인 분위기를 만듭니다.",
+    "parsed": {
+      "care_type": [
+        "장애인"
+      ],
+      "age": 27,
+      "wage_min": 120000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h269",
+    "name": "이상윤",
+    "location": "대치동",
+    "bio": "노인분들의 이야기를 듣는 것을 즐기며 공감 능력이 뛰어납니다. 편안하고 안전한 환경을 만드는 것이 저의 역할입니다.",
+    "parsed": {
+      "care_type": [
+        "노인",
+        "치매노인"
+      ],
+      "age": 32,
+      "wage_min": 130000,
+      "hours": "10:00-20:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h270",
+    "name": "조은정",
+    "location": "봉천동",
+    "bio": "성격이 밝고 책임감이 강해서 믿고 맡길 수 있습니다. 아이들과 어르신 모두와 깊은 유대감을 형성하는 것이 특기예요.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "환자"
+      ],
+      "age": 30,
+      "wage_min": 115000,
+      "hours": "14:00-21:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h271",
+    "name": "이서연",
+    "location": "봉천동",
+    "bio": "밝고 긍정적인 성격으로 아이들의 마음을 잘 이해합니다. 유아교육을 전공했고 현장 경험이 풍부해요. 항상 웃음이 많은 돌봄을 제공하려고 노력합니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "장애인"
+      ],
+      "age": 24,
+      "wage_min": 95000,
+      "hours": "08:00-16:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h272",
+    "name": "박준호",
+    "location": "대치동",
+    "bio": "활기찬 에너지로 어르신들을 돌보는 것이 정말 보람차요. 간호 경험이 있고 환자 케어에 자신감이 있습니다. 항상 따뜻한 말씀과 함께 성실하게 일합니다.",
+    "parsed": {
+      "care_type": [
+        "노인",
+        "환자"
+      ],
+      "age": 28,
+      "wage_min": 120000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h273",
+    "name": "김아현",
+    "location": "과천",
+    "bio": "아이들과 함께 하는 시간이 정말 즐거워요. 창의적인 활동을 좋아하고 안전 교육을 철저히 합니다. 매순간 아이의 성장에 함께하고 싶어요.",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 26,
+      "wage_min": 100000,
+      "hours": "14:00-22:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h274",
+    "name": "최민지",
+    "location": "봉천동",
+    "bio": "치매 어르신 케어 경험이 많고 인내심이 강해요. 항상 미소 지으며 어르신의 마음을 헤아리는 돌봄을 합니다. 신체 활동 보조도 잘합니다.",
+    "parsed": {
+      "care_type": [
+        "치매노인",
+        "노인"
+      ],
+      "age": 32,
+      "wage_min": 135000,
+      "hours": "07:00-15:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h275",
+    "name": "이준영",
+    "location": "대치동",
+    "bio": "장애인 친구들과 함께 일하는 것이 저의 소명입니다. 인내심 있고 성실하며 개인맞춤 케어를 제공합니다. 함께 웃고 함께 성장하고 싶어요.",
+    "parsed": {
+      "care_type": [
+        "장애인"
+      ],
+      "age": 25,
+      "wage_min": 110000,
+      "hours": "10:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h276",
+    "name": "정희주",
+    "location": "과천",
+    "bio": "환자 간호와 회복을 돕는 일에 열정적입니다. 의료 기본 지식이 있고 세심한 케어가 특기예요. 어떤 상황에서도 침착함을 잃지 않는 전문가입니다.",
+    "parsed": {
+      "care_type": [
+        "환자",
+        "노인"
+      ],
+      "age": 30,
+      "wage_min": 130000,
+      "hours": "06:00-14:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h277",
+    "name": "강석민",
+    "location": "봉천동",
+    "bio": "활발한 성격으로 아이들이 저를 정말 좋아해요. 놀이 활동과 학습을 재미있게 연계할 수 있습니다. 아이의 발달 단계를 잘 이해하는 돌봄이 제 강점입니다.",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 23,
+      "wage_min": 85000,
+      "hours": "15:00-23:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h278",
+    "name": "오수진",
+    "location": "대치동",
+    "bio": "아동과 노인 모두와 일한 경험이 풍부합니다. 긍정적인 에너지와 책임감이 강해요. 각 대상의 필요를 이해하고 존중하는 돌봄을 제공합니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "노인"
+      ],
+      "age": 29,
+      "wage_min": 115000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h279",
+    "name": "이유진",
+    "location": "과천",
+    "bio": "치매와 장애인 케어에 특화된 돌봄이를 찾으신다면 저가 최고의 선택입니다. 인내심과 공감 능력이 뛰어나고 언제나 긍정적입니다. 신뢰할 수 있는 전문가가 되겠습니다.",
+    "parsed": {
+      "care_type": [
+        "치매노인",
+        "장애인"
+      ],
+      "age": 35,
+      "wage_min": 145000,
+      "hours": "08:00-16:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h280",
+    "name": "유민수",
+    "location": "봉천동",
+    "bio": "활기차고 친절한 성격으로 환자분들의 회복을 돕고 싶습니다. 스트레스 관리와 감정 지원도 잘합니다. 매일 최선을 다하는 신뢰할 수 있는 돌봄을 약속합니다.",
+    "parsed": {
+      "care_type": [
+        "환자"
+      ],
+      "age": 27,
+      "wage_min": 125000,
+      "hours": "12:00-20:00",
+      "preferred_gender": "남"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h281",
+    "name": "이준호",
+    "location": "봉천동",
+    "bio": "3년간 어린이집에서 일한 경험이 있습니다. 아이들의 밝은 웃음이 제 원동력입니다! 안전하고 즐거운 돌봄을 약속드립니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "환자"
+      ],
+      "age": 26,
+      "wage_min": 110000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h282",
+    "name": "박민지",
+    "location": "대치동",
+    "bio": "요양보호사 자격증을 보유하고 있으며, 노년층 분들과의 소통을 즐깁니다. 따뜻한 마음으로 최고의 서비스를 제공하겠습니다.",
+    "parsed": {
+      "care_type": [
+        "노인",
+        "치매노인"
+      ],
+      "age": 32,
+      "wage_min": 130000,
+      "hours": "08:00-17:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h283",
+    "name": "김준영",
+    "location": "과천",
+    "bio": "체육학 전공으로 활동적인 성격입니다. 장애인 돌봄에 특화되어 있으며, 긍정적인 에너지로 함께 일상을 만들어갑니다.",
+    "parsed": {
+      "care_type": [
+        "장애인"
+      ],
+      "age": 24,
+      "wage_min": 95000,
+      "hours": "10:00-19:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h284",
+    "name": "손혜림",
+    "location": "봉천동",
+    "bio": "간호조무사 경력 2년! 환자분들의 건강이 제 목표입니다. 세심하고 책임감 있는 돌봄을 약속드려요.",
+    "parsed": {
+      "care_type": [
+        "환자",
+        "노인"
+      ],
+      "age": 28,
+      "wage_min": 125000,
+      "hours": "14:00-22:00",
+      "preferred_gender": "남"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h285",
+    "name": "최동욱",
+    "location": "대치동",
+    "bio": "사회복지학 전공자로 다양한 돌봄 경험을 보유했습니다. 항상 밝은 마음으로 최선을 다하겠습니다!",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "장애인",
+        "환자"
+      ],
+      "age": 29,
+      "wage_min": 115000,
+      "hours": "07:00-15:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h286",
+    "name": "정유정",
+    "location": "과천",
+    "bio": "아이들과의 상호작용을 잘합니다. 창의적인 활동으로 아이들의 발달을 도울 수 있어 자랑스럽습니다!",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 25,
+      "wage_min": 100000,
+      "hours": "09:00-17:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h287",
+    "name": "윤석진",
+    "location": "봉천동",
+    "bio": "치매 전문 돌봄 경험이 풍부합니다. 환자분의 존엄성을 존중하며 인내심 있게 일합니다.",
+    "parsed": {
+      "care_type": [
+        "치매노인",
+        "노인"
+      ],
+      "age": 35,
+      "wage_min": 145000,
+      "hours": "06:00-14:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h288",
+    "name": "이서희",
+    "location": "대치동",
+    "bio": "유아교육과 졸업자입니다. 아이들의 성장과정을 함께하는 것이 가장 큰 보람입니다. 활발하고 재미있는 돌봄을 제공합니다!",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 23,
+      "wage_min": 85000,
+      "hours": "08:00-16:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h289",
+    "name": "조현우",
+    "location": "과천",
+    "bio": "특수교육 자격증 보유! 장애인 돌봄에 열정을 가지고 있으며, 개개인의 필요에 맞춘 서비스를 제공합니다.",
+    "parsed": {
+      "care_type": [
+        "장애인",
+        "아동"
+      ],
+      "age": 30,
+      "wage_min": 120000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h290",
+    "name": "김나연",
+    "location": "봉천동",
+    "bio": "환자 간호 경험 4년차입니다. 꼼꼼하고 책임감 있는 성격으로 최고의 케어를 약속합니다. 야근도 가능합니다!",
+    "parsed": {
+      "care_type": [
+        "환자",
+        "노인",
+        "치매노인"
+      ],
+      "age": 31,
+      "wage_min": 135000,
+      "hours": "15:00-23:00",
+      "preferred_gender": "남"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h291",
+    "name": "김지은",
+    "location": "봉천동",
+    "bio": "안녕하세요! 밝고 긍정적인 성격으로 아이들과 쉽게 친해져요. 아동 돌봄 경력 3년으로 신뢰할 수 있는 케어를 약속합니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "환자"
+      ],
+      "age": 26,
+      "wage_min": 100000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h292",
+    "name": "박준호",
+    "location": "대치동",
+    "bio": "체력 좋고 책임감 강한 남성 케어 워커입니다. 노인분들께 따뜻한 마음으로 섬세한 돌봄을 제공하고 싶어요.",
+    "parsed": {
+      "care_type": [
+        "노인"
+      ],
+      "age": 28,
+      "wage_min": 120000,
+      "hours": "07:00-15:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h293",
+    "name": "이수민",
+    "location": "과천",
+    "bio": "활기찬 에너지로 아이들을 즐겁게 만들어요! 미술, 음악 활동도 잘해서 창의적인 놀이를 자주 해줍니다.",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 24,
+      "wage_min": 90000,
+      "hours": "14:00-22:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h294",
+    "name": "정현철",
+    "location": "대치동",
+    "bio": "차분하고 성실한 성격으로 노인 돌봄에 최적화되어 있습니다. 경청 잘하고 편안함을 드리는 게 제 강점이에요.",
+    "parsed": {
+      "care_type": [
+        "노인",
+        "치매노인"
+      ],
+      "age": 31,
+      "wage_min": 130000,
+      "hours": "10:00-19:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h295",
+    "name": "최미라",
+    "location": "봉천동",
+    "bio": "장애인 돌봄 전문가로 2년 경력이 있습니다. 인내심 많고 개인 맞춤 케어로 신뢰받고 있어요!",
+    "parsed": {
+      "care_type": [
+        "장애인",
+        "환자"
+      ],
+      "age": 27,
+      "wage_min": 110000,
+      "hours": "09:00-17:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h296",
+    "name": "손도현",
+    "location": "과천",
+    "bio": "아이들 심리에 관심 많은 신입 케어 워커예요. 매사에 적극적이고 빠르게 배우려는 자세로 항상 준비되어 있습니다!",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 22,
+      "wage_min": 80000,
+      "hours": "15:00-21:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h297",
+    "name": "강소연",
+    "location": "대치동",
+    "bio": "따뜻한 손길로 환자분들을 돌보고 싶은 간호 경험자입니다. 꼼꼼함과 전문성으로 신뢰를 얻고 있어요.",
+    "parsed": {
+      "care_type": [
+        "환자",
+        "노인"
+      ],
+      "age": 30,
+      "wage_min": 140000,
+      "hours": "08:00-16:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h298",
+    "name": "우찬영",
+    "location": "봉천동",
+    "bio": "사람 좋아하고 에너지 넘치는 청년입니다. 다양한 케어 경험으로 어떤 상황도 잘 대처할 수 있어요!",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "장애인",
+        "노인"
+      ],
+      "age": 25,
+      "wage_min": 115000,
+      "hours": "11:00-20:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h299",
+    "name": "박연희",
+    "location": "과천",
+    "bio": "치매 어르신 돌봄 경력 2년으로 인내심과 공감 능력이 뛰어납니다. 가족 같은 마음으로 케어합니다.",
+    "parsed": {
+      "care_type": [
+        "치매노인",
+        "노인"
+      ],
+      "age": 29,
+      "wage_min": 135000,
+      "hours": "07:30-15:30",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h300",
+    "name": "임준석",
+    "location": "대치동",
+    "bio": "장애인 활동지원 경험이 풍부한 케어 전문가입니다. 친절하고 신뢰할 수 있는 파트너가 되고 싶습니다!",
+    "parsed": {
+      "care_type": [
+        "장애인"
+      ],
+      "age": 33,
+      "wage_min": 125000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h301",
+    "name": "김민지",
+    "location": "봉천동",
+    "bio": "아동 돌봄 경력 3년, 밝고 긍정적인 성격으로 아이들과 쉽게 친해져요. 창의로운 활동으로 아이들을 즐겁게 해드리겠습니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "환자"
+      ],
+      "age": 24,
+      "wage_min": 95000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h302",
+    "name": "박준호",
+    "location": "과천",
+    "bio": "힘 있고 꼼꼼한 남자 돌봄 도우미예요. 장애인 분들의 일상을 편하게 해드리는 것이 제 목표입니다.",
+    "parsed": {
+      "care_type": [
+        "장애인"
+      ],
+      "age": 28,
+      "wage_min": 130000,
+      "hours": "07:00-16:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h303",
+    "name": "이수진",
+    "location": "대치동",
+    "bio": "노인 돌봄과 치매 간호 경험이 풍부합니다. 따뜻한 마음으로 어르신들을 모시겠습니다.",
+    "parsed": {
+      "care_type": [
+        "노인",
+        "치매노인"
+      ],
+      "age": 32,
+      "wage_min": 125000,
+      "hours": "08:00-17:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h304",
+    "name": "정태영",
+    "location": "봉천동",
+    "bio": "에너지 넘치는 20대 남자! 아동 돌봄에 열정적이며, 재미있는 놀이와 교육을 함께해요.",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 22,
+      "wage_min": 85000,
+      "hours": "14:00-22:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h305",
+    "name": "황은영",
+    "location": "대치동",
+    "bio": "차분하고 세심한 성격으로 환자 돌봄을 전문으로 합니다. 의료 기본 지식도 갖추고 있어요.",
+    "parsed": {
+      "care_type": [
+        "환자",
+        "노인"
+      ],
+      "age": 27,
+      "wage_min": 115000,
+      "hours": "10:00-19:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h306",
+    "name": "최동욱",
+    "location": "과천",
+    "bio": "활동적이고 책임감 강한 도우미입니다. 장애인과 아동 모두와 좋은 관계를 만드는 것이 특기예요.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "장애인"
+      ],
+      "age": 30,
+      "wage_min": 120000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h307",
+    "name": "송민주",
+    "location": "봉천동",
+    "bio": "밝은 웃음이 매력인 여자 도우미! 아동과 노인 돌봄 모두 경험 많으며, 누구든 편하게 대해요.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "노인"
+      ],
+      "age": 26,
+      "wage_min": 105000,
+      "hours": "07:00-15:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h308",
+    "name": "강현수",
+    "location": "대치동",
+    "bio": "치매노인 간호에 전문성이 있습니다. 인내심 있고 상황 대처 능력이 뛰어나요. 함께하면 안심됩니다.",
+    "parsed": {
+      "care_type": [
+        "치매노인",
+        "노인"
+      ],
+      "age": 34,
+      "wage_min": 145000,
+      "hours": "08:00-20:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h309",
+    "name": "우지현",
+    "location": "과천",
+    "bio": "유연하고 긍정적인 에너지를 가진 도우미예요. 여러 돌봄 분야를 아우르며 빠르게 적응합니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "환자",
+        "장애인"
+      ],
+      "age": 25,
+      "wage_min": 110000,
+      "hours": "10:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h310",
+    "name": "문예지",
+    "location": "봉천동",
+    "bio": "신뢰할 수 있는 20대 여자 도우미! 환자 돌봄과 노인 간호에 진심을 다하겠습니다.",
+    "parsed": {
+      "care_type": [
+        "환자",
+        "노인"
+      ],
+      "age": 23,
+      "wage_min": 100000,
+      "hours": "15:00-23:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h311",
+    "name": "김민준",
+    "location": "봉천동",
+    "bio": "대학생 때부터 아이들과 함께하는 걸 좋아했어요. 밝고 긍정적인 성격으로 아이들의 마음을 사로잡는 게 제 장점입니다. 함께 웃고 배우는 시간을 만들어드릴게요!",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "장애인"
+      ],
+      "age": 24,
+      "wage_min": 95000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h312",
+    "name": "이서현",
+    "location": "대치동",
+    "bio": "간호학 공부 중인 열정적인 여성이에요. 노인 분들의 건강과 편안함을 최우선으로 생각하며 정성스러운 돌봄을 제공합니다. 따뜻한 마음으로 함께하겠습니다.",
+    "parsed": {
+      "care_type": [
+        "노인",
+        "치매노인"
+      ],
+      "age": 26,
+      "wage_min": 110000,
+      "hours": "07:00-15:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h313",
+    "name": "박지훈",
+    "location": "과천",
+    "bio": "체육교육과 졸업생으로 활동적이고 에너지 넘치는 성격이에요. 아이들과 함께 놀이를 통해 발달을 도와드리는 데 자신감이 있습니다. 재미있고 안전한 돌봄을 약속할게요!",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 28,
+      "wage_min": 105000,
+      "hours": "14:00-22:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h314",
+    "name": "최유정",
+    "location": "대치동",
+    "bio": "사회복지학과 전공으로 돌봄 경험이 풍부한 여성입니다. 환자분들의 신체적, 심리적 필요를 세심하게 챙기는 게 저의 강점이에요. 믿을 수 있는 돌봄 제공자가 되겠습니다.",
+    "parsed": {
+      "care_type": [
+        "환자",
+        "노인"
+      ],
+      "age": 32,
+      "wage_min": 130000,
+      "hours": "08:00-17:00",
+      "preferred_gender": "남"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h315",
+    "name": "정현우",
+    "location": "봉천동",
+    "bio": "유아교육 전공자로 아이들의 웃음과 성장이 저를 행복하게 만듭니다. 창의적인 활동과 함께 아이들의 발달을 자연스럽게 지원하고 싶어요. 긍정적인 에너지로 함께하겠습니다!",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "장애인"
+      ],
+      "age": 25,
+      "wage_min": 100000,
+      "hours": "10:00-19:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h316",
+    "name": "조혜민",
+    "location": "과천",
+    "bio": "간호조무사 자격증을 가지고 있는 꼼꼼한 성격의 여성입니다. 장애인 분들의 일상을 돕는 것이 보람있고, 항상 존중과 배려로 대합니다. 신뢰할 수 있는 돌봄 파트너가 되겠습니다.",
+    "parsed": {
+      "care_type": [
+        "장애인",
+        "환자"
+      ],
+      "age": 30,
+      "wage_min": 125000,
+      "hours": "06:00-14:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h317",
+    "name": "윤태호",
+    "location": "대치동",
+    "bio": "청년 돌봄전문가로 활동 중인 긍정적이고 책임감 강한 남성입니다. 아이들의 안전과 행복이 최우선이며, 부모님과의 소통도 적극적으로 합니다. 함께 성장하는 경험을 만들어드릴게요!",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 29,
+      "wage_min": 115000,
+      "hours": "15:00-23:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h318",
+    "name": "송지은",
+    "location": "봉천동",
+    "bio": "치매 전문 돌봄 교육을 받은 따뜻한 마음의 여성입니다. 어르신들과의 소통을 가장 중요하게 생각하며, 인내심과 공감능력으로 신뢰를 쌓겠습니다. 안정적이고 안전한 돌봄을 약속합니다.",
+    "parsed": {
+      "care_type": [
+        "치매노인",
+        "노인"
+      ],
+      "age": 35,
+      "wage_min": 140000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h319",
+    "name": "한승민",
+    "location": "과천",
+    "bio": "활동적이고 친화적인 성격의 젊은 남성이에요. 아이들뿐만 아니라 장애인 분들과의 상호작용도 즐기며, 항상 최선을 다하는 태도로 임합니다. 함께라면 모두 행복할 거예요!",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "장애인",
+        "환자"
+      ],
+      "age": 23,
+      "wage_min": 85000,
+      "hours": "12:00-20:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h320",
+    "name": "라민지",
+    "location": "대치동",
+    "bio": "심리학 전공으로 섬세한 공감 능력을 갖춘 여성입니다. 노인 분들의 정서적 안정을 돕는 것이 가장 보람찬 일이에요. 진심 어린 소통과 존중으로 좋은 관계를 만들겠습니다.",
+    "parsed": {
+      "care_type": [
+        "노인",
+        "치매노인"
+      ],
+      "age": 27,
+      "wage_min": 120000,
+      "hours": "13:00-21:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h321",
+    "name": "김지은",
+    "location": "봉천동",
+    "bio": "아이들의 밝은 웃음이 저를 행복하게 만들어요. 4년간의 보육 경험으로 안심하고 맡겨주세요. 항상 긍정적인 에너지로 아이들과 함께하겠습니다!",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "환자"
+      ],
+      "age": 23,
+      "wage_min": 95000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h322",
+    "name": "이준호",
+    "location": "과천",
+    "bio": "노인 요양에 진심을 다하는 청년입니다. 어르신들의 건강과 행복이 제 가장 큰 보람이에요. 친절하고 책임감 있는 돌봄을 약속드립니다.",
+    "parsed": {
+      "care_type": [
+        "노인"
+      ],
+      "age": 28,
+      "wage_min": 120000,
+      "hours": "07:00-15:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h323",
+    "name": "박수진",
+    "location": "대치동",
+    "bio": "에너지 넘치는 아동 전담 케어 도우미입니다. 창의적인 활동으로 아이들의 성장을 돕고 싶어요. 매일 새로운 도전이 저를 설레게 합니다!",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 25,
+      "wage_min": 110000,
+      "hours": "14:00-22:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h324",
+    "name": "최민준",
+    "location": "봉천동",
+    "bio": "치매 어르신 돌봄에 특화되어 있습니다. 인내심과 전문 지식으로 어르신과 가족분들께 신뢰를 드리고 싶어요. 함께라면 더 밝은 하루가 될 거예요.",
+    "parsed": {
+      "care_type": [
+        "치매노인",
+        "노인"
+      ],
+      "age": 31,
+      "wage_min": 135000,
+      "hours": "08:00-17:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h325",
+    "name": "정하영",
+    "location": "대치동",
+    "bio": "장애인 활동 보조에 열정적입니다. 따뜻한 마음으로 개인의 존엄성을 존중하며 돌봐드려요. 함께하는 시간 하나하나가 의미 있고 소중합니다.",
+    "parsed": {
+      "care_type": [
+        "장애인"
+      ],
+      "age": 26,
+      "wage_min": 125000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "남"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h326",
+    "name": "이현우",
+    "location": "과천",
+    "bio": "환자 돌봄과 재활 보조에 경험이 풍부합니다. 의료진과의 협력으로 최고의 케어를 제공하려 노력해요. 작은 배려가 치유의 시작이라고 믿습니다.",
+    "parsed": {
+      "care_type": [
+        "환자"
+      ],
+      "age": 32,
+      "wage_min": 140000,
+      "hours": "06:00-14:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h327",
+    "name": "송지현",
+    "location": "봉천동",
+    "bio": "밝고 활동적인 성격으로 아동과 노인 모두와 잘 지냅니다. 세대를 넘어 누구와도 따뜻한 관계를 맺고 싶어요. 웃음이 많은 제 모습이 자산이라 생각합니다!",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "노인"
+      ],
+      "age": 24,
+      "wage_min": 100000,
+      "hours": "10:00-19:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h328",
+    "name": "함준석",
+    "location": "대치동",
+    "bio": "장애인과 환자 돌봄에 특화된 청년입니다. 신체적, 정서적 케어 모두 최선을 다해요. 상대방의 눈높이에서 이해하고 돕는 것이 제 강점입니다.",
+    "parsed": {
+      "care_type": [
+        "장애인",
+        "환자"
+      ],
+      "age": 29,
+      "wage_min": 130000,
+      "hours": "13:00-21:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h329",
+    "name": "조은별",
+    "location": "과천",
+    "bio": "치매 어르신 돌봄에 마음을 다합니다. 인내심 있고 세심한 주의로 보호자님들의 걱정을 덜어드리고 싶어요. 작은 변화도 놓치지 않겠습니다.",
+    "parsed": {
+      "care_type": [
+        "치매노인"
+      ],
+      "age": 27,
+      "wage_min": 128000,
+      "hours": "08:00-16:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h330",
+    "name": "윤태호",
+    "location": "봉천동",
+    "bio": "아이들의 발달을 돕는 일에 보람을 느껴요. 재미있으면서도 교육적인 활동으로 아이들의 성장을 지원합니다. 저도 함께 성장하는 케어 도우미가 되겠습니다!",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 22,
+      "wage_min": 88000,
+      "hours": "14:00-22:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h331",
+    "name": "김지은",
+    "location": "봉천동",
+    "bio": "안녕하세요! 저는 밝고 긍정적인 성격으로 아이들과 어르신들 모두와 잘 지낼 수 있어요. 5년간 돌봄 경험을 쌓으며 신뢰할 수 있는 케어를 제공하겠습니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "노인"
+      ],
+      "age": 24,
+      "wage_min": 95000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h332",
+    "name": "박준호",
+    "location": "대치동",
+    "bio": "에너지 넘치는 20대 남자예요! 장애인 케어와 환자 돌봄에 특화되어 있으며, 항상 밝은 마음으로 임하겠습니다.",
+    "parsed": {
+      "care_type": [
+        "장애인",
+        "환자"
+      ],
+      "age": 26,
+      "wage_min": 120000,
+      "hours": "14:00-22:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h333",
+    "name": "이수현",
+    "location": "과천",
+    "bio": "활발하고 책임감 강한 성격의 간호사입니다. 치매노인 케어에 특별한 관심이 있으며, 전문적이면서도 따뜻한 돌봄을 드릴게요.",
+    "parsed": {
+      "care_type": [
+        "치매노인",
+        "노인"
+      ],
+      "age": 28,
+      "wage_min": 140000,
+      "hours": "10:00-20:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h334",
+    "name": "최민지",
+    "location": "봉천동",
+    "bio": "아이들을 정말 사랑해요! 창의적인 활동으로 아이들의 발달을 돕고, 언제나 긍정적인 에너지로 함께하겠습니다.",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 22,
+      "wage_min": 85000,
+      "hours": "07:00-15:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h335",
+    "name": "한동욱",
+    "location": "대치동",
+    "bio": "다정하고 세심한 성격의 사람이에요. 장애인분들과 노인분들을 위해 성실하게 돌봄 서비스를 제공합니다.",
+    "parsed": {
+      "care_type": [
+        "장애인",
+        "노인"
+      ],
+      "age": 30,
+      "wage_min": 125000,
+      "hours": "09:00-17:00",
+      "preferred_gender": "남"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h336",
+    "name": "서하나",
+    "location": "과천",
+    "bio": "저는 환자분들의 회복을 진심으로 응원하는 케어 도우미입니다. 의료 기초 지식과 따뜻한 마음으로 최선을 다하겠습니다.",
+    "parsed": {
+      "care_type": [
+        "환자",
+        "치매노인"
+      ],
+      "age": 27,
+      "wage_min": 130000,
+      "hours": "15:00-23:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h337",
+    "name": "조현준",
+    "location": "봉천동",
+    "bio": "순발력 있고 친절한 20대 남자입니다! 아동 케어부터 환자 돌봄까지 폭넓게 경험했으며, 항상 신뢰할 수 있는 서비스를 제공하겠습니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "환자",
+        "노인"
+      ],
+      "age": 25,
+      "wage_min": 105000,
+      "hours": "08:00-16:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h338",
+    "name": "오은혜",
+    "location": "대치동",
+    "bio": "아이들의 안전과 행복이 최우선입니다! 유아 교육 경험이 풍부하고 재밌는 활동으로 아이들의 웃음을 이끌어낼게요.",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 23,
+      "wage_min": 90000,
+      "hours": "09:00-19:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h339",
+    "name": "임준영",
+    "location": "과천",
+    "bio": "노인분들의 편안함을 위해 정성을 쏟는 케어 도우미입니다. 진심 있는 태도와 체계적인 관리로 신뢰받겠습니다.",
+    "parsed": {
+      "care_type": [
+        "노인",
+        "치매노인"
+      ],
+      "age": 32,
+      "wage_min": 135000,
+      "hours": "10:00-18:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h340",
+    "name": "문지수",
+    "location": "봉천동",
+    "bio": "장애인분들의 자립을 돕는 것이 보람이에요. 인내심 있고 긍정적인 마음으로 매일 최선의 케어를 드리겠습니다.",
+    "parsed": {
+      "care_type": [
+        "장애인"
+      ],
+      "age": 29,
+      "wage_min": 115000,
+      "hours": "06:00-14:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h341",
+    "name": "이서윤",
+    "location": "봉천동",
+    "bio": "아이들과 함께하는 것을 정말 좋아해요! 밝고 긍정적인 성격으로 아이들에게 신뢰받고 있습니다. 창의로운 활동과 안전한 돌봄을 약속드려요.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "환자"
+      ],
+      "age": 23,
+      "wage_min": 95000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h342",
+    "name": "박준호",
+    "location": "대치동",
+    "bio": "활발하고 책임감 있는 케어 전문가입니다. 노인분들과의 대화를 통해 삶의 소중함을 배우고 있어요. 친절하고 따뜻한 마음으로 섬기겠습니다.",
+    "parsed": {
+      "care_type": [
+        "노인"
+      ],
+      "age": 28,
+      "wage_min": 120000,
+      "hours": "07:00-15:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h343",
+    "name": "김은지",
+    "location": "과천",
+    "bio": "체계적이고 꼼꼼한 성격으로 장애인분들의 일상을 함께합니다. 작은 배려로 큰 변화를 만드는 것에 보람을 느껴요. 항상 긍정적이고 성실합니다!",
+    "parsed": {
+      "care_type": [
+        "장애인",
+        "환자"
+      ],
+      "age": 26,
+      "wage_min": 130000,
+      "hours": "14:00-22:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h344",
+    "name": "최민준",
+    "location": "봉천동",
+    "bio": "치매 어르신들 케어에 특화된 전문가예요. 인내심 있고 따뜻한 마음으로 어르신을 존중하며 돌봅니다. 매일 새로운 배움이 있는 일이라 생각해요.",
+    "parsed": {
+      "care_type": [
+        "치매노인"
+      ],
+      "age": 31,
+      "wage_min": 145000,
+      "hours": "10:00-19:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h345",
+    "name": "정하나",
+    "location": "대치동",
+    "bio": "아이들의 웃음이 제 에너지입니다! 밝은 성격으로 아이들과 친근하게 지내며 발달을 도와주는 것이 제 역할이에요. 언제나 안전하고 즐거운 환경을 만들어요.",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 24,
+      "wage_min": 100000,
+      "hours": "08:00-17:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h346",
+    "name": "조성훈",
+    "location": "과천",
+    "bio": "환자 케어 경험이 풍부한 신뢰할 수 있는 전문가입니다. 의료적 지식과 배려심으로 편안함을 제공해요. 항상 긍정적인 에너지로 회복을 도와드립니다!",
+    "parsed": {
+      "care_type": [
+        "환자",
+        "노인"
+      ],
+      "age": 29,
+      "wage_min": 135000,
+      "hours": "06:00-14:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h347",
+    "name": "이채민",
+    "location": "봉천동",
+    "bio": "활발한 성격으로 아이들과 신나게 놀며 배우고 있어요! 교육적이면서도 재밌는 활동을 즐겨합니다. 아이들의 성장이 저의 가장 큰 기쁨입니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "장애인"
+      ],
+      "age": 25,
+      "wage_min": 105000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h348",
+    "name": "한기철",
+    "location": "대치동",
+    "bio": "신뢰와 책임감으로 가득한 케어 전문가입니다. 어르신들의 이야기를 경청하며 편안한 환경을 만들어요. 매번 성실하고 친절한 서비스를 약속드립니다.",
+    "parsed": {
+      "care_type": [
+        "노인",
+        "치매노인"
+      ],
+      "age": 32,
+      "wage_min": 140000,
+      "hours": "07:00-16:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h349",
+    "name": "박수진",
+    "location": "과천",
+    "bio": "장애인분들의 자립을 돕고 존엄성을 지키기 위해 노력하는 따뜻한 케어 도우미예요. 항상 웃음과 긍정으로 함께합니다. 더 나은 일상을 만들어가고 싶어요!",
+    "parsed": {
+      "care_type": [
+        "장애인"
+      ],
+      "age": 27,
+      "wage_min": 125000,
+      "hours": "15:00-23:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h350",
+    "name": "윤준영",
+    "location": "봉천동",
+    "bio": "다양한 케어 경험으로 무장한 전문가입니다! 아이부터 어르신까지 모두를 따뜻하게 돌봅니다. 책임감 있고 성실하게 최선을 다하겠습니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "노인",
+        "환자"
+      ],
+      "age": 33,
+      "wage_min": 150000,
+      "hours": "10:00-20:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h351",
+    "name": "김지은",
+    "location": "봉천동",
+    "bio": "아이들과 함께 놀고 배우는 것을 좋아합니다. 밝고 긍정적인 성격으로 아이들에게 신뢰받고 있어요. 안전하고 즐거운 돌봄을 약속드립니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "환자"
+      ],
+      "age": 23,
+      "wage_min": 95000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h352",
+    "name": "박준호",
+    "location": "대치동",
+    "bio": "체계적이고 책임감 있는 성격으로 노인분들을 정성스럽게 돌보겠습니다. 경청을 잘하는 편이라 편안한 관계를 만들어요.",
+    "parsed": {
+      "care_type": [
+        "노인"
+      ],
+      "age": 28,
+      "wage_min": 120000,
+      "hours": "07:00-15:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h353",
+    "name": "이수현",
+    "location": "과천",
+    "bio": "활동적이고 창의적인 성향으로 아이들과 새로운 활동을 함께해요. 교육심리학 공부 중이라 아이 발달에 맞춘 돌봄을 제공합니다.",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 25,
+      "wage_min": 100000,
+      "hours": "14:00-22:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h354",
+    "name": "최미영",
+    "location": "봉천동",
+    "bio": "체계적이고 꼼꼼한 성격의 돌봄 도우미예요. 장애인분들의 일상을 편하게 만드는 데 최선을 다하겠습니다.",
+    "parsed": {
+      "care_type": [
+        "장애인",
+        "치매노인"
+      ],
+      "age": 32,
+      "wage_min": 140000,
+      "hours": "08:00-16:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h355",
+    "name": "정태준",
+    "location": "대치동",
+    "bio": "밝은 에너지와 친화력으로 누구와도 쉽게 친해져요. 환자분들의 회복을 응원하는 마음으로 정성스럽게 돌보겠습니다.",
+    "parsed": {
+      "care_type": [
+        "환자",
+        "노인"
+      ],
+      "age": 26,
+      "wage_min": 115000,
+      "hours": "10:00-19:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h356",
+    "name": "강하은",
+    "location": "과천",
+    "bio": "아동 심리에 관심 많고, 신체활동을 즐겨요. 아이들이 건강하고 행복하게 자랄 수 있도록 함께하겠습니다.",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 22,
+      "wage_min": 85000,
+      "hours": "09:00-17:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h357",
+    "name": "손기훈",
+    "location": "봉천동",
+    "bio": "인내심 많고 섬세한 성격으로 치매노인분들을 돌본 경험이 있습니다. 편안한 분위기에서 신뢰받는 도우미가 되겠습니다.",
+    "parsed": {
+      "care_type": [
+        "치매노인",
+        "노인"
+      ],
+      "age": 35,
+      "wage_min": 130000,
+      "hours": "06:00-14:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h358",
+    "name": "윤지훈",
+    "location": "대치동",
+    "bio": "긍정적이고 에너지 넘치는 도우미예요. 다양한 상황에 빠르게 적응하면서 아동과 노인분들을 모두 잘 돌봅니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "노인",
+        "환자"
+      ],
+      "age": 29,
+      "wage_min": 125000,
+      "hours": "12:00-20:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h359",
+    "name": "이현주",
+    "location": "과천",
+    "bio": "예술과 음악을 좋아해서 아이들과 창의적인 활동을 함께해요. 따뜻하고 재미있는 돌봄을 제공하는 것이 목표입니다.",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 24,
+      "wage_min": 90000,
+      "hours": "15:00-23:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h360",
+    "name": "오승준",
+    "location": "봉천동",
+    "bio": "책임감 있고 성숙한 태도로 장애인분들과 깊은 신뢰 관계를 만듭니다. 일상의 작은 순간들을 소중히 여기는 도우미입니다.",
+    "parsed": {
+      "care_type": [
+        "장애인"
+      ],
+      "age": 31,
+      "wage_min": 135000,
+      "hours": "08:00-17:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h361",
+    "name": "이민지",
+    "location": "봉천동",
+    "bio": "밝고 긍정적인 성격으로 아이들과 쉽게 친해져요. 아동 돌봄 경험 3년, 안전하고 재미있는 활동을 제공합니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "환자"
+      ],
+      "age": 24,
+      "wage_min": 95000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h362",
+    "name": "김준호",
+    "location": "과천",
+    "bio": "체계적이고 책임감 있는 돌봄 제공자입니다. 노인 요양 경험 4년, 친절한 태도로 신뢰받고 있습니다.",
+    "parsed": {
+      "care_type": [
+        "노인"
+      ],
+      "age": 31,
+      "wage_min": 120000,
+      "hours": "07:00-15:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h363",
+    "name": "박서연",
+    "location": "대치동",
+    "bio": "에너지 넘치는 20대입니다! 아동과 장애인 돌봄 경험 있으며, 항상 웃는 얼굴로 인사해요.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "장애인"
+      ],
+      "age": 22,
+      "wage_min": 85000,
+      "hours": "14:00-22:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h364",
+    "name": "최동욱",
+    "location": "봉천동",
+    "bio": "차분하고 세심한 돌봄을 제공합니다. 치매노인 특화 교육 이수, 인내심 있는 돌봄자입니다.",
+    "parsed": {
+      "care_type": [
+        "치매노인",
+        "노인"
+      ],
+      "age": 28,
+      "wage_min": 135000,
+      "hours": "08:00-16:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h365",
+    "name": "송지은",
+    "location": "대치동",
+    "bio": "아이들의 성장과 발달을 돕는 데 열정적입니다. 창의적인 활동과 따뜻한 돌봄으로 사랑받고 있어요!",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 26,
+      "wage_min": 110000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h366",
+    "name": "정현민",
+    "location": "과천",
+    "bio": "활발하고 긍정적인 에너지가 장점입니다. 아동과 환자 돌봄 모두 가능하며, 빠른 적응력이 특기예요.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "환자"
+      ],
+      "age": 25,
+      "wage_min": 100000,
+      "hours": "10:00-19:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h367",
+    "name": "한수진",
+    "location": "봉천동",
+    "bio": "노인분들과 대화하는 것을 즐기고, 격려와 동료애로 신뢰를 얻고 있습니다. 경험 2년, 성실함이 자랑입니다.",
+    "parsed": {
+      "care_type": [
+        "노인",
+        "치매노인"
+      ],
+      "age": 29,
+      "wage_min": 125000,
+      "hours": "07:00-15:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h368",
+    "name": "오준석",
+    "location": "대치동",
+    "bio": "장애인 돌봄 전문가로서 섬세한 케어를 제공합니다. 긍정적 태도와 인내심으로 신뢰받고 있습니다.",
+    "parsed": {
+      "care_type": [
+        "장애인",
+        "환자"
+      ],
+      "age": 32,
+      "wage_min": 140000,
+      "hours": "09:00-17:00",
+      "preferred_gender": "남"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h369",
+    "name": "임다현",
+    "location": "과천",
+    "bio": "밝은 웃음과 책임감으로 아동 돌봄을 하고 있습니다. 교육 경험도 있어 아이들의 발달을 자극하는 활동을 제공해요!",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 23,
+      "wage_min": 90000,
+      "hours": "14:00-22:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h370",
+    "name": "윤혁준",
+    "location": "봉천동",
+    "bio": "환자 돌봄과 가사 일까지 맡을 수 있는 다재다능한 돌봄 도우미입니다. 항상 칭찬받는 세심함과 신뢰성!",
+    "parsed": {
+      "care_type": [
+        "환자",
+        "노인"
+      ],
+      "age": 27,
+      "wage_min": 115000,
+      "hours": "06:00-14:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h371",
+    "name": "이서연",
+    "location": "봉천동",
+    "bio": "안녕하세요! 아동 돌봄에 열정이 있는 서연입니다. 밝고 친절한 성격으로 아이들과 즐겁게 소통하며, 책 읽어주기와 함께 놀이를 통해 발달을 도와드립니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "환자"
+      ],
+      "age": 24,
+      "wage_min": 95000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h372",
+    "name": "김준호",
+    "location": "대치동",
+    "bio": "체계적이고 꼼꼼한 준호입니다. 노인 돌봄 경험이 풍부하며, 따뜻한 마음으로 어르신들의 일상을 편하게 만들어드리겠습니다.",
+    "parsed": {
+      "care_type": [
+        "노인",
+        "치매노인"
+      ],
+      "age": 28,
+      "wage_min": 120000,
+      "hours": "07:00-15:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h373",
+    "name": "박지은",
+    "location": "과천",
+    "bio": "활기찬 에너지를 가진 지은입니다! 장애인분들과의 상호작용을 즐기며, 최신 돌봄 기술을 배우고 적용하는 것을 좋아합니다.",
+    "parsed": {
+      "care_type": [
+        "장애인"
+      ],
+      "age": 26,
+      "wage_min": 110000,
+      "hours": "14:00-22:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h374",
+    "name": "최민수",
+    "location": "봉천동",
+    "bio": "책임감 강한 민수입니다. 아동과 노인 돌봄 모두 경험했으며, 세심한 관찰력으로 각 개인의 필요를 정확히 파악합니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "노인"
+      ],
+      "age": 31,
+      "wage_min": 130000,
+      "hours": "08:00-17:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h375",
+    "name": "정하나",
+    "location": "대치동",
+    "bio": "긍정적인 에너지의 하나입니다. 환자 돌봄과 아동 돌봄에 특화되어 있으며, 항상 환자분들의 회복을 응원합니다.",
+    "parsed": {
+      "care_type": [
+        "환자",
+        "아동",
+        "치매노인"
+      ],
+      "age": 25,
+      "wage_min": 105000,
+      "hours": "10:00-18:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h376",
+    "name": "송재훈",
+    "location": "과천",
+    "bio": "신뢰할 수 있는 재훈입니다. 장애인과 환자 돌봄에 깊은 이해를 가지고 있으며, 매사에 진심으로 임합니다.",
+    "parsed": {
+      "care_type": [
+        "장애인",
+        "환자"
+      ],
+      "age": 29,
+      "wage_min": 125000,
+      "hours": "06:30-14:30",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h377",
+    "name": "우현주",
+    "location": "봉천동",
+    "bio": "밝고 친화적인 현주입니다! 노인 돌봄 전문가로서, 어르신들과의 대화를 통해 마음까지 챙기려고 노력합니다.",
+    "parsed": {
+      "care_type": [
+        "노인"
+      ],
+      "age": 27,
+      "wage_min": 115000,
+      "hours": "09:00-17:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h378",
+    "name": "이명준",
+    "location": "대치동",
+    "bio": "성실하고 차분한 명준입니다. 치매노인 돌봄과 환자 케어에 전문성을 가지고 있으며, 인내심과 배려심이 강합니다.",
+    "parsed": {
+      "care_type": [
+        "치매노인",
+        "환자"
+      ],
+      "age": 34,
+      "wage_min": 145000,
+      "hours": "13:00-21:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h379",
+    "name": "한세연",
+    "location": "과천",
+    "bio": "밝고 통통튀는 세연입니다! 아동 돌봄을 사랑하며, 창의적인 활동으로 아이들의 상상력을 키워주고 싶습니다.",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 23,
+      "wage_min": 85000,
+      "hours": "14:00-20:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h380",
+    "name": "조석준",
+    "location": "봉천동",
+    "bio": "든든하고 믿음직한 석준입니다. 장애인과 아동 돌봄 경험이 풍부하며, 개개인의 특성을 존중하며 돌봅니다.",
+    "parsed": {
+      "care_type": [
+        "장애인",
+        "아동"
+      ],
+      "age": 30,
+      "wage_min": 120000,
+      "hours": "08:00-16:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h381",
+    "name": "김민지",
+    "location": "봉천동",
+    "bio": "아동 돌봄 경력 3년, 밝고 활발한 성격으로 아이들과 쉽게 친해져요. 창의적인 활동과 교육을 통해 아이들의 발달을 돕는 것에 자부심이 있습니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "장애인"
+      ],
+      "age": 25,
+      "wage_min": 110000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h382",
+    "name": "이준호",
+    "location": "대치동",
+    "bio": "건강하고 책임감 있는 청년입니다. 노인 돌봄 경험이 풍부하며, 환자분들의 일상을 편하게 만드는 데 집중합니다.",
+    "parsed": {
+      "care_type": [
+        "노인",
+        "환자"
+      ],
+      "age": 28,
+      "wage_min": 125000,
+      "hours": "07:00-15:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h383",
+    "name": "박수진",
+    "location": "과천",
+    "bio": "긍정적이고 친화력 있는 성격으로 누구와도 잘 지냅니다. 치매노인 돌봄에 특화되어 있으며, 인내심 있게 대응합니다.",
+    "parsed": {
+      "care_type": [
+        "치매노인"
+      ],
+      "age": 32,
+      "wage_min": 135000,
+      "hours": "08:00-17:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h384",
+    "name": "최도현",
+    "location": "봉천동",
+    "bio": "에너지 넘치는 20대입니다! 아동 활동 보조와 장애인 이동 지원에 자신이 있으며, 항상 긍정적인 태도로 임합니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "장애인"
+      ],
+      "age": 23,
+      "wage_min": 100000,
+      "hours": "14:00-22:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h385",
+    "name": "서예은",
+    "location": "대치동",
+    "bio": "섬세하고 따뜻한 마음으로 노인 돌봄을 합니다. 일상생활 보조뿐만 아니라 정서적 지원까지 신경 쓰는 성실한 돌봄 도우미입니다.",
+    "parsed": {
+      "care_type": [
+        "노인",
+        "치매노인",
+        "환자"
+      ],
+      "age": 29,
+      "wage_min": 130000,
+      "hours": "06:00-14:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h386",
+    "name": "정현우",
+    "location": "과천",
+    "bio": "활동적이고 체계적인 청년으로, 아동교육과 생활지도를 균형있게 제공합니다. 부모님과의 소통도 적극적으로 합니다.",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 26,
+      "wage_min": 105000,
+      "hours": "15:00-21:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h387",
+    "name": "한지우",
+    "location": "봉천동",
+    "bio": "밝은 미소와 함께 장애인 돌봄에 진심을 담습니다. 신체활동 보조와 일상생활 지원에 경험이 많아요.",
+    "parsed": {
+      "care_type": [
+        "장애인",
+        "환자"
+      ],
+      "age": 31,
+      "wage_min": 120000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "남"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h388",
+    "name": "윤시현",
+    "location": "대치동",
+    "bio": "젊은 에너지로 가득한 돌봄 전문가입니다. 아동과 노인 모두와 잘 지내며, 각자의 필요에 맞춘 맞춤형 서비스를 제공합니다.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "노인"
+      ],
+      "age": 24,
+      "wage_min": 95000,
+      "hours": "10:00-19:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h389",
+    "name": "조아영",
+    "location": "과천",
+    "bio": "책임감 강하고 친절한 성격으로 가족 같은 돌봄을 제공합니다. 치매 및 중증 환자 간호에 특별한 관심과 경험이 있습니다.",
+    "parsed": {
+      "care_type": [
+        "치매노인",
+        "환자",
+        "노인"
+      ],
+      "age": 35,
+      "wage_min": 145000,
+      "hours": "08:00-16:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h390",
+    "name": "강태민",
+    "location": "봉천동",
+    "bio": "열정적이고 끈기 있는 청년입니다. 장애인과 환자 돌봄에 정성을 들이며, 보호자와의 신뢰 관계 구축을 최우선으로 합니다.",
+    "parsed": {
+      "care_type": [
+        "장애인",
+        "환자"
+      ],
+      "age": 27,
+      "wage_min": 115000,
+      "hours": "13:00-21:00",
+      "preferred_gender": "남"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h391",
+    "name": "이지은",
+    "location": "봉천동",
+    "bio": "아동 돌봄 경력 3년, 아이들의 웃음이 제 보람입니다. 밝고 긍정적인 에너지로 안전하고 재미있는 케어를 제공해요!",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "환자"
+      ],
+      "age": 24,
+      "wage_min": 95000,
+      "hours": "08:00-17:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h392",
+    "name": "박준호",
+    "location": "대치동",
+    "bio": "노인 및 장애인 돌봄 전문가입니다. 친절하고 세심한 손길로 편안함을 드리겠습니다. 활동적인 야외활동도 함께 즐겨요!",
+    "parsed": {
+      "care_type": [
+        "노인",
+        "장애인"
+      ],
+      "age": 28,
+      "wage_min": 120000,
+      "hours": "10:00-20:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h393",
+    "name": "김민지",
+    "location": "과천",
+    "bio": "아동·유아 전담 돌봄 전문가예요. 발달 심리 공부 중이며, 매일 새로운 활동으로 아이들과 함께 성장하고 있습니다!",
+    "parsed": {
+      "care_type": [
+        "아동"
+      ],
+      "age": 26,
+      "wage_min": 100000,
+      "hours": "07:00-16:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h394",
+    "name": "최태환",
+    "location": "봉천동",
+    "bio": "체력 좋은 20대 남성입니다! 치매노인 돌봄 경험 있고, 인내심과 따뜻함으로 항상 최선을 다해요. 함께 웃으며 시간을 보내요!",
+    "parsed": {
+      "care_type": [
+        "치매노인",
+        "노인"
+      ],
+      "age": 29,
+      "wage_min": 115000,
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h395",
+    "name": "오수진",
+    "location": "대치동",
+    "bio": "환자 간병과 장애인 돌봄을 담당합니다. 의료 지식도 있으며 매사 꼼꼼하고 신뢰할 수 있는 케어를 약속해요!",
+    "parsed": {
+      "care_type": [
+        "환자",
+        "장애인"
+      ],
+      "age": 31,
+      "wage_min": 130000,
+      "hours": "14:00-23:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h396",
+    "name": "정윤호",
+    "location": "과천",
+    "bio": "신체활동 좋아하는 활발한 성격입니다! 아동과 노인 돌봄 모두 경험 있으며, 긍정적인 마음으로 매일을 즐겁게 만들어요.",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "노인"
+      ],
+      "age": 25,
+      "wage_min": 105000,
+      "hours": "08:00-17:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h397",
+    "name": "송채원",
+    "location": "봉천동",
+    "bio": "아동과 환자 돌봄을 전담합니다. 유아 교육 공부 중이며, 상황에 맞는 섬세한 대응으로 신뢰받고 싶어요!",
+    "parsed": {
+      "care_type": [
+        "아동",
+        "환자"
+      ],
+      "age": 23,
+      "wage_min": 90000,
+      "hours": "09:00-19:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h398",
+    "name": "한동욱",
+    "location": "대치동",
+    "bio": "치매노인 및 노인 돌봄 전문입니다. 인내심 있고 따뜻한 성격으로 어르신들이 편안해하셨어요. 믿고 맡겨주세요!",
+    "parsed": {
+      "care_type": [
+        "치매노인",
+        "노인",
+        "환자"
+      ],
+      "age": 32,
+      "wage_min": 135000,
+      "hours": "10:00-19:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h399",
+    "name": "류지현",
+    "location": "과천",
+    "bio": "장애인과 아동 돌봄을 합니다. 에너지 넘치는 성격으로 긍정적인 환경을 만들고, 항상 배우는 마음으로 최선을 다해요!",
+    "parsed": {
+      "care_type": [
+        "장애인",
+        "아동"
+      ],
+      "age": 27,
+      "wage_min": 110000,
+      "hours": "07:00-15:00",
+      "preferred_gender": "무관"
+    },
+    "reviews_received": [],
+    "reviews_written": []
+  },
+  {
+    "id": "h400",
+    "name": "함혜은",
+    "location": "봉천동",
+    "bio": "노인과 환자 돌봄에 정성을 다합니다. 섬세하고 세심한 성격으로 편안함을 드리며, 항상 새로운 것을 배우려 해요!",
+    "parsed": {
+      "care_type": [
+        "노인",
+        "환자"
+      ],
+      "age": 30,
+      "wage_min": 125000,
+      "hours": "14:00-22:00",
+      "preferred_gender": "여"
+    },
+    "reviews_received": [],
+    "reviews_written": []
   }
 ]
