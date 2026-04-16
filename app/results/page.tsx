@@ -64,7 +64,7 @@ function ResultsInner() {
 
       const reply = r.reply || r.next_question || "";
       if (r.search_query) setSearchQuery(r.search_query);
-      if ((r as Record<string,unknown>).filter_tags) setFilterTags((r as Record<string,unknown>).filter_tags as string[]);
+      if ((r as { filter_tags?: string[] }).filter_tags) setFilterTags((r as { filter_tags?: string[] }).filter_tags!);
 
       if (r.need_info) {
         setTurns((t) => [...t, { role: "ai", text: reply }]);
