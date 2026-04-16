@@ -39,6 +39,7 @@ function ResultsInner() {
   const [finalResults, setFinalResults] = useState<any[] | null>(null);
   const [input, setInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [filterTags, setFilterTags] = useState<string[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
   const initialized = useRef(false);
 
@@ -55,6 +56,7 @@ function ResultsInner() {
             location,
             role: "family",
             search_query: searchQuery || undefined,
+            filter_tags: filterTags.length > 0 ? filterTags : undefined,
           }),
         },
         add
@@ -62,6 +64,7 @@ function ResultsInner() {
 
       const reply = r.reply || r.next_question || "";
       if (r.search_query) setSearchQuery(r.search_query);
+      if ((r as Record<string,unknown>).filter_tags) setFilterTags((r as Record<string,unknown>).filter_tags as string[]);
 
       if (r.need_info) {
         setTurns((t) => [...t, { role: "ai", text: reply }]);
