@@ -152,7 +152,7 @@ export function HelperCard({
               <div className="mt-5 grid grid-cols-2 gap-3">
                 <InfoRow
                   label="돌봄 유형"
-                  value={(helper.parsed?.care_type || []).join(", ") || "-"}
+                  value={Array.isArray(helper.parsed?.care_type) ? helper.parsed.care_type.join(", ") : String(helper.parsed?.care_type || "-")}
                 />
                 <InfoRow
                   label="희망 급여"
