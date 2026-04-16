@@ -51,7 +51,7 @@ export default function SearchPage() {
                 onClick={() => setLocation(a)}
                 className="text-[18px] py-4 rounded-2xl border transition-all active:scale-[0.97]"
                 style={location === a
-                  ? { background: "linear-gradient(135deg, #C5DDD9, #9DBFBA)", color: "white", borderColor: "transparent" }
+                  ? { background: "linear-gradient(135deg, #82C9BB, #5AA89A)", color: "white", borderColor: "transparent" }
                   : { background: "white", color: "#636366", borderColor: "#E5E5EA" }
                 }
               >
