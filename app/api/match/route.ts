@@ -82,7 +82,7 @@ ${candidateContext}
 9. 추천 이유(for_family)는 1문장으로 짧게.
 
 [응답 형식]
-매칭할 때: {"reply":"자연어","recommendations":[{"id":"h001","headline":"한 줄 소개","for_family":"추천 이유","for_helper":"도우미에게 한 줄"}]}
+매칭할 때: {"reply":"자연어","recommendations":[{"id":"h001","headline":"20자 이내 핵심 한 줄 (예: 봉천동 아동돌봄 5년 경력)","for_family":"1문장 추천 이유"}]}
 대화만 할 때: {"reply":"자연어","recommendations":[]}
 
 JSON만 응답.`;

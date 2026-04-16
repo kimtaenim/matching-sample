@@ -49,11 +49,11 @@ export default function SearchPage() {
               <button
                 key={a}
                 onClick={() => setLocation(a)}
-                className={`text-[18px] py-4 rounded-2xl border transition-all active:scale-[0.97] ${
-                  location === a
-                    ? "bg-apple-blue text-white border-apple-blue shadow-card"
-                    : "bg-white text-apple-label border-apple-silver2 hover:bg-apple-silver"
-                }`}
+                className="text-[18px] py-4 rounded-2xl border transition-all active:scale-[0.97]"
+                style={location === a
+                  ? { background: "linear-gradient(135deg, #C0C0C0, #A8A8A8)", color: "white", borderColor: "transparent" }
+                  : { background: "white", color: "#636366", borderColor: "#E5E5EA" }
+                }
               >
                 {a}
               </button>

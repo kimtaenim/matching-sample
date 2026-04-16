@@ -25,7 +25,7 @@ export function Button({ variant = "primary", className = "", onClick, children,
 
   const variants = {
     primary:
-      "bg-apple-blue text-white shadow-card hover:shadow-cardHover hover:brightness-105",
+      "text-white shadow-card hover:shadow-cardHover hover:brightness-105",
     secondary:
       "bg-apple-silver text-apple-label hover:bg-apple-silver2",
     ghost:
@@ -37,6 +37,7 @@ export function Button({ variant = "primary", className = "", onClick, children,
       {...rest}
       onClick={handleClick}
       className={`${base} ${variants[variant]} ${className}`}
+      style={variant === "primary" ? { background: "linear-gradient(135deg, #B8B8B8, #9E9E9E)" } : undefined}
     >
       {children}
       {ripples.map((r) => (
