@@ -169,7 +169,7 @@ export async function POST(req: NextRequest) {
         next_options: nextOptions,
         parsed_so_far: parsed,
         turn: safeNumber(body.turn, 0),
-        turns_left: 8 - safeNumber(body.turn, 0),
+        turns_left: 99,
         _usage: { input: totalIn, output: totalOut },
         cost_krw: totalKRW,
       });
@@ -214,25 +214,29 @@ export async function POST(req: NextRequest) {
       };
     });
 
-    const conversationSummary = userMsgs.slice(-3).join("\n");
+    const fullHistory = messages.map((m) => `${m.role === "user" ? "고객" : "AI"}: ${m.content}`).join("\n");
     const targetType = role === "family" ? "도우미" : "가정";
 
     const matchPrompt = `당신은 돌봄 매칭 전문 AI입니다. 자기소개와 후기의 감성까지 종합해 매칭합니다.
 
-[${role === "family" ? "찾는 가정" : "찾는 도우미"} 대화 맥락]
+[전체 대화 기록 — 반드시 꼼꼼히 읽으세요]
 """
-${conversationSummary}
+${fullHistory}
 """
 지역: ${location}
 
 [후보 ${targetType} ${candidates.length}명]
 ${JSON.stringify(candidates, null, 2)}
 
+[절대 규칙]
+- 대화에서 고객이 싫다/피한다/말고/빼줘라고 한 조건은 절대 추천 금지.
+- 이전에 추천했는데 거부당한 후보도 다시 추천 금지.
+
 [평가] 구조 조건 + 성격/경험/돌봄 철학의 결
 [반환] match_score 50이상, 최대 5개, 내림차순
 - headline: 30자 이내
-- for_family: 2문장 80자 (가정이 볼 추천 이유)
-- for_helper: 1문장 50자 (도우미가 볼 추천 이유)
+- for_family: 2문장 80자
+- for_helper: 1문장 50자
 - match_reason: for_family 복사
 
 JSON 배열만:
