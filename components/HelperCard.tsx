@@ -119,11 +119,6 @@ export function HelperCard({
                   <span className="text-apple-blue">✦</span> {forFamily || matchReason}
                 </p>
               )}
-              {forHelper && (
-                <p className="mt-2 text-[13px] text-apple-gray italic leading-snug">
-                  도우미 입장: {forHelper}
-                </p>
-              )}
             </div>
             <div
               className={`text-apple-gray transition-transform duration-300 ${
