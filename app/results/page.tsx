@@ -69,8 +69,10 @@ function ResultsInner() {
           setFinalResults(r.results);
         }
       }
-    } catch {
-      setTurns((t) => [...t, { role: "ai", text: "잠시 문제가 생겼어요. 다시 말씀해 주시겠어요?" }]);
+    } catch (e) {
+      const errMsg = (e as Error).message || "알 수 없는 오류";
+      console.error("[match] frontend error:", errMsg);
+      setTurns((t) => [...t, { role: "ai", text: `오류: ${errMsg}` }]);
     } finally {
       setLoading(false);
     }
