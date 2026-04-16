@@ -106,19 +106,30 @@ JSON만 응답.`;
       reply = resp.text.replace(/```json[\s\S]*?```/g, "").replace(/[{}[\]]/g, "").trim() || "다시 말씀해 주시겠어요?";
     }
 
-    // 추천이 있으면 메타데이터 매핑
-    const metaMap = new Map(vectorResults.map((r) => [r.id, { ...r.metadata as Record<string, unknown>, _score: r.score }]));
+    // 추천이 있으면 메타데이터 매핑 — HelperCard 형식에 맞게 변환
+    const metaMap = new Map(vectorResults.map((r) => [r.id, { meta: r.metadata as Record<string, unknown>, score: r.score }]));
     const results = recommendations
       .filter((rec) => rec && rec.id && metaMap.has(rec.id as string))
       .map((rec) => {
-        const meta = metaMap.get(rec.id as string)!;
+        const { meta, score } = metaMap.get(rec.id as string)!;
+        // parsed가 문자열이면 파싱
+        let parsed = meta.parsed;
+        if (typeof parsed === "string") {
+          try { parsed = JSON.parse(parsed); } catch { parsed = {}; }
+        }
         return {
-          ...meta,
+          id: meta.id || rec.id,
+          name: meta.name || "이름 없음",
+          location: meta.location || "",
+          bio: meta.bio || "",
+          parsed: parsed || {},
+          reviews_received: Array.isArray(meta.reviews_received) ? meta.reviews_received : [],
+          reviews_written: Array.isArray(meta.reviews_written) ? meta.reviews_written : [],
           headline: safeString(rec.headline as string),
           for_family: safeString(rec.for_family as string),
           for_helper: safeString(rec.for_helper as string),
           match_reason: safeString(rec.for_family as string || rec.headline as string),
-          match_score: Math.round((meta._score as number || 0.5) * 100),
+          match_score: Math.round((score || 0.5) * 100),
         };
       })
       .slice(0, 5);
