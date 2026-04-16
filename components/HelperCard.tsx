@@ -92,13 +92,13 @@ export function HelperCard({
                   {helper.location} · {helper.parsed.age}세
                 </span>
               </div>
-              <div className="mt-2 flex items-center gap-2 text-[15px]">
-                <Stars rating={avg || 0} />
-                <span className="text-apple-label2 font-medium">
-                  {avg ? avg.toFixed(1) : "-"}
-                </span>
-                <span className="text-apple-gray">후기 {n}건</span>
-              </div>
+              {n > 0 && (
+                <div className="mt-2 flex items-center gap-2 text-[15px] whitespace-nowrap">
+                  <Stars rating={avg || 0} />
+                  <span className="text-apple-label2 font-medium">{avg.toFixed(1)}</span>
+                  <span className="text-apple-gray">후기 {n}건</span>
+                </div>
+              )}
               <div className="mt-3 flex items-start gap-2 flex-wrap">
                 {typeof matchScore === "number" && (
                   <span
