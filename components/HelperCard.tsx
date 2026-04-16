@@ -97,21 +97,11 @@ export function HelperCard({
                   후기 {n}건
                 </div>
               )}
-              <div className="mt-3 flex items-start gap-2 flex-wrap">
-                {typeof matchScore === "number" && (
-                  <span
-                    className="text-[13px] font-semibold px-2 py-0.5 rounded-full bg-apple-silver text-apple-label2"
-                    style={{ fontVariantNumeric: "tabular-nums" }}
-                  >
-                    {matchScore}점
-                  </span>
-                )}
-                {headline && (
-                  <span className="text-[14px] text-apple-label2 font-medium">
-                    {headline}
-                  </span>
-                )}
-              </div>
+              {headline && (
+                <div className="mt-3">
+                  <span className="text-[14px] text-apple-label2 font-medium">{headline}</span>
+                </div>
+              )}
               {(forFamily || matchReason) && (
                 <p className="mt-3 text-[15px] text-apple-label2 leading-relaxed">
                   <span className="text-apple-blue">✦</span> {forFamily || matchReason}
@@ -189,11 +179,6 @@ export function HelperCard({
                 </div>
               )}
 
-              <div className="mt-6 flex justify-end">
-                <Button onClick={handleMatch} disabled={matching}>
-                  {matching ? "매칭 중..." : "이분과 매칭하기"}
-                </Button>
-              </div>
             </div>
           </div>
         </div>
