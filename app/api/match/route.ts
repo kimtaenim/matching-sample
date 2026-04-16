@@ -60,8 +60,9 @@ export async function POST(req: NextRequest) {
     const candidateContext = vectorResults.length > 0
       ? vectorResults.slice(0, 10).map((r) => {
           const m = r.metadata as Record<string, unknown>;
-          const p = m.parsed as Record<string, unknown> || {};
-          return `[${m.id}] ${m.name || "이름없음"} | ${m.location} | ${safeString(m.bio as string).slice(0, 100)}`;
+          const p = (typeof m.parsed === 'object' && m.parsed) ? m.parsed as Record<string, unknown> : {};
+          const careTypes = Array.isArray(p.care_type) ? (p.care_type as string[]).join(',') : String(p.care_type || '');
+          return `[${m.id}] ${m.name || "이름없음"} | ${p.age || '?'}세 | ${m.location} | 돌봄: ${careTypes} | 시간: ${p.hours || '?'} | ${safeString(m.bio as string).slice(0, 80)}`;
         }).join("\n")
       : "(검색 결과 없음)";
 
