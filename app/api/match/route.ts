@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { callClaude, extractJson } from "@/lib/claude";
 import { queryVector } from "@/lib/vector";
-import type { Location } from "@/lib/types";
 
 export const runtime = "nodejs";
 
@@ -11,60 +10,15 @@ interface Message {
 }
 
 interface Body {
-  // 새 방식
   messages?: Message[];
-  // 구 방식 (하위호환)
   bio?: string;
   location?: string;
   role?: string;
-  name?: string;
-  turn?: number;
-  skipped_keys?: string[];
-}
-
-interface ScoreItem {
-  id: string;
-  headline?: string;
-  for_family?: string;
-  for_helper?: string;
-  match_reason: string;
-  match_score: number;
 }
 
 function safeString(v: unknown, fallback = ""): string {
   return typeof v === "string" ? v : fallback;
 }
-function safeNumber(v: unknown, fallback = 0): number {
-  if (typeof v === "number" && !Number.isNaN(v)) return v;
-  if (typeof v === "string") { const n = parseInt(v, 10); if (!Number.isNaN(n)) return n; }
-  return fallback;
-}
-
-const FAMILY_SYSTEM = `돌봄 조건 파악 모듈. 매칭은 별도 시스템이 하므로 특정 도우미 이름/정보 절대 언급 금지.
-
-[핵심 규칙]
-고객이 돌봄 상황을 말했으면 그걸로 끝. ready:true.
-예: "70대 아버지 뇌졸중 간병" → 돌봄유형+나이 확보됨 → ready:true
-예: "아이 등하원 도우미 15만원" → 돌봄유형+예산 확보됨 → ready:true
-
-질문은 최대 1회. 정보가 아예 없을 때만.
-이미 2가지 이상 정보가 있으면 절대 질문하지 말고 ready:true.
-모르는 필드는 null로 두고 넘겨. 묻지 마.
-
-parsed(null 허용): care_type, care_age(숫자), wage_max(원), hours, preferred_gender
-
-reply는 ready:true일 때 "찾아볼게요!" 같은 짧은 한마디만.
-JSON만: {"reply":"...","parsed":{...},"ready":false}`;
-
-const HELPER_SYSTEM = `도우미 조건 파악 모듈. 매칭은 별도 시스템. 가정 정보 언급 금지.
-
-[핵심 규칙]
-도우미가 자기 상황을 말했으면 그걸로 끝. ready:true.
-질문은 최대 1회. 2가지 이상 있으면 절대 질문 말고 ready:true.
-모르는 건 null. 묻지 마.
-
-parsed(null 허용): care_type(배열), age, wage_min(원), hours, preferred_gender
-JSON만: {"reply":"...","parsed":{...},"ready":false}`;
 
 export async function POST(req: NextRequest) {
   let body: Body;
@@ -74,10 +28,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const location = safeString(body.location) as Location;
+  const location = safeString(body.location) || "봉천동";
   const role = body.role === "helper" ? "helper" : "family";
 
-  // 구 방식 → messages 변환
+  // 구 방식 호환
   let messages: Message[];
   if (Array.isArray(body.messages) && body.messages.length > 0) {
     messages = body.messages;
@@ -87,24 +41,53 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "messages 또는 bio 필요" }, { status: 400 });
   }
 
-  if (!location) {
-    return NextResponse.json({ error: "location 필요" }, { status: 400 });
-  }
-
   let totalIn = 0;
   let totalOut = 0;
   let totalKRW = 0;
 
   try {
-    // ── 1단계: 정보 수집 (Haiku) ──
-    const systemPrompt = role === "family" ? FAMILY_SYSTEM : HELPER_SYSTEM;
+    // ── 매 턴: 벡터 검색 + Haiku 단일 호출 ──
+    const userMessages = messages.filter((m) => m.role === "user").map((m) => m.content);
+    const allUserText = userMessages.join(" ");
+
+    const queryText = `지역:${location} ${allUserText}`;
+    const vectorResults = await queryVector(queryText, 15);
+
+    const targetType = role === "family" ? "도우미" : "가정";
+    const candidateContext = vectorResults.length > 0
+      ? vectorResults.slice(0, 10).map((r) => {
+          const m = r.metadata as Record<string, unknown>;
+          const p = m.parsed as Record<string, unknown> || {};
+          return `[${m.id}] ${m.name || "이름없음"} | ${m.location} | ${safeString(m.bio as string).slice(0, 100)}`;
+        }).join("\n")
+      : "(검색 결과 없음)";
+
+    const systemPrompt = `당신은 돌봄 매칭 서비스의 상담사 챗봇입니다. ${role === "family" ? "가정이 돌봄 도우미를 찾도록" : "도우미가 일자리를 찾도록"} 자연스럽게 대화합니다.
+
+[${targetType} 후보 목록 — 이 안에서만 매칭 가능]
+${candidateContext}
+
+[규칙]
+1. 고객의 상황이 파악되면 위 목록에서 적합한 분을 매칭하세요 (최대 3명).
+2. 정보가 부족하면 자연스럽게 한 가지만 물어보세요.
+3. 같은 질문을 반복하지 마세요. 이전 대화를 잘 읽으세요.
+4. 고객이 "이 분 말고", "다른 분" 하면 이전 매칭을 피하세요.
+5. 목록에 없는 사람을 지어내지 마세요.
+6. 매칭할 때 반드시 ID를 포함하세요.
+
+[응답 형식]
+매칭할 때: {"reply":"자연어","recommendations":[{"id":"h001","headline":"한 줄 소개","for_family":"추천 이유","for_helper":"도우미에게 한 줄"}]}
+대화만 할 때: {"reply":"자연어","recommendations":[]}
+
+JSON만 응답.`;
+
     const claudeMessages = messages.map((m) => ({
       role: m.role as "user" | "assistant",
       content: m.content,
     }));
 
     const resp = await callClaude(systemPrompt, {
-      maxTokens: 500,
+      maxTokens: 600,
       model: "claude-haiku-4-5-20251001",
       messages: claudeMessages,
     });
@@ -112,141 +95,39 @@ export async function POST(req: NextRequest) {
     totalOut += resp.usage.output;
     totalKRW += resp.cost_krw;
 
-    let parsed: Record<string, unknown> = {};
     let reply = "";
-    let ready = false;
-    let nextQuestion: string | null = null;
-    let nextKey: string | null = null;
-    let nextType: string | null = null;
-    let nextOptions: string[] | null = null;
+    let recommendations: Record<string, unknown>[] = [];
 
     try {
       const json = extractJson<Record<string, unknown>>(resp.text);
       reply = safeString(json.reply);
-      parsed = (json.parsed as Record<string, unknown>) || {};
-      ready = json.ready === true || resp.text.includes("READY_TO_RECOMMEND");
-      nextQuestion = safeString(json.next_question) || reply;
-      nextKey = safeString(json.next_key) || null;
-      nextType = safeString(json.next_type) || null;
-      nextOptions = Array.isArray(json.next_options) ? json.next_options as string[] : null;
+      recommendations = Array.isArray(json.recommendations) ? json.recommendations as Record<string, unknown>[] : [];
     } catch {
-      reply = resp.text.replace(/```json[\s\S]*?```/g, "").trim() || "다시 말씀해 주시겠어요?";
-      ready = resp.text.includes("READY_TO_RECOMMEND");
-      nextQuestion = reply;
+      reply = resp.text.replace(/```json[\s\S]*?```/g, "").replace(/[{}[\]]/g, "").trim() || "다시 말씀해 주시겠어요?";
     }
 
-    if (!ready) {
-      return NextResponse.json({
-        need_info: true,
-        reply,
-        next_question: nextQuestion,
-        next_key: nextKey,
-        next_type: nextType,
-        next_options: nextOptions,
-        parsed_so_far: parsed,
-        turn: safeNumber(body.turn, 0),
-        turns_left: 99,
-        _usage: { input: totalIn, output: totalOut },
-        cost_krw: totalKRW,
-      });
-    }
-
-    // ── 2단계: 벡터 검색 ──
-    const queryParts = [`지역: ${location}`];
-    if (role === "family") {
-      if (parsed.care_type) queryParts.push(`돌봄유형: ${parsed.care_type}`);
-      if (parsed.care_age) queryParts.push(`돌봄대상 나이: ${parsed.care_age}`);
-      if (parsed.preferred_gender) queryParts.push(`성별: ${parsed.preferred_gender}`);
-    } else {
-      if (parsed.care_type) queryParts.push(`돌봄유형: ${Array.isArray(parsed.care_type) ? (parsed.care_type as string[]).join(",") : parsed.care_type}`);
-      if (parsed.age) queryParts.push(`나이: ${parsed.age}`);
-    }
-    const userMsgs = messages.filter((m) => m.role === "user").map((m) => m.content);
-    queryParts.push(userMsgs.join(" "));
-
-    const vectorResults = await queryVector(queryParts.join(" | "), 20);
-
-    if (vectorResults.length === 0) {
-      return NextResponse.json({
-        need_info: false,
-        results: [],
-        requester_id: null,
-        _usage: { input: totalIn, output: totalOut },
-        cost_krw: totalKRW,
-      });
-    }
-
-    // ── 3단계: Claude 감성 매칭 (Sonnet) ──
-    const candidates = vectorResults.map((r) => {
-      const m = r.metadata as Record<string, unknown>;
-      return {
-        id: r.id,
-        name: m.name,
-        location: m.location,
-        bio: m.bio,
-        parsed: m.parsed,
-        reviews: (m.reviews_received as unknown[] || []).slice(0, 2),
-        score: r.score,
-      };
-    });
-
-    const fullHistory = messages.map((m) => `${m.role === "user" ? "고객" : "AI"}: ${m.content}`).join("\n");
-    const targetType = role === "family" ? "도우미" : "가정";
-
-    const matchPrompt = `당신은 돌봄 매칭 전문 AI입니다. 자기소개와 후기의 감성까지 종합해 매칭합니다.
-
-[전체 대화 기록 — 반드시 꼼꼼히 읽으세요]
-"""
-${fullHistory}
-"""
-지역: ${location}
-
-[후보 ${targetType} ${candidates.length}명]
-${JSON.stringify(candidates, null, 2)}
-
-[절대 규칙]
-- 대화에서 고객이 싫다/피한다/말고/빼줘라고 한 조건은 절대 추천 금지.
-- 이전에 추천했는데 거부당한 후보도 다시 추천 금지.
-
-[평가] 구조 조건 + 성격/경험/돌봄 철학의 결
-[반환] match_score 40이상, 최대 5개, 내림차순. 억지로 점수를 깎지 마세요.
-- headline: 30자 이내
-- for_family: 2문장 80자
-- for_helper: 1문장 50자
-- match_reason: for_family 복사
-
-JSON 배열만:
-[{"id":"h001","headline":"...","for_family":"...","for_helper":"...","match_reason":"...","match_score":82}]`;
-
-    let scored: ScoreItem[] = [];
-    try {
-      const scoreResult = await callClaude(matchPrompt, { maxTokens: 1000 });
-      totalIn += scoreResult.usage.input;
-      totalOut += scoreResult.usage.output;
-      totalKRW += scoreResult.cost_krw;
-      scored = extractJson<ScoreItem[]>(scoreResult.text);
-    } catch {
-      scored = [];
-    }
-
-    const metaMap = new Map(vectorResults.map((r) => [r.id, r.metadata]));
-    const results = scored
-      .filter((s) => s && typeof s.id === "string" && metaMap.has(s.id))
-      .filter((s) => safeNumber(s.match_score, 0) >= 40)
-      .sort((a, b) => (b.match_score || 0) - (a.match_score || 0))
-      .slice(0, 5)
-      .map((s) => ({
-        ...(metaMap.get(s.id) as Record<string, unknown>),
-        headline: safeString(s.headline),
-        for_family: safeString(s.for_family),
-        for_helper: safeString(s.for_helper),
-        match_reason: safeString(s.match_reason || s.for_family),
-        match_score: safeNumber(s.match_score, 0),
-      }));
+    // 추천이 있으면 메타데이터 매핑
+    const metaMap = new Map(vectorResults.map((r) => [r.id, { ...r.metadata as Record<string, unknown>, _score: r.score }]));
+    const results = recommendations
+      .filter((rec) => rec && rec.id && metaMap.has(rec.id as string))
+      .map((rec) => {
+        const meta = metaMap.get(rec.id as string)!;
+        return {
+          ...meta,
+          headline: safeString(rec.headline as string),
+          for_family: safeString(rec.for_family as string),
+          for_helper: safeString(rec.for_helper as string),
+          match_reason: safeString(rec.for_family as string || rec.headline as string),
+          match_score: Math.round((meta._score as number || 0.5) * 100),
+        };
+      })
+      .slice(0, 5);
 
     return NextResponse.json({
-      need_info: false,
-      results,
+      need_info: results.length === 0,
+      reply,
+      next_question: results.length === 0 ? reply : undefined,
+      results: results.length > 0 ? results : undefined,
       requester_id: "",
       _usage: { input: totalIn, output: totalOut },
       cost_krw: totalKRW,
@@ -254,10 +135,9 @@ JSON 배열만:
   } catch (e) {
     console.error("[match] error:", (e as Error).message);
     return NextResponse.json({
-      need_info: false,
-      results: [],
-      requester_id: null,
-      error: (e as Error).message,
+      need_info: true,
+      reply: "잠시 문제가 생겼어요. 다시 말씀해 주시겠어요?",
+      next_question: "잠시 문제가 생겼어요. 다시 말씀해 주시겠어요?",
       _usage: { input: totalIn, output: totalOut },
       cost_krw: totalKRW,
     });
