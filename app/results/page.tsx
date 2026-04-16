@@ -191,7 +191,7 @@ function ChatBubble({ role, text, loading }: { role: "user" | "ai"; text: string
         } ${loading ? "animate-pulse-soft" : ""}`}
         style={isUser ? { background: "linear-gradient(135deg, #D4A574 0%, #C49B6A 50%, #B8915E 100%)" } : undefined}
       >
-        {text}
+        {text.replace(/\*\*/g, "").replace(/```[\s\S]*?```/g, "").replace(/`/g, "")}
       </div>
     </div>
   );
