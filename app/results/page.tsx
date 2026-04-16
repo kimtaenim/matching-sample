@@ -16,6 +16,7 @@ interface MatchResponse {
   next_question?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   results?: any[];
+  search_query?: string;
   requester_id?: string | null;
   _usage?: { input: number; output: number };
 }
@@ -37,6 +38,7 @@ function ResultsInner() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [finalResults, setFinalResults] = useState<any[] | null>(null);
   const [input, setInput] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const initialized = useRef(false);
 
@@ -52,12 +54,14 @@ function ResultsInner() {
             messages: msgs,
             location,
             role: "family",
+            search_query: searchQuery || undefined,
           }),
         },
         add
       );
 
       const reply = r.reply || r.next_question || "";
+      if (r.search_query) setSearchQuery(r.search_query);
 
       if (r.need_info) {
         setTurns((t) => [...t, { role: "ai", text: reply }]);

@@ -33,8 +33,8 @@ export async function POST(req: NextRequest) {
   try {
     const userMessages = messages.filter((m) => m.role === "user").map((m) => m.content);
     const allUserText = userMessages.join(" ");
-    // 벡터 쿼리는 첫 메시지(핵심 요구)만 사용 — 대화 쌓여도 검색 안정적
-    const searchQuery = userMessages[0] || allUserText;
+    // 벡터 쿼리: 프론트에서 넘긴 이전 search_query 사용, 없으면 첫 메시지
+    const searchQuery = safeString((body as Record<string,unknown>).search_query) || userMessages[0] || allUserText;
 
     // ── 벡터 검색: location filter + 감성 유사도 ──
     const idPrefix = role === "family" ? "h" : "f";
@@ -97,8 +97,9 @@ ${candidateContext}
 8. 이모지 사용 금지.
 
 [응답 형식]
-추천: {"reply":"자연어","recommendations":[{"id":"h001","headline":"20자 한줄","for_family":"1문장"}]}
-대화: {"reply":"자연어","recommendations":[]}
+추천: {"reply":"자연어","search_query":"다음 검색에 쓸 핵심 키워드 (예: 봉천동 30세이하 여성 아동돌봄 활발한)","recommendations":[{"id":"h001","headline":"20자 한줄","for_family":"1문장"}]}
+대화: {"reply":"자연어","search_query":"현재까지 파악된 조건 키워드","recommendations":[]}
+search_query는 대화에서 파악된 모든 조건을 반영한 검색 키워드. 고객이 번복하면 업데이트.
 JSON만.`;
 
     const resp = await callClaude(systemPrompt, {
@@ -112,6 +113,7 @@ JSON만.`;
 
     let reply = "";
     let recommendations: Record<string, unknown>[] = [];
+    let nextSearchQuery = "";
 
     try {
       let raw = resp.text;
@@ -120,6 +122,7 @@ JSON만.`;
       const json = extractJson<Record<string, unknown>>(raw);
       reply = safeString(json.reply);
       recommendations = Array.isArray(json.recommendations) ? json.recommendations as Record<string, unknown>[] : [];
+      nextSearchQuery = safeString(json.search_query as string);
     } catch {
       reply = resp.text.replace(/```[\s\S]*?```/g, "").replace(/\*\*/g, "").replace(/`/g, "").trim();
       if (!reply) reply = "다시 한번 말씀해 주시겠어요?";
@@ -158,6 +161,7 @@ JSON만.`;
     return NextResponse.json({
       need_info: results.length === 0,
       reply,
+      search_query: typeof nextSearchQuery === "string" ? nextSearchQuery : undefined,
       next_question: results.length === 0 ? reply : undefined,
       results: results.length > 0 ? results : undefined,
       requester_id: "",
