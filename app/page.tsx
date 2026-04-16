@@ -49,7 +49,7 @@ export default function Home() {
         style={{ animationDelay: "320ms" }}
       >
         <MiniStat label="서비스 지역" value="3" unit="개 동" sub="봉천동·과천·대치동" />
-        <MiniStat label="등록 도우미" value="200" unit="+" sub="검증된 프로필" />
+        <MiniStat label="등록 도우미" value="400" unit="+" sub="검증된 프로필" />
         <MiniStat label="성사된 매칭" value="100" unit="+" sub="후기를 확인하세요" />
       </div>
     </div>
