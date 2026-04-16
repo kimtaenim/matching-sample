@@ -75,6 +75,7 @@ export async function POST(req: NextRequest) {
   let finalFamily: Family["parsed"] | null = null;
   let finalHelper: Helper["parsed"] | null = null;
 
+  // 전체 플로우를 try/catch로 감싸 500 대신 graceful fallback
   try {
     if (role === "family") {
       const r = await chatFamily(bio, turn, MAX_TURNS);
@@ -122,10 +123,25 @@ export async function POST(req: NextRequest) {
       finalHelper = finalizeHelper(r.parsed);
     }
   } catch (e) {
-    return NextResponse.json(
-      { error: `파싱 실패: ${(e as Error).message}` },
-      { status: 500 }
-    );
+    // 파싱 실패해도 500 대신 질문 재시도 유도 or 기본값으로 매칭 진행
+    console.error("[match] parse error:", (e as Error).message);
+    if (role === "family") {
+      finalFamily = finalizeFamily({
+        care_type: null,
+        care_age: null,
+        wage_max: null,
+        hours: null,
+        preferred_gender: null,
+      });
+    } else {
+      finalHelper = finalizeHelper({
+        care_type: null,
+        age: null,
+        wage_min: null,
+        hours: null,
+        preferred_gender: null,
+      });
+    }
   }
 
   // 2) 요청자 영속화
@@ -162,10 +178,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "parsed data 누락" }, { status: 500 });
     }
   } catch (e) {
-    return NextResponse.json(
-      { error: `저장 실패: ${(e as Error).message}` },
-      { status: 500 }
-    );
+    console.error("[match] persist error:", (e as Error).message);
+    // 저장 실패해도 매칭은 계속 진행, requester_id는 null로
+    requester_id = "";
   }
 
   // 3) 후보 필터
@@ -219,10 +234,8 @@ ${JSON.stringify(summary, null, 2)}
       scored = [];
     }
   } catch (e) {
-    return NextResponse.json(
-      { error: `매칭 실패: ${(e as Error).message}` },
-      { status: 500 }
-    );
+    console.error("[match] scoring error:", (e as Error).message);
+    scored = [];
   }
 
   const byId = new Map<string, Helper | Family>(limited.map((c) => [c.id, c]));

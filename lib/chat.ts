@@ -39,31 +39,31 @@ export interface ChatResult<P> {
 const CARE_TYPES: CareType[] = ["아동", "노인", "치매노인", "장애인", "환자"];
 const GENDERS: Gender[] = ["무관", "남", "여"];
 
-const FAMILY_PROMPT = (bio: string, turn: number, maxTurns: number) => `당신은 돌봄 매칭 서비스의 따뜻한 상담사입니다. 가정이 돌봄 도우미를 찾을 수 있도록 돕습니다.
+const FAMILY_PROMPT = (bio: string, turn: number, maxTurns: number) => `당신은 돌봄 매칭 서비스의 따뜻한 상담사입니다. 가정이 돌봄 도우미를 찾도록 돕습니다.
 
-사용자가 지금까지 말한 내용(초기 설명 + 대화 기록):
+사용자가 지금까지 말한 내용(초기 설명 + Q/A 기록):
 """
 ${bio}
 """
 
-[1단계] 위 내용에서 다음 구조 필드를 추출하세요. 명시되지 않은 건 반드시 null. 추측 금지. 단, "70대 후반" → 77 같은 자연스러운 수치 환산은 허용.
+[중요 원칙]
+- 사용자가 앞선 답변을 나중에 번복하면 최신 답변을 우선.
+- 질문에 맞지 않는 답을 해도 에러 내지 말고 받을 수 있는 만큼만 받아들이세요.
+- 답이 애매하면 가장 그럴싸한 해석을 고르되, 정말 단서가 없으면 null.
+- 한 턴 안에서 같은 항목에 대해 서로 모순된 정보가 섞여 있으면(예: "여자분이 좋지만 남자도 괜찮다") 그 항목을 null로 두고 다음 질문으로 공손히 재확인하세요.
+
+[1단계] 다음 구조 필드를 최신 정보 기준으로 추출:
 - care_type: "아동" | "노인" | "치매노인" | "장애인" | "환자" | null
-- care_age: 돌봄 받으실 분 나이 숫자 | null
-- wage_max: 하루 최대 지불 의향 금액 숫자(원) | null
-- hours: 시간대 "HH:MM-HH:MM" | null
-- preferred_gender: "무관" | "남" | "여" | null
+- care_age: 돌봄 받으실 분 나이 숫자 | null   (예: "70대 후반"→77, "85세"→85)
+- wage_max: 하루 최대 지불 의향 금액 숫자(원) | null  (예: "15만원"→150000)
+- hours: 시간대 "HH:MM-HH:MM" | null  (예: "9시부터 6시"→"09:00-18:00")
+- preferred_gender: "무관" | "남" | "여" | null  ("여성이 좋겠어요"→"여")
 
-[2단계] 현재 ${turn}번째 턴 (최대 ${maxTurns}턴). 필수 정보(care_type, care_age)가 null이거나, 매칭 정확도를 높일 정보(wage_max, hours, preferred_gender 등) 중 중요한 게 빠져 있다면 다음 질문을 한 개 작성하세요.
-- 질문은 맥락을 반영한 친근한 한국어. 예: 아버지에 대한 얘기를 먼저 해주셨다면 "아버님 연세가 어떻게 되세요?" 처럼 호칭을 이어 받습니다.
-- 템플릿 문장 금지. 매번 다른 결로 표현.
-- 한 번에 한 가지만 물어봐요.
-- 더 물을 게 없거나 충분하면 next_question을 null.
-- 남은 턴이 1이면 가장 중요한 것 하나만 물어보고, 0이면 질문 생략.
+[2단계] 현재 ${turn}번째 턴 (최대 ${maxTurns}턴). 중요한 정보가 빠져 있으면 다음 질문 한 개를 친근한 한국어로. 템플릿 금지, 맥락 반영. 충분하면 next_question=null.
 
-next_key는 질문이 겨냥하는 필드명(위 5개 중 하나)으로.
-next_type: care_type은 "select" (options: ${JSON.stringify(CARE_TYPES)}), preferred_gender은 "select" (options: ${JSON.stringify(GENDERS)}), age·care_age·wage_max는 "number", 나머지는 "text".
+next_key는 질문이 겨냥하는 필드명(위 5개 중). next_type은 care_type="select" (${JSON.stringify(CARE_TYPES)}), preferred_gender="select" (${JSON.stringify(GENDERS)}), care_age·wage_max="number", hours="text".
 
-JSON으로만 응답:
+반드시 JSON만, 아무 설명 없이:
 {
   "parsed": { "care_type": ..., "care_age": ..., "wage_max": ..., "hours": ..., "preferred_gender": ... },
   "next_question": "..." | null,
@@ -72,14 +72,19 @@ JSON으로만 응답:
   "next_options": ["..."] | null
 }`;
 
-const HELPER_PROMPT = (bio: string, turn: number, maxTurns: number) => `당신은 돌봄 매칭 서비스의 따뜻한 상담사입니다. 돌봄 도우미가 자신을 소개할 수 있도록 돕습니다.
+const HELPER_PROMPT = (bio: string, turn: number, maxTurns: number) => `당신은 돌봄 매칭 서비스의 따뜻한 상담사입니다. 돌봄 도우미가 자신을 소개하도록 돕습니다.
 
 지금까지의 내용:
 """
 ${bio}
 """
 
-[1단계] 구조 필드 추출 (없으면 null, 추측 금지):
+[중요 원칙]
+- 앞선 답변 번복 시 최신 답변 우선.
+- 질문과 상관없는 답도 에러 내지 말고 받을 수 있는 만큼 받아들이세요.
+- 한 항목 안에서 모순된 정보가 섞이면 해당 항목 null로 두고 다음 질문에서 공손히 재확인.
+
+[1단계] 구조 필드 추출 (명시 없으면 null):
 - care_type: ["아동"|"노인"|"치매노인"|"장애인"|"환자"] 배열 | null
 - age: 도우미 본인 나이 | null
 - wage_min: 희망 일당 최저 | null

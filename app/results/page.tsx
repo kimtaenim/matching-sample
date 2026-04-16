@@ -133,9 +133,7 @@ function ResultsInner() {
     runMatch(newBio, turnCount + 1, skippedKeys);
   }
 
-  if (err) {
-    return <div className="text-center py-20 text-apple-gray">오류: {err}</div>;
-  }
+  // err 있어도 전체 화면 교체하지 말고 하단에 토스트로만 표시
 
   return (
     <div>
@@ -203,6 +201,18 @@ function ResultsInner() {
               앞으로 최대 {pending.turns_left}번 정도만 더 여쭤볼게요
             </p>
           )}
+        </div>
+      )}
+
+      {err && (
+        <div className="mt-4 bg-apple-silver border border-apple-silver2 rounded-xl p-4 text-[14px] text-apple-label2">
+          잠시 문제가 있었어요. 다시 말씀해주시면 이어서 진행할게요.
+          <button
+            onClick={() => runMatch(bio, turnCount, skippedKeys)}
+            className="ml-2 text-apple-blue hover:underline"
+          >
+            다시 시도
+          </button>
         </div>
       )}
 
