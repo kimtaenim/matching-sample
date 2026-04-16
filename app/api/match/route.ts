@@ -40,55 +40,27 @@ function safeNumber(v: unknown, fallback = 0): number {
   return fallback;
 }
 
-const FAMILY_SYSTEM = `당신은 돌봄 매칭 서비스의 따뜻한 상담사입니다. 가정이 돌봄 도우미를 찾도록 돕습니다.
+const FAMILY_SYSTEM = `돌봄 매칭 상담사. 가정이 돌봄 도우미를 찾도록 대화.
 
-[수집할 정보 - 5가지]
-1. care_type: 돌봄유형 (아동/노인/치매노인/장애인/환자)
-2. care_age: 돌봄 받으실 분 나이 (숫자)
-3. wage_max: 하루 최대 급여 (숫자, 원)
-4. hours: 시간대 (HH:MM-HH:MM)
-5. preferred_gender: 선호 성별 (무관/남/여)
+[절대 금지] 특정 도우미 이름/정보 언급 금지. 매칭은 별도 시스템이 함.
+[억지 질문 금지] 충분하면 바로 ready:true. 고객이 상황을 설명했으면 그걸로 충분.
 
-[행동 규칙]
-- 한 번에 하나만 자연스럽게. 설문이 아닌 대화.
-- 같은 질문 2번 후 답 없으면 기본값 처리.
-- 충분하면 READY_TO_RECOMMEND 라고 말하세요.
+파악할 정보(대화에서 자연스럽게, 못 파악하면 null):
+care_type(아동/노인/치매노인/장애인/환자), care_age(숫자), wage_max(원), hours(HH:MM-HH:MM), preferred_gender(무관/남/여)
 
-JSON 응답:
-{
-  "reply": "자연어 응답",
-  "parsed": { "care_type": null, "care_age": null, "wage_max": null, "hours": null, "preferred_gender": null },
-  "ready": false,
-  "next_question": "다음 질문 (reply와 동일 가능)",
-  "next_key": "필드명",
-  "next_type": "select|number|text",
-  "next_options": ["옵션1"] 또는 null
-}`;
+2가지 이상 파악되면 ready:true. 질문이 떠오르지 않으면 질문 말고 ready:true.
+JSON만: {"reply":"...","parsed":{...},"ready":false}`;
 
-const HELPER_SYSTEM = `당신은 돌봄 매칭 서비스의 따뜻한 상담사입니다. 돌봄 도우미가 일자리를 찾도록 돕습니다.
+const HELPER_SYSTEM = `돌봄 매칭 상담사. 도우미가 일자리를 찾도록 대화.
 
-[수집할 정보 - 5가지]
-1. care_type: 가능한 돌봄유형 (배열: 아동/노인/치매노인/장애인/환자)
-2. age: 도우미 본인 나이
-3. wage_min: 희망 최저 일당 (원)
-4. hours: 가능 시간대 (HH:MM-HH:MM)
-5. preferred_gender: 선호 성별 (무관/남/여)
+[절대 금지] 특정 가정 정보 언급 금지. 매칭은 별도 시스템.
+[억지 질문 금지] 충분하면 바로 ready:true.
 
-[행동 규칙]
-- 한 번에 하나만 자연스럽게.
-- 같은 질문 2번 후 답 없으면 기본값 처리.
-- 충분하면 READY_TO_RECOMMEND.
+파악할 정보(자연스럽게, null 가능):
+care_type(배열), age(숫자), wage_min(원), hours(HH:MM-HH:MM), preferred_gender(무관/남/여)
 
-JSON 응답:
-{
-  "reply": "자연어 응답",
-  "parsed": { "care_type": null, "age": null, "wage_min": null, "hours": null, "preferred_gender": null },
-  "ready": false,
-  "next_question": "다음 질문",
-  "next_key": "필드명",
-  "next_type": "select|number|text",
-  "next_options": null
-}`;
+2가지 이상 파악되면 ready:true.
+JSON만: {"reply":"...","parsed":{...},"ready":false}`;
 
 export async function POST(req: NextRequest) {
   let body: Body;
@@ -188,7 +160,7 @@ export async function POST(req: NextRequest) {
     const userMsgs = messages.filter((m) => m.role === "user").map((m) => m.content);
     queryParts.push(userMsgs.join(" "));
 
-    const vectorResults = await queryVector(queryParts.join(" | "), 10);
+    const vectorResults = await queryVector(queryParts.join(" | "), 20);
 
     if (vectorResults.length === 0) {
       return NextResponse.json({
@@ -233,7 +205,7 @@ ${JSON.stringify(candidates, null, 2)}
 - 이전에 추천했는데 거부당한 후보도 다시 추천 금지.
 
 [평가] 구조 조건 + 성격/경험/돌봄 철학의 결
-[반환] match_score 50이상, 최대 5개, 내림차순
+[반환] match_score 40이상, 최대 5개, 내림차순. 억지로 점수를 깎지 마세요.
 - headline: 30자 이내
 - for_family: 2문장 80자
 - for_helper: 1문장 50자
@@ -256,7 +228,7 @@ JSON 배열만:
     const metaMap = new Map(vectorResults.map((r) => [r.id, r.metadata]));
     const results = scored
       .filter((s) => s && typeof s.id === "string" && metaMap.has(s.id))
-      .filter((s) => safeNumber(s.match_score, 0) >= 50)
+      .filter((s) => safeNumber(s.match_score, 0) >= 40)
       .sort((a, b) => (b.match_score || 0) - (a.match_score || 0))
       .slice(0, 5)
       .map((s) => ({

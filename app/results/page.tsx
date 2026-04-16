@@ -105,7 +105,7 @@ function ResultsInner() {
   }
 
   return (
-    <div className="fixed inset-0 flex flex-col" style={{ top: "56px" }}>
+    <div className="fixed inset-0 flex flex-col z-40" style={{ top: "56px", background: "#FAFAFA" }}>
       {/* 대화 영역 */}
       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-3">
         {turns.map((t, i) => (
