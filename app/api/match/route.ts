@@ -93,7 +93,7 @@ JSON만 응답.`;
 
     const resp = await callClaude(systemPrompt, {
       maxTokens: 600,
-      model: "claude-haiku-4-5-20251001",
+      model: "claude-sonnet-4-6",
       messages: claudeMessages,
     });
     totalIn += resp.usage.input;
