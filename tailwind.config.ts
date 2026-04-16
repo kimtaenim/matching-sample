@@ -16,9 +16,9 @@ const config: Config = {
           gray2: "#AEAEB2",
           silver: "#F2F2F7",
           silver2: "#E5E5EA",
-          label: "#4A4A4F",
-          label2: "#5E5E63",
-          labelDark: "#2C2C2E",
+          label: "#636366",
+          label2: "#8E8E93",
+          labelDark: "#48484A",
           // 헬스 카테고리 컬러 (톤 다운)
           red: "#E06B6B",
           pink: "#E87490",
