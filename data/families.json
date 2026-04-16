@@ -4206,5 +4206,19 @@
     },
     "reviews_received": [],
     "reviews_written": []
+  },
+  {
+    "id": "f205",
+    "location": "봉천동",
+    "bio": "70대 후반 아버지가 요양 병원에 계세요. 뇌졸중.\n(Q: 시간? A: 9-6)\n(Q: 성별? A: 무관)\n(Q: 급여? A: 15만원)",
+    "parsed": {
+      "wage_max": 150000,
+      "care_type": "환자",
+      "hours": "09:00-18:00",
+      "preferred_gender": "무관",
+      "care_age": 77
+    },
+    "reviews_received": [],
+    "reviews_written": []
   }
 ]
