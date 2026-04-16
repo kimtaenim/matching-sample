@@ -75,19 +75,20 @@ export async function POST(req: NextRequest) {
       return `[${m.id}] ${m.name || "?"} | ${p.age || "?"}세 | ${m.location} | ${careTypes} | ${p.hours || "?"} | ${safeString(m.bio as string).slice(0, 60)}`;
     }).join("\n");
 
-    // ── Sonnet 단일 호출 ──
-    const systemPrompt = `돌봄 매칭 챗봇. 자연스럽게 대화하며 ${targetType}를 추천합니다.
+    // ── Sonnet 호출 (조건 불일치 시 1회 재검색) ──
+    function buildSystemPrompt(candidates: string) {
+      return `돌봄 매칭 챗봇. 자연스럽게 대화하며 ${targetType}를 추천합니다.
 
 [${targetType} 후보 목록]
-${candidateContext || "(후보 없음)"}
+${candidates || "(후보 없음)"}
 
 [규칙]
 1. 고객 상황이 파악되면 목록에서 3명 추천. 정보 부족하면 자연스럽게 질문.
 2. 같은 질문 반복 금지.
-3. 목록에 없는 사람 지어내지 말 것.
+3. 목록에 없는 사람 지어내지 말 것. 나이대, 경력, 조건도 마찬가지로 목록에 실제로 있는 정보만 언급할 것. 추측 금지.
 4. 고객이 특정 인물 언급하면 반드시 포함.
 5. 나이 조건 엄격. "젊은"=35세 이하.
-6. 조건 안 맞으면 솔직히 없다고.
+6. 고객이 원하는 조건(나이, 경력, 돌봄유형 등)에 맞는 후보가 목록에 없으면, 추천하지 말고 refine 필드에 재검색 키워드를 넣어라. 예: 고객이 "20대 도우미"를 원하는데 목록에 없으면 refine에 "20대 젊은 도우미"를 넣는다.
 7. reply는 대화체. 고객 상황 언급하면서 자연스럽게.
 8. headline: 핵심 강점 20자.
 9. for_family: 고객 상황과 연결된 구체적 추천 이유 2문장.
@@ -96,12 +97,16 @@ ${candidateContext || "(후보 없음)"}
 [응답]
 추천: {"reply":"대화체","recommendations":[{"id":"h001","headline":"20자","for_family":"2문장"}]}
 대화: {"reply":"대화체","recommendations":[]}
+재검색: {"reply":"잠시만요, 조건에 맞는 분을 찾아볼게요.","recommendations":[],"refine":"재검색 키워드"}
 JSON만.`;
+    }
 
-    const resp = await callClaude(systemPrompt, {
+    const claudeMessages = messages.map(m => ({ role: m.role as "user"|"assistant", content: m.content }));
+
+    let resp = await callClaude(buildSystemPrompt(candidateContext), {
       maxTokens: 500,
       model: "claude-sonnet-4-6",
-      messages: messages.map(m => ({ role: m.role as "user"|"assistant", content: m.content })),
+      messages: claudeMessages,
     });
     totalIn += resp.usage.input;
     totalOut += resp.usage.output;
@@ -109,6 +114,7 @@ JSON만.`;
 
     let reply = "";
     let recommendations: Record<string, unknown>[] = [];
+    let refine = "";
 
     try {
       let raw = resp.text;
@@ -117,9 +123,56 @@ JSON만.`;
       const json = extractJson<Record<string, unknown>>(raw);
       reply = safeString(json.reply as string);
       recommendations = Array.isArray(json.recommendations) ? json.recommendations as Record<string, unknown>[] : [];
+      refine = safeString(json.refine as string);
     } catch {
       reply = resp.text.replace(/```[\s\S]*?```/g, "").replace(/\*\*/g, "").replace(/`/g, "").trim();
       if (!reply) reply = "죄송합니다, 다시 말씀해 주시겠어요?";
+    }
+
+    // ── refine: 조건 불일치 시 재검색 1회 ──
+    if (refine && recommendations.length === 0) {
+      let retryResults: { id: string; score: number; metadata: VectorMetadata }[] = [];
+      try {
+        retryResults = await queryVector(refine, 30, filter);
+        retryResults = retryResults.filter(r => String(r.id).startsWith(idPrefix));
+      } catch {
+        try {
+          retryResults = await queryVector(refine, 30);
+          retryResults = retryResults.filter(r => String(r.id).startsWith(idPrefix));
+        } catch { retryResults = []; }
+      }
+      // 기존 결과와 합쳐서 중복 제거
+      const seenRetry = new Set(top15.map(r => r.id));
+      for (const r of retryResults) {
+        if (!seenRetry.has(r.id)) { top15.push(r); seenRetry.add(r.id); }
+      }
+      const retryContext = top15.map(r => {
+        const m = r.metadata as Record<string, unknown>;
+        const p = (typeof m.parsed === "object" && m.parsed) ? m.parsed as Record<string, unknown> : {};
+        const careTypes = Array.isArray(p.care_type) ? (p.care_type as string[]).join(",") : String(p.care_type || "");
+        return `[${m.id}] ${m.name || "?"} | ${p.age || "?"}세 | ${m.location} | ${careTypes} | ${p.hours || "?"} | ${safeString(m.bio as string).slice(0, 60)}`;
+      }).join("\n");
+
+      resp = await callClaude(buildSystemPrompt(retryContext), {
+        maxTokens: 500,
+        model: "claude-sonnet-4-6",
+        messages: claudeMessages,
+      });
+      totalIn += resp.usage.input;
+      totalOut += resp.usage.output;
+      totalKRW += resp.cost_krw;
+
+      try {
+        let raw = resp.text;
+        const cb = raw.match(/```(?:json)?\s*([\s\S]*?)```/);
+        if (cb) raw = cb[1];
+        const json = extractJson<Record<string, unknown>>(raw);
+        reply = safeString(json.reply as string);
+        recommendations = Array.isArray(json.recommendations) ? json.recommendations as Record<string, unknown>[] : [];
+      } catch {
+        reply = resp.text.replace(/```[\s\S]*?```/g, "").replace(/\*\*/g, "").replace(/`/g, "").trim();
+        if (!reply) reply = "죄송합니다, 다시 말씀해 주시겠어요?";
+      }
     }
 
     // 결과 매핑
