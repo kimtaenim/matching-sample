@@ -57,13 +57,15 @@ export async function upsertVectorBatch(
  */
 export async function queryVector(
   text: string,
-  topK: number = 10
+  topK: number = 10,
+  filter?: string
 ): Promise<{ id: string; score: number; metadata: VectorMetadata }[]> {
   const index = getIndex();
   const results = await index.query({
     data: text,
     topK,
     includeMetadata: true,
+    ...(filter ? { filter } : {}),
   });
   return results.map((r) => ({
     id: r.id as string,
