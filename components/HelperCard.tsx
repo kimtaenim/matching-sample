@@ -67,54 +67,54 @@ export function HelperCard({
 
   return (
     <div
-      className="animate-slideUp opacity-0"
+      className="animate-slideUp opacity-0 h-full"
       style={{
         animationDelay: `${index * 100}ms`,
         animationFillMode: "forwards",
       }}
     >
       <div
-        className={`bg-white rounded-card border border-apple-silver2 shadow-card transition-all duration-300 overflow-hidden ${
+        className={`h-full flex flex-col bg-white rounded-card border border-apple-silver2 shadow-card transition-all duration-300 overflow-hidden ${
           open ? "shadow-cardHover" : "hover:shadow-cardHover hover:-translate-y-1"
         }`}
       >
         <button
           onClick={() => setOpen((v) => !v)}
-          className="w-full text-left p-4 focus:outline-none"
+          className="w-full text-left p-4 focus:outline-none flex-1 flex items-start"
         >
-          <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start justify-between gap-2 w-full">
             <div className="flex-1 min-w-0">
               <div className="flex items-baseline gap-2 flex-wrap">
-                <h3 className="text-[20px] font-semibold text-apple-label">
+                <h3 className="text-[17px] font-semibold text-apple-label tracking-tight">
                   {helper.name}
                 </h3>
-                <span className="text-[15px] text-apple-gray">
+                <span className="text-[13px] text-apple-gray">
                   {helper.location} · {helper.parsed.age}세
                 </span>
               </div>
               {n > 0 && (
-                <div className="mt-1 text-[13px] text-apple-gray whitespace-nowrap">
+                <div className="mt-0.5 text-[12px] text-apple-gray whitespace-nowrap">
                   후기 {n}건
                 </div>
               )}
               {headline && (
                 <div className="mt-2">
-                  <span className="text-[14px] text-apple-label2 font-medium">{headline}</span>
+                  <span className="text-[13px] text-apple-label2 font-medium">{headline}</span>
                 </div>
               )}
               {(forFamily || matchReason) && (
-                <p className="mt-1 text-[14px] text-apple-label2 leading-snug">
+                <p className="mt-1 text-[13px] text-apple-label2 leading-snug">
                   {forFamily || matchReason}
                 </p>
               )}
             </div>
             <div
-              className={`text-apple-gray transition-transform duration-300 ${
+              className={`text-apple-gray transition-transform duration-300 shrink-0 mt-1 ${
                 open ? "rotate-180" : ""
               }`}
               aria-hidden
             >
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M5 7.5l5 5 5-5" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
@@ -127,12 +127,12 @@ export function HelperCard({
           }`}
         >
           <div className="overflow-hidden">
-            <div className="px-6 pb-6 border-t border-apple-silver2 pt-5">
-              <p className="text-[17px] leading-relaxed text-apple-label2">
+            <div className="px-4 pb-4 border-t border-apple-silver2 pt-4">
+              <p className="text-[14px] leading-relaxed text-apple-label2">
                 {helper.bio}
               </p>
 
-              <div className="mt-5 grid grid-cols-2 gap-3">
+              <div className="mt-4 grid grid-cols-2 gap-2">
                 <InfoRow
                   label="돌봄 유형"
                   value={Array.isArray(helper.parsed?.care_type) ? helper.parsed.care_type.join(", ") : String(helper.parsed?.care_type || "-")}
@@ -150,21 +150,21 @@ export function HelperCard({
               </div>
 
               {helper.reviews_received.length > 0 && (
-                <div className="mt-6">
-                  <div className="text-[15px] font-semibold text-apple-label mb-3">
+                <div className="mt-5">
+                  <div className="text-[13px] font-semibold text-apple-label mb-2">
                     최근 후기
                   </div>
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {helper.reviews_received.slice(0, 3).map((r, i) => (
                       <div
                         key={i}
-                        className="bg-apple-silver rounded-2xl p-4"
+                        className="bg-apple-silver rounded-xl p-3"
                       >
                         <div className="flex items-center justify-between mb-1">
-                          <Stars rating={r.rating} size={14} />
-                          <span className="text-[13px] text-apple-gray">{r.date}</span>
+                          <Stars rating={r.rating} size={12} />
+                          <span className="text-[11px] text-apple-gray">{r.date}</span>
                         </div>
-                        <p className="text-[15px] text-apple-label2 leading-snug">
+                        <p className="text-[13px] text-apple-label2 leading-snug">
                           {r.text}
                         </p>
                       </div>
@@ -172,7 +172,7 @@ export function HelperCard({
                   </div>
                   <Link
                     href={`/profile/${helper.id}/reviews`}
-                    className="mt-3 inline-block text-[15px] text-apple-blue hover:underline"
+                    className="mt-2 inline-block text-[13px] text-apple-blue hover:underline"
                   >
                     전체 후기 보기 →
                   </Link>
@@ -189,9 +189,9 @@ export function HelperCard({
 
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-apple-silver rounded-xl px-4 py-3">
-      <div className="text-[13px] text-apple-gray">{label}</div>
-      <div className="text-[17px] text-apple-label font-medium mt-0.5">
+    <div className="bg-apple-silver rounded-lg px-3 py-2">
+      <div className="text-[11px] text-apple-gray uppercase tracking-wide">{label}</div>
+      <div className="text-[14px] text-apple-label font-medium mt-0.5">
         {value}
       </div>
     </div>
