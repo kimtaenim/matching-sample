@@ -9,6 +9,80 @@ interface Body { messages?: Message[]; bio?: string; location?: string; role?: s
 
 function safeString(v: unknown, f = ""): string { return typeof v === "string" ? v : f; }
 
+/**
+ * 대화 히스토리에서 여러 차원의 필터를 추출.
+ * 각 차원별로 역순 스캔 — 최신 언급이 이김. 언급 없으면 해당 차원 미적용.
+ */
+interface ExtractedFilters {
+  age?: { min?: number; max?: number };
+  careTypes?: string[]; // OR 매칭
+}
+
+const CARE_TYPE_KEYWORDS: { [k: string]: string } = {
+  "아동": "아동", "아이": "아동", "애기": "아동", "유아": "아동",
+  "환자": "환자", "수술": "환자", "병간호": "환자",
+  "치매": "치매노인", "노인": "치매노인", "어르신": "치매노인",
+  "장애": "장애", "발달": "장애",
+};
+
+function extractFilters(userMessages: string[]): ExtractedFilters {
+  const out: ExtractedFilters = {};
+
+  // ── 나이 ──
+  ageLoop: for (let i = userMessages.length - 1; i >= 0; i--) {
+    const msg = userMessages[i];
+    if (/(나이|연령)\s*(상관\s*없|무관|제한\s*없)/.test(msg)) { out.age = {}; break; }
+
+    // "젊은" → 35세 이하
+    if (/젊은/.test(msg)) { out.age = { max: 35 }; break; }
+    // "나이 많은", "경력 많은", "베테랑" → 55세 이상
+    if (/(나이\s*많|베테랑|연륜)/.test(msg)) { out.age = { min: 55 }; break; }
+
+    // "N대" → [N0대, N9세]
+    let m = msg.match(/(\d)0\s*대/);
+    if (m) { out.age = { min: +m[1] * 10, max: +m[1] * 10 + 9 }; break ageLoop; }
+
+    // "N세 이하/까지"
+    m = msg.match(/(\d+)\s*세\s*(이하|까지)/);
+    if (m) { out.age = { max: +m[1] }; break ageLoop; }
+
+    // "N세 이상/부터"
+    m = msg.match(/(\d+)\s*세\s*(이상|부터|넘)/);
+    if (m) { out.age = { min: +m[1] }; break ageLoop; }
+
+    // "N~M세"
+    m = msg.match(/(\d+)\s*[~\-]\s*(\d+)\s*세/);
+    if (m) { out.age = { min: +m[1], max: +m[2] }; break ageLoop; }
+  }
+
+  // ── 돌봄 유형 ──
+  for (let i = userMessages.length - 1; i >= 0; i--) {
+    const msg = userMessages[i];
+    if (/돌봄\s*(상관\s*없|무관|아무)/.test(msg)) { out.careTypes = []; break; }
+    const hits = new Set<string>();
+    for (const [kw, tag] of Object.entries(CARE_TYPE_KEYWORDS)) {
+      if (msg.includes(kw)) hits.add(tag);
+    }
+    if (hits.size > 0) { out.careTypes = Array.from(hits); break; }
+  }
+
+  return out;
+}
+
+/** location + age + care_type 필터를 Upstash Vector 필터 문자열로 조립 */
+function buildVectorFilter(location: string, filters: ExtractedFilters): string {
+  const parts: string[] = [`location = '${location}'`];
+  if (filters.age) {
+    if (typeof filters.age.min === "number") parts.push(`parsed.age >= ${filters.age.min}`);
+    if (typeof filters.age.max === "number") parts.push(`parsed.age <= ${filters.age.max}`);
+  }
+  if (filters.careTypes && filters.careTypes.length > 0) {
+    const or = filters.careTypes.map(t => `parsed.care_type CONTAINS '${t}'`).join(" OR ");
+    parts.push(`(${or})`);
+  }
+  return parts.join(" AND ");
+}
+
 export async function POST(req: NextRequest) {
   let body: Body;
   try { body = (await req.json()) as Body; } catch {
@@ -35,9 +109,11 @@ export async function POST(req: NextRequest) {
     const firstUserMsg = userMessages[0] || lastUserMsg;
     const idPrefix = role === "family" ? "h" : "f";
 
-    // ── 벡터 검색: location filter + 감성 유사도 ──
+    // ── 벡터 검색: location + 다중 필터 + 감성 유사도 ──
     const query = firstUserMsg === lastUserMsg ? firstUserMsg : `${firstUserMsg} ${lastUserMsg}`;
-    const filter = `location = '${location}'`;
+    const filters = extractFilters(userMessages);
+    const filter = buildVectorFilter(location, filters);
+    const locationOnly = `location = '${location}'`;
 
     let vectorResults: { id: string; score: number; metadata: VectorMetadata }[] = [];
     try {
@@ -45,7 +121,17 @@ export async function POST(req: NextRequest) {
       vectorResults = vectorResults.filter(r => String(r.id).startsWith(idPrefix));
     } catch {
       try {
-        vectorResults = await queryVector(query, 30);
+        vectorResults = await queryVector(query, 30, locationOnly);
+        vectorResults = vectorResults.filter(r => String(r.id).startsWith(idPrefix));
+      } catch { vectorResults = []; }
+    }
+
+    // 필터가 너무 좁아서 0건이면 완화 (다중 → location만)
+    const hasExtraFilter = (filters.age && (filters.age.min || filters.age.max))
+      || (filters.careTypes && filters.careTypes.length > 0);
+    if (vectorResults.length === 0 && hasExtraFilter) {
+      try {
+        vectorResults = await queryVector(query, 30, locationOnly);
         vectorResults = vectorResults.filter(r => String(r.id).startsWith(idPrefix));
       } catch { vectorResults = []; }
     }
@@ -92,8 +178,8 @@ export async function POST(req: NextRequest) {
 ${candidates || "(후보 없음)"}
 
 [규칙]
-1. 고객 상황이 파악되면 목록에서 3명 추천. 정보 부족하면 자연스럽게 질문.
-2. 같은 질문 반복 금지.
+1. 목록에서 3명 추천하는 게 기본. 단서가 조금만 있어도 있는 정보로 매칭해서 추천. 조건 캐묻지 말 것.
+2. 같은 질문 반복 금지. 정말 단서가 전혀 없을 때만 딱 한 번 자연스럽게 질문.
 3. 목록에 없는 사람 지어내지 말 것. 나이대, 경력, 조건도 마찬가지로 목록에 실제로 있는 정보만 언급할 것. 추측 금지.
 4. 고객이 특정 인물 언급하면 반드시 포함.
 5. 나이 조건 엄격. "젊은"=35세 이하.
@@ -157,7 +243,7 @@ JSON만.`;
         retryResults = retryResults.filter(r => String(r.id).startsWith(idPrefix));
       } catch {
         try {
-          retryResults = await queryVector(refine, 60);
+          retryResults = await queryVector(refine, 60, locationOnly);
           retryResults = retryResults.filter(r => String(r.id).startsWith(idPrefix));
         } catch { retryResults = []; }
       }
