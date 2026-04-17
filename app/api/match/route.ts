@@ -76,7 +76,16 @@ export async function POST(req: NextRequest) {
     }).join("\n");
 
     // ── Sonnet 호출 (조건 불일치 시 1회 재검색) ──
-    function buildSystemPrompt(candidates: string) {
+    function buildSystemPrompt(candidates: string, allowRefine: boolean) {
+      const refineRule = allowRefine
+        ? `6. 고객이 원하는 조건(나이, 경력, 돌봄유형 등)에 맞는 후보가 목록에 없으면, 추천하지 말고 refine 필드에 재검색 키워드를 넣어라. 예: 고객이 "20대 도우미"를 원하는데 목록에 없으면 refine에 "20대 젊은 도우미"를 넣는다.`
+        : `6. 이번이 마지막 검색 결과다. refine 사용 금지. 고객 조건에 가장 가까운 후보 3명을 반드시 추천하거나, 조건에 맞는 분이 전혀 없으면 솔직하게 "이 지역에는 X대부터 계시네요" 같이 현실을 설명하고 대안을 제시해라.`;
+      const responseFormats = allowRefine
+        ? `추천: {"reply":"대화체","recommendations":[{"id":"h001","headline":"20자","for_family":"2문장"}]}
+대화: {"reply":"대화체","recommendations":[]}
+재검색: {"reply":"잠시만요, 조건에 맞는 분을 찾아볼게요.","recommendations":[],"refine":"재검색 키워드"}`
+        : `추천: {"reply":"대화체","recommendations":[{"id":"h001","headline":"20자","for_family":"2문장"}]}
+설명: {"reply":"현실 설명 + 대안 제시 대화체","recommendations":[]}`;
       return `돌봄 매칭 챗봇. 자연스럽게 대화하며 ${targetType}를 추천합니다.
 
 [${targetType} 후보 목록]
@@ -88,16 +97,14 @@ ${candidates || "(후보 없음)"}
 3. 목록에 없는 사람 지어내지 말 것. 나이대, 경력, 조건도 마찬가지로 목록에 실제로 있는 정보만 언급할 것. 추측 금지.
 4. 고객이 특정 인물 언급하면 반드시 포함.
 5. 나이 조건 엄격. "젊은"=35세 이하.
-6. 고객이 원하는 조건(나이, 경력, 돌봄유형 등)에 맞는 후보가 목록에 없으면, 추천하지 말고 refine 필드에 재검색 키워드를 넣어라. 예: 고객이 "20대 도우미"를 원하는데 목록에 없으면 refine에 "20대 젊은 도우미"를 넣는다.
+${refineRule}
 7. reply는 대화체. 고객 상황 언급하면서 자연스럽게.
 8. headline: 핵심 강점 20자.
 9. for_family: 고객 상황과 연결된 구체적 추천 이유 2문장.
 10. 이모지 금지.
 
 [응답]
-추천: {"reply":"대화체","recommendations":[{"id":"h001","headline":"20자","for_family":"2문장"}]}
-대화: {"reply":"대화체","recommendations":[]}
-재검색: {"reply":"잠시만요, 조건에 맞는 분을 찾아볼게요.","recommendations":[],"refine":"재검색 키워드"}
+${responseFormats}
 JSON만.`;
     }
 
@@ -131,7 +138,7 @@ JSON만.`;
       return { reply: r, recommendations: recs, refine: rf };
     }
 
-    let resp = await callClaude(buildSystemPrompt(candidateContext), {
+    let resp = await callClaude(buildSystemPrompt(candidateContext, true), {
       maxTokens: 1000,
       model: "claude-sonnet-4-6",
       messages: claudeMessages,
@@ -142,15 +149,15 @@ JSON만.`;
 
     let { reply, recommendations, refine } = parseResponse(resp.text);
 
-    // ── refine: 조건 불일치 시 재검색 1회 ──
+    // ── refine: 조건 불일치 시 재검색 1회 (topK 60으로 확대) ──
     if (refine && recommendations.length === 0) {
       let retryResults: { id: string; score: number; metadata: VectorMetadata }[] = [];
       try {
-        retryResults = await queryVector(refine, 30, filter);
+        retryResults = await queryVector(refine, 60, filter);
         retryResults = retryResults.filter(r => String(r.id).startsWith(idPrefix));
       } catch {
         try {
-          retryResults = await queryVector(refine, 30);
+          retryResults = await queryVector(refine, 60);
           retryResults = retryResults.filter(r => String(r.id).startsWith(idPrefix));
         } catch { retryResults = []; }
       }
@@ -166,7 +173,8 @@ JSON만.`;
         return `[${m.id}] ${m.name || "?"} | ${p.age || "?"}세 | ${m.location} | ${careTypes} | ${p.hours || "?"} | ${safeString(m.bio as string).slice(0, 60)}`;
       }).join("\n");
 
-      resp = await callClaude(buildSystemPrompt(retryContext), {
+      // 2차 호출: refine 금지, 반드시 응답
+      resp = await callClaude(buildSystemPrompt(retryContext, false), {
         maxTokens: 1000,
         model: "claude-sonnet-4-6",
         messages: claudeMessages,

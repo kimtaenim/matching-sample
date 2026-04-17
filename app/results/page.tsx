@@ -104,7 +104,7 @@ function ResultsInner() {
     const answer = text.trim();
     setInput("");
 
-    if (finalResults) setFinalResults(null);
+    // 이전 추천은 새 결과가 올 때까지 유지 (지우지 않음)
 
     const userMsg: Message = { role: "user", content: answer };
     const newMessages = [...messages, userMsg];
