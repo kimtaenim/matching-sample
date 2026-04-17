@@ -103,8 +103,36 @@ JSON만.`;
 
     const claudeMessages = messages.map(m => ({ role: m.role as "user"|"assistant", content: m.content }));
 
+    // JSON 파싱: 실패 시 reply만이라도 살리기
+    function parseResponse(rawText: string) {
+      let r = "", recs: Record<string, unknown>[] = [], rf = "";
+      try {
+        let raw = rawText;
+        const cb = raw.match(/```(?:json)?\s*([\s\S]*?)```/);
+        if (cb) raw = cb[1];
+        const json = extractJson<Record<string, unknown>>(raw);
+        r = safeString(json.reply as string);
+        recs = Array.isArray(json.recommendations) ? json.recommendations as Record<string, unknown>[] : [];
+        rf = safeString(json.refine as string);
+      } catch {
+        // 폴백1: reply 필드만 정규식으로 추출 (잘린 JSON 대응)
+        const replyMatch = rawText.match(/"reply"\s*:\s*"((?:[^"\\]|\\.)*)"/);
+        if (replyMatch) {
+          r = replyMatch[1].replace(/\\"/g, '"').replace(/\\n/g, '\n');
+        } else {
+          // 폴백2: JSON 시작 전 텍스트만, 없으면 기본 메시지
+          const jsonStart = rawText.indexOf("{");
+          r = (jsonStart > 0 ? rawText.slice(0, jsonStart) : rawText)
+            .replace(/```[\s\S]*?```/g, "").replace(/\*\*/g, "").replace(/`/g, "")
+            .replace(/\bjson\b\s*$/i, "").trim();
+        }
+        if (!r) r = "죄송합니다, 다시 말씀해 주시겠어요?";
+      }
+      return { reply: r, recommendations: recs, refine: rf };
+    }
+
     let resp = await callClaude(buildSystemPrompt(candidateContext), {
-      maxTokens: 500,
+      maxTokens: 1000,
       model: "claude-sonnet-4-6",
       messages: claudeMessages,
     });
@@ -112,22 +140,7 @@ JSON만.`;
     totalOut += resp.usage.output;
     totalKRW += resp.cost_krw;
 
-    let reply = "";
-    let recommendations: Record<string, unknown>[] = [];
-    let refine = "";
-
-    try {
-      let raw = resp.text;
-      const cb = raw.match(/```(?:json)?\s*([\s\S]*?)```/);
-      if (cb) raw = cb[1];
-      const json = extractJson<Record<string, unknown>>(raw);
-      reply = safeString(json.reply as string);
-      recommendations = Array.isArray(json.recommendations) ? json.recommendations as Record<string, unknown>[] : [];
-      refine = safeString(json.refine as string);
-    } catch {
-      reply = resp.text.replace(/```[\s\S]*?```/g, "").replace(/\*\*/g, "").replace(/`/g, "").trim();
-      if (!reply) reply = "죄송합니다, 다시 말씀해 주시겠어요?";
-    }
+    let { reply, recommendations, refine } = parseResponse(resp.text);
 
     // ── refine: 조건 불일치 시 재검색 1회 ──
     if (refine && recommendations.length === 0) {
@@ -154,7 +167,7 @@ JSON만.`;
       }).join("\n");
 
       resp = await callClaude(buildSystemPrompt(retryContext), {
-        maxTokens: 500,
+        maxTokens: 1000,
         model: "claude-sonnet-4-6",
         messages: claudeMessages,
       });
@@ -162,17 +175,9 @@ JSON만.`;
       totalOut += resp.usage.output;
       totalKRW += resp.cost_krw;
 
-      try {
-        let raw = resp.text;
-        const cb = raw.match(/```(?:json)?\s*([\s\S]*?)```/);
-        if (cb) raw = cb[1];
-        const json = extractJson<Record<string, unknown>>(raw);
-        reply = safeString(json.reply as string);
-        recommendations = Array.isArray(json.recommendations) ? json.recommendations as Record<string, unknown>[] : [];
-      } catch {
-        reply = resp.text.replace(/```[\s\S]*?```/g, "").replace(/\*\*/g, "").replace(/`/g, "").trim();
-        if (!reply) reply = "죄송합니다, 다시 말씀해 주시겠어요?";
-      }
+      const parsed = parseResponse(resp.text);
+      reply = parsed.reply;
+      recommendations = parsed.recommendations;
     }
 
     // 결과 매핑
