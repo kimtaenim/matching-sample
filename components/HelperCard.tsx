@@ -103,7 +103,7 @@ export function HelperCard({
                 </div>
               )}
               {(forFamily || matchReason) && (
-                <p className="mt-1 text-[13px] text-apple-label2 leading-snug">
+                <p className="mt-1 text-[13px] text-apple-label2 leading-snug line-clamp-3">
                   {forFamily || matchReason}
                 </p>
               )}
@@ -127,8 +127,8 @@ export function HelperCard({
           }`}
         >
           <div className="overflow-hidden">
-            <div className="px-4 pb-4 border-t border-apple-silver2 pt-4">
-              <p className="text-[14px] leading-relaxed text-apple-label2">
+            <div className="px-4 pb-4 border-t border-apple-silver2 pt-3">
+              <p className="text-[13px] leading-normal text-apple-label2">
                 {helper.bio}
               </p>
 
@@ -190,8 +190,8 @@ export function HelperCard({
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-apple-silver rounded-lg px-3 py-2">
-      <div className="text-[11px] text-apple-gray uppercase tracking-wide">{label}</div>
-      <div className="text-[14px] text-apple-label font-medium mt-0.5">
+      <div className="text-[10px] text-apple-gray uppercase tracking-wide">{label}</div>
+      <div className="text-[13px] text-apple-label font-medium mt-0.5 leading-snug">
         {value}
       </div>
     </div>
