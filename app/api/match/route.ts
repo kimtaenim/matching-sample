@@ -16,6 +16,7 @@ function safeString(v: unknown, f = ""): string { return typeof v === "string" ?
 interface ExtractedFilters {
   age?: { min?: number; max?: number };
   careTypes?: string[]; // OR 매칭
+  gender?: "여" | "남";
 }
 
 const CARE_TYPE_KEYWORDS: { [k: string]: string } = {
@@ -66,10 +67,19 @@ function extractFilters(userMessages: string[]): ExtractedFilters {
     if (hits.size > 0) { out.careTypes = Array.from(hits); break; }
   }
 
+  // ── 성별 ──
+  for (let i = userMessages.length - 1; i >= 0; i--) {
+    const msg = userMessages[i];
+    if (/성별\s*(상관\s*없|무관)/.test(msg)) { out.gender = undefined; break; }
+    // "여자", "여선생님", "여성" 등 (선생님/도우미/분 문맥 포함)
+    if (/(여자\s*(선생|도우미|분|쌤)?|여선생|여성\s*(선생|도우미|분)|여\s*쌤)/.test(msg)) { out.gender = "여"; break; }
+    if (/(남자\s*(선생|도우미|분|쌤)?|남선생|남성\s*(선생|도우미|분)|남\s*쌤)/.test(msg)) { out.gender = "남"; break; }
+  }
+
   return out;
 }
 
-/** location + age + care_type 필터를 Upstash Vector 필터 문자열로 조립 */
+/** location + age + care_type + gender 필터를 Upstash Vector 필터 문자열로 조립 */
 function buildVectorFilter(location: string, filters: ExtractedFilters): string {
   const parts: string[] = [`location = '${location}'`];
   if (filters.age) {
@@ -79,6 +89,9 @@ function buildVectorFilter(location: string, filters: ExtractedFilters): string 
   if (filters.careTypes && filters.careTypes.length > 0) {
     const or = filters.careTypes.map(t => `parsed.care_type CONTAINS '${t}'`).join(" OR ");
     parts.push(`(${or})`);
+  }
+  if (filters.gender) {
+    parts.push(`parsed.gender = '${filters.gender}'`);
   }
   return parts.join(" AND ");
 }
@@ -128,7 +141,8 @@ export async function POST(req: NextRequest) {
 
     // 필터가 너무 좁아서 0건이면 완화 (다중 → location만)
     const hasExtraFilter = (filters.age && (filters.age.min || filters.age.max))
-      || (filters.careTypes && filters.careTypes.length > 0);
+      || (filters.careTypes && filters.careTypes.length > 0)
+      || !!filters.gender;
     if (vectorResults.length === 0 && hasExtraFilter) {
       try {
         vectorResults = await queryVector(query, 30, locationOnly);
